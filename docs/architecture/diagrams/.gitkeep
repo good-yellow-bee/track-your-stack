@@ -1,0 +1,18 @@
+# Architecture Diagrams Directory
+
+This directory contains architecture diagrams and visual representations.
+
+## Diagram Types
+
+- Entity Relationship Diagrams (ERD)
+- Sequence Diagrams (authentication flow, data flow)
+- Component Diagrams
+- Deployment Architecture
+- Currency Conversion Flow
+
+## Tools
+
+Recommended tools for creating diagrams:
+- Mermaid.js (for embedded diagrams in markdown)
+- Excalidraw (for hand-drawn style diagrams)
+- Draw.io / Lucidchart (for formal diagrams)

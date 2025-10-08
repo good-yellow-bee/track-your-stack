@@ -1,0 +1,19 @@
+# Screenshots Directory
+
+This directory contains UI screenshots for user documentation.
+
+## Naming Convention
+
+Use descriptive names that indicate the feature and state:
+- `signin-page.png`
+- `dashboard-overview.png`
+- `create-portfolio-form.png`
+- `add-investment-modal.png`
+- `portfolio-chart-view.png`
+
+## Screenshot Guidelines
+
+- Resolution: 1920x1080 recommended
+- Format: PNG for clarity
+- Annotate when necessary to highlight features
+- Update screenshots when UI changes significantly
