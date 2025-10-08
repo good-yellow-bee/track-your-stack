@@ -85,7 +85,34 @@ Documentation Agent (Parallel):
 
 ## 🚨 CRITICAL: Git Branching Workflow
 
-**⚠️ NEVER COMMIT DIRECTLY TO MAIN BRANCH**
+**⚠️ NEVER COMMIT DIRECTLY TO MAIN BRANCH - ALWAYS USE FEATURE BRANCHES**
+
+```
+╔═══════════════════════════════════════════════════════════════╗
+║  🚫 STOP! READ THIS BEFORE MAKING ANY CHANGES 🚫             ║
+║                                                               ║
+║  ✅ CORRECT WORKFLOW:                                        ║
+║     1. git checkout -b feature/your-feature                  ║
+║     2. Make changes                                          ║
+║     3. Commit and push                                       ║
+║     4. Create Pull Request                                   ║
+║     5. Merge via GitHub (after approval)                     ║
+║                                                               ║
+║  ❌ WRONG: git checkout main → make changes → commit         ║
+║                                                               ║
+║  This applies to EVERYTHING:                                 ║
+║  • Features • Bug fixes • Documentation • Refactoring        ║
+║  • Tests • Configuration • EVERYTHING                        ║
+╚═══════════════════════════════════════════════════════════════╝
+```
+
+**WHY THIS RULE EXISTS:**
+- ✅ Enables code review and quality control
+- ✅ Maintains clean, reversible history
+- ✅ Allows CI/CD validation before merge
+- ✅ Prevents accidental main branch corruption
+- ✅ Facilitates team collaboration and parallel work
+- ✅ Creates clear audit trail for all changes
 
 Before implementing ANY feature, follow this mandatory workflow:
 
