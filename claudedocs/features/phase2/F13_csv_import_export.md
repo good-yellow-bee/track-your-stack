@@ -13,6 +13,7 @@
 Implement bulk import/export functionality allowing users to upload CSV files with investment data and export portfolio reports in CSV and PDF formats with tax reporting options.
 
 **What this enables:**
+
 - Bulk import investments from CSV files
 - Validate and preview data before import
 - Export portfolio data to CSV format
@@ -109,6 +110,7 @@ model Portfolio {
 ```
 
 Run migration:
+
 ```bash
 pnpm prisma migrate dev --name add_import_export_tracking
 ```
@@ -119,14 +121,7 @@ Create `lib/csv/template.ts`:
 
 ```typescript
 export const CSV_TEMPLATE = {
-  headers: [
-    'ticker',
-    'quantity',
-    'purchase_price',
-    'purchase_date',
-    'currency',
-    'notes',
-  ],
+  headers: ['ticker', 'quantity', 'purchase_price', 'purchase_date', 'currency', 'notes'],
   example: [
     ['AAPL', '10', '150.50', '2024-01-15', 'USD', 'Initial purchase'],
     ['GOOGL', '5', '2800.00', '2024-02-20', 'USD', ''],
@@ -179,7 +174,10 @@ export function validateCSVRow(
 
   // Check required fields
   for (const field of REQUIRED_FIELDS) {
-    if (!row[field as keyof CSVInvestmentRow] || row[field as keyof CSVInvestmentRow].trim() === '') {
+    if (
+      !row[field as keyof CSVInvestmentRow] ||
+      row[field as keyof CSVInvestmentRow].trim() === ''
+    ) {
       errors.push({
         row: rowIndex,
         field,
@@ -378,9 +376,7 @@ export async function importInvestments(
         imported++
       } catch (error) {
         console.error(`Failed to import row ${index + 2}:`, error)
-        errors.push(
-          `Row ${index + 2}: ${error instanceof Error ? error.message : 'Unknown error'}`
-        )
+        errors.push(`Row ${index + 2}: ${error instanceof Error ? error.message : 'Unknown error'}`)
         failed++
       }
     }
@@ -706,18 +702,7 @@ export async function exportPortfolioPDF(portfolioId: string, userId: string) {
 
   autoTable(doc, {
     startY: 86,
-    head: [
-      [
-        'Ticker',
-        'Name',
-        'Qty',
-        'Avg Cost',
-        'Price',
-        'Value',
-        'Gain/Loss',
-        '%',
-      ],
-    ],
+    head: [['Ticker', 'Name', 'Qty', 'Avg Cost', 'Price', 'Value', 'Gain/Loss', '%']],
     body: tableData,
     theme: 'striped',
     headStyles: { fillColor: [59, 130, 246] },
@@ -768,10 +753,7 @@ import { validateCSVData } from '@/lib/csv/validator'
 import { importInvestments } from '@/lib/csv/import-service'
 import { CSVInvestmentRow } from '@/lib/csv/template'
 
-export async function POST(
-  request: NextRequest,
-  { params }: { params: { id: string } }
-) {
+export async function POST(request: NextRequest, { params }: { params: { id: string } }) {
   try {
     const session = await getServerSession(authOptions)
 
@@ -869,10 +851,7 @@ import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth'
 import { exportPortfolioToCSV } from '@/lib/csv/export-service'
 
-export async function GET(
-  request: NextRequest,
-  { params }: { params: { id: string } }
-) {
+export async function GET(request: NextRequest, { params }: { params: { id: string } }) {
   try {
     const session = await getServerSession(authOptions)
 
@@ -904,10 +883,7 @@ import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth'
 import { exportPortfolioPDF } from '@/lib/pdf/export-service'
 
-export async function GET(
-  request: NextRequest,
-  { params }: { params: { id: string } }
-) {
+export async function GET(request: NextRequest, { params }: { params: { id: string } }) {
   try {
     const session = await getServerSession(authOptions)
 
@@ -1305,6 +1281,7 @@ export default async function PortfolioPage({ params }: { params: { id: string }
 ### Test CSV Files
 
 Create `test-data/sample-import.csv`:
+
 ```csv
 ticker,quantity,purchase_price,purchase_date,currency,notes
 AAPL,10,150.50,2024-01-15,USD,Initial purchase
@@ -1313,6 +1290,7 @@ MSFT,20,350.00,2024-03-10,USD,Large cap
 ```
 
 Create `test-data/sample-import-errors.csv`:
+
 ```csv
 ticker,quantity,purchase_price,purchase_date,currency,notes
 ,10,150.50,2024-01-15,USD,Missing ticker
@@ -1328,6 +1306,7 @@ TSLA,15,250.00,2025-12-31,USD,Future date
 ### Update README.md
 
 Add Import/Export section:
+
 ```markdown
 ## Import/Export
 
@@ -1345,6 +1324,7 @@ Add Import/Export section:
 ## [0.3.0] - Phase 2: Import/Export
 
 ### Added
+
 - CSV import with validation and preview
 - CSV export functionality
 - PDF report generation
@@ -1353,6 +1333,7 @@ Add Import/Export section:
 - Drag-and-drop file upload
 
 ### Technical
+
 - Added ImportHistory model
 - Implemented Papa Parse for CSV handling
 - Created jsPDF export service
@@ -1368,6 +1349,7 @@ Add Import/Export section:
 **Problem:** Special characters break CSV parsing
 
 **Solution:** Ensure proper escaping:
+
 ```typescript
 // Use proper CSV escaping for fields with commas/quotes
 Papa.parse(content, {
@@ -1382,6 +1364,7 @@ Papa.parse(content, {
 **Problem:** Large CSV files cause timeout
 
 **Solution:** Increase upload limits:
+
 ```javascript
 // next.config.js
 module.exports = {
@@ -1398,6 +1381,7 @@ module.exports = {
 **Problem:** Large portfolios cause memory errors
 
 **Solution:** Paginate data:
+
 ```typescript
 // Split table across multiple pages
 const rowsPerPage = 40
@@ -1432,6 +1416,7 @@ After completing this feature, you should have:
 ## 🔗 Related Files
 
 ### Created Files
+
 - `lib/csv/template.ts`
 - `lib/csv/validator.ts`
 - `lib/csv/import-service.ts`
@@ -1445,6 +1430,7 @@ After completing this feature, you should have:
 - `test-data/sample-import.csv`
 
 ### Modified Files
+
 - `prisma/schema.prisma` (added ImportHistory model)
 - `app/(dashboard)/portfolios/[id]/page.tsx` (added import/export)
 
@@ -1457,6 +1443,7 @@ After completing this feature, you should have:
 ---
 
 **Status Legend:**
+
 - ⬜ Not Started
 - 🟨 In Progress
 - ✅ Complete

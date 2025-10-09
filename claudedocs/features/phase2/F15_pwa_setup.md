@@ -13,6 +13,7 @@
 Transform the web application into a Progressive Web App (PWA) enabling installation on mobile devices, offline support, and push notifications for price alerts. This provides an app-like experience without requiring separate native mobile apps.
 
 **What this enables:**
+
 - Install app on mobile devices (iOS and Android)
 - Offline access to cached portfolio data
 - Push notifications for price alerts
@@ -332,12 +333,7 @@ const CACHE_NAME = 'track-your-stack-v1'
 const RUNTIME_CACHE = 'runtime-cache-v1'
 
 // Resources to cache on install
-const STATIC_CACHE_URLS = [
-  '/',
-  '/dashboard',
-  '/portfolios',
-  '/offline',
-]
+const STATIC_CACHE_URLS = ['/', '/dashboard', '/portfolios', '/offline']
 
 // Install event - cache static resources
 self.addEventListener('install', (event) => {
@@ -463,9 +459,7 @@ self.addEventListener('push', (event) => {
 self.addEventListener('notificationclick', (event) => {
   event.notification.close()
 
-  event.waitUntil(
-    clients.openWindow(event.notification.data || '/')
-  )
+  event.waitUntil(clients.openWindow(event.notification.data || '/'))
 })
 ```
 
@@ -682,6 +676,7 @@ generateIcons().catch(console.error)
 ```
 
 Add to `package.json`:
+
 ```json
 {
   "scripts": {
@@ -691,6 +686,7 @@ Add to `package.json`:
 ```
 
 Install sharp and run:
+
 ```bash
 pnpm add -D sharp
 pnpm run generate-icons
@@ -813,6 +809,7 @@ export default function ServiceWorkerStatus() {
 ```
 
 Add to layout:
+
 ```typescript
 import ServiceWorkerStatus from '@/components/pwa/ServiceWorkerStatus'
 
@@ -835,6 +832,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
 ### Manual Testing Checklist
 
 #### Desktop Testing
+
 - [ ] Chrome: Install prompt appears
 - [ ] Chrome: App installs successfully
 - [ ] Chrome: Offline mode works
@@ -842,6 +840,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
 - [ ] Edge: Install and offline support
 
 #### iOS Testing
+
 - [ ] Safari: "Add to Home Screen" works
 - [ ] App opens in standalone mode
 - [ ] Icons display correctly
@@ -850,6 +849,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
 - [ ] App updates properly
 
 #### Android Testing
+
 - [ ] Chrome: Install prompt appears
 - [ ] Chrome: App installs via banner
 - [ ] App opens in standalone mode
@@ -860,6 +860,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
 ### Lighthouse PWA Audit
 
 Run Lighthouse audit:
+
 ```bash
 # Install Lighthouse CLI
 pnpm add -g @lhci/cli
@@ -869,6 +870,7 @@ lhci autorun --collect.url=http://localhost:3000
 ```
 
 Target scores:
+
 - PWA: 100
 - Performance: 90+
 - Accessibility: 90+
@@ -901,6 +903,7 @@ caches.keys().then((names) => {
 ### Update README.md
 
 Add PWA section:
+
 ```markdown
 ## Progressive Web App (PWA)
 
@@ -915,17 +918,20 @@ Track Your Stack is a fully functional Progressive Web App:
 ### Installation
 
 **iOS (Safari):**
+
 1. Open app in Safari
 2. Tap Share button
 3. Tap "Add to Home Screen"
 4. Tap "Add"
 
 **Android (Chrome):**
+
 1. Open app in Chrome
 2. Tap the install banner or menu > "Install App"
 3. Tap "Install"
 
 **Desktop (Chrome/Edge):**
+
 1. Look for install icon in address bar
 2. Click "Install"
 ```
@@ -936,6 +942,7 @@ Track Your Stack is a fully functional Progressive Web App:
 ## [0.5.0] - Phase 2: PWA Support
 
 ### Added
+
 - Progressive Web App (PWA) configuration
 - Service worker for offline support
 - Install prompts for mobile and desktop
@@ -947,6 +954,7 @@ Track Your Stack is a fully functional Progressive Web App:
 - Push notification infrastructure
 
 ### Technical
+
 - Configured next-pwa plugin
 - Created custom service worker
 - Added PWA manifest.json
@@ -964,6 +972,7 @@ Track Your Stack is a fully functional Progressive Web App:
 **Problem:** New service worker doesn't activate
 
 **Solution:**
+
 ```javascript
 // In sw.js, ensure skipWaiting
 self.addEventListener('install', (event) => {
@@ -981,10 +990,11 @@ self.addEventListener('activate', (event) => {
 **Problem:** App doesn't work when added to home screen
 
 **Solution:** Ensure all iOS meta tags are present:
+
 ```html
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="default">
-<link rel="apple-touch-icon" sizes="180x180" href="/icons/icon-192x192.png">
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="default" />
+<link rel="apple-touch-icon" sizes="180x180" href="/icons/icon-192x192.png" />
 ```
 
 ### Issue 3: Manifest Not Found
@@ -992,6 +1002,7 @@ self.addEventListener('activate', (event) => {
 **Problem:** Browser can't find manifest.json
 
 **Solution:** Verify manifest link in layout:
+
 ```typescript
 export const metadata: Metadata = {
   manifest: '/manifest.json', // Correct
@@ -1004,6 +1015,7 @@ export const metadata: Metadata = {
 **Problem:** Offline page doesn't display when offline
 
 **Solution:** Pre-cache offline page in service worker:
+
 ```javascript
 const STATIC_CACHE_URLS = [
   '/',
@@ -1036,6 +1048,7 @@ After completing this feature, you should have:
 ## 🔗 Related Files
 
 ### Created Files
+
 - `public/manifest.json`
 - `public/sw.js`
 - `public/icons/icon-*.png` (multiple sizes)
@@ -1047,6 +1060,7 @@ After completing this feature, you should have:
 - `scripts/generate-icons.js`
 
 ### Modified Files
+
 - `next.config.js` (added PWA configuration)
 - `app/layout.tsx` (added meta tags and links)
 - `app/(dashboard)/layout.tsx` (added InstallPrompt)
@@ -1059,12 +1073,14 @@ After completing this feature, you should have:
 **Congratulations!** All Phase 2 features (F12-F15) are now documented and ready for implementation.
 
 ### Phase 2 Summary
+
 - ✅ F12: Historical Performance Charts with daily snapshots
 - ✅ F13: CSV Import/Export with bulk operations
 - ✅ F14: Portfolio Comparison for side-by-side analysis
 - ✅ F15: PWA Setup for mobile app experience
 
 ### Next Steps
+
 1. Implement features in order (F12 → F15)
 2. Test thoroughly on multiple devices
 3. Deploy to production
@@ -1072,6 +1088,7 @@ After completing this feature, you should have:
 5. Plan Phase 3 features (if needed)
 
 ### Production Checklist
+
 - [ ] All Phase 2 features implemented
 - [ ] Historical data collecting daily
 - [ ] Import/export tested with real data
@@ -1086,6 +1103,7 @@ After completing this feature, you should have:
 ---
 
 **Status Legend:**
+
 - ⬜ Not Started
 - 🟨 In Progress
 - ✅ Complete

@@ -1,6 +1,6 @@
 # F01: Project Setup & Configuration
 
-**Status:** ⬜ Not Started
+**Status:** ✅ Completed (2025-01-09)
 **Priority:** 🔴 Critical
 **Estimated Time:** 1-2 days
 **Dependencies:** None
@@ -12,6 +12,7 @@
 Initialize the Next.js 15 project with TypeScript, Tailwind CSS, and all necessary dependencies. Configure development environment, linting, formatting, and set up project structure.
 
 **What this enables:**
+
 - Modern Next.js 15 App Router application
 - TypeScript for type safety
 - Tailwind CSS for styling
@@ -23,24 +24,25 @@ Initialize the Next.js 15 project with TypeScript, Tailwind CSS, and all necessa
 
 ## 🎯 Acceptance Criteria
 
-- [ ] Next.js 15 project created with App Router
-- [ ] TypeScript configured and working
-- [ ] Tailwind CSS installed and configured
-- [ ] shadcn/ui initialized with base components
-- [ ] All core dependencies installed
-- [ ] ESLint configured with no errors
-- [ ] Prettier configured and working
-- [ ] `.env.local` template created
-- [ ] Development server runs without errors
-- [ ] Git repository initialized with initial commit
-- [ ] README.md exists with setup instructions
-- [ ] Project builds successfully
+- [x] Next.js 15 project created with App Router
+- [x] TypeScript configured and working
+- [x] Tailwind CSS installed and configured
+- [x] shadcn/ui initialized with base components
+- [x] All core dependencies installed
+- [x] ESLint configured with no errors
+- [x] Prettier configured and working
+- [x] `.env.local` template created
+- [x] Development server runs without errors
+- [x] Git repository initialized with initial commit
+- [x] README.md exists with setup instructions
+- [x] Project builds successfully
 
 ---
 
 ## 📦 Dependencies to Install
 
 ### Core Dependencies
+
 ```bash
 pnpm add next@latest react@latest react-dom@latest
 pnpm add @prisma/client @auth/prisma-adapter next-auth@beta
@@ -51,6 +53,7 @@ pnpm add date-fns clsx tailwind-merge
 ```
 
 ### Dev Dependencies
+
 ```bash
 pnpm add -D prisma
 pnpm add -D typescript @types/node @types/react @types/react-dom
@@ -60,6 +63,7 @@ pnpm add -D @typescript-eslint/eslint-plugin @typescript-eslint/parser
 ```
 
 ### shadcn/ui Components (Initial Set)
+
 ```bash
 pnpm dlx shadcn-ui@latest init
 pnpm dlx shadcn-ui@latest add button input label card dialog form select table dropdown-menu
@@ -111,12 +115,10 @@ pnpm add date-fns clsx tailwind-merge
 ### Step 3: Configure ESLint (15 min)
 
 Create `.eslintrc.json`:
+
 ```json
 {
-  "extends": [
-    "next/core-web-vitals",
-    "plugin:@typescript-eslint/recommended"
-  ],
+  "extends": ["next/core-web-vitals", "plugin:@typescript-eslint/recommended"],
   "rules": {
     "@typescript-eslint/no-unused-vars": "error",
     "@typescript-eslint/no-explicit-any": "warn",
@@ -129,6 +131,7 @@ Create `.eslintrc.json`:
 ### Step 4: Configure Prettier (10 min)
 
 Create `.prettierrc`:
+
 ```json
 {
   "semi": false,
@@ -141,6 +144,7 @@ Create `.prettierrc`:
 ```
 
 Create `.prettierignore`:
+
 ```
 .next
 node_modules
@@ -153,6 +157,7 @@ dist
 ### Step 5: Configure TypeScript (10 min)
 
 Update `tsconfig.json`:
+
 ```json
 {
   "compilerOptions": {
@@ -202,6 +207,7 @@ pnpm dlx shadcn-ui@latest add button input label card dialog form select table d
 ### Step 7: Create Environment Variables Template (10 min)
 
 Create `.env.example`:
+
 ```bash
 # Database
 DATABASE_URL="postgresql://user:password@localhost:5432/track_your_stack"
@@ -219,6 +225,7 @@ ALPHA_VANTAGE_API_KEY="your_api_key_here"
 ```
 
 Create `.env.local` (not committed):
+
 ```bash
 # Copy from .env.example and fill in actual values
 cp .env.example .env.local
@@ -227,6 +234,7 @@ cp .env.example .env.local
 ### Step 8: Add npm Scripts (10 min)
 
 Update `package.json` scripts:
+
 ```json
 {
   "scripts": {
@@ -267,9 +275,10 @@ mkdir -p types
 ### Step 10: Create Utility Files (20 min)
 
 Create `lib/utils.ts` (if not created by shadcn):
+
 ```typescript
-import { type ClassValue, clsx } from "clsx"
-import { twMerge } from "tailwind-merge"
+import { type ClassValue, clsx } from 'clsx'
+import { twMerge } from 'tailwind-merge'
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
@@ -277,24 +286,25 @@ export function cn(...inputs: ClassValue[]) {
 ```
 
 Create `lib/constants.ts`:
+
 ```typescript
-export const APP_NAME = "Track Your Stack"
-export const APP_DESCRIPTION = "Investment Portfolio Tracker"
+export const APP_NAME = 'Track Your Stack'
+export const APP_DESCRIPTION = 'Investment Portfolio Tracker'
 
 export const CURRENCIES = [
-  { code: "USD", symbol: "$", name: "US Dollar" },
-  { code: "EUR", symbol: "€", name: "Euro" },
-  { code: "GBP", symbol: "£", name: "British Pound" },
-  { code: "JPY", symbol: "¥", name: "Japanese Yen" },
-  { code: "CAD", symbol: "C$", name: "Canadian Dollar" },
-  { code: "AUD", symbol: "A$", name: "Australian Dollar" },
+  { code: 'USD', symbol: '$', name: 'US Dollar' },
+  { code: 'EUR', symbol: '€', name: 'Euro' },
+  { code: 'GBP', symbol: '£', name: 'British Pound' },
+  { code: 'JPY', symbol: '¥', name: 'Japanese Yen' },
+  { code: 'CAD', symbol: 'C$', name: 'Canadian Dollar' },
+  { code: 'AUD', symbol: 'A$', name: 'Australian Dollar' },
 ] as const
 
 export const ASSET_TYPES = [
-  { value: "STOCK", label: "Stock" },
-  { value: "ETF", label: "ETF" },
-  { value: "MUTUAL_FUND", label: "Mutual Fund" },
-  { value: "CRYPTO", label: "Cryptocurrency" },
+  { value: 'STOCK', label: 'Stock' },
+  { value: 'ETF', label: 'ETF' },
+  { value: 'MUTUAL_FUND', label: 'Mutual Fund' },
+  { value: 'CRYPTO', label: 'Cryptocurrency' },
 ] as const
 
 export const PRICE_CACHE_TTL = {
@@ -342,6 +352,7 @@ pnpm build
 ## 🧪 Testing Requirements
 
 ### Manual Testing Checklist
+
 - [ ] Development server starts: `pnpm dev`
 - [ ] No TypeScript errors: `pnpm typecheck`
 - [ ] No ESLint errors: `pnpm lint`
@@ -353,6 +364,7 @@ pnpm build
 - [ ] `.gitignore` properly configured
 
 ### Verification Commands
+
 ```bash
 # All checks in one go
 pnpm typecheck && pnpm lint && pnpm format:check && pnpm build
@@ -363,15 +375,18 @@ pnpm typecheck && pnpm lint && pnpm format:check && pnpm build
 ## 📚 Documentation Updates
 
 ### Files to Create/Update
+
 - [ ] `README.md` - Add setup instructions
 - [ ] `docs/architecture/project-structure.md` - Document folder organization
 - [ ] `docs/changelog.md` - Add initial setup entry
 
 ### Changelog Entry
+
 ```markdown
 ## [0.1.0] - 2025-10-08
 
 ### Added
+
 - Initial Next.js 15 project setup with TypeScript
 - Tailwind CSS configuration
 - shadcn/ui component library
@@ -386,11 +401,13 @@ pnpm typecheck && pnpm lint && pnpm format:check && pnpm build
 ## 🔀 Git Workflow
 
 ### Branch Name
+
 ```bash
 git checkout -b feature/project-setup
 ```
 
 ### Commit Messages
+
 ```bash
 git commit -m "chore: initialize Next.js 15 project with TypeScript
 
@@ -415,17 +432,21 @@ git commit -m "chore: create project structure
 ```
 
 ### Pull Request Template
+
 ```markdown
 ## F01: Project Setup & Configuration
 
 ### What does this PR do?
+
 Initializes the Next.js 15 project with all necessary dependencies and configuration.
 
 ### Type of change
+
 - [x] Initial setup
 - [x] Configuration
 
 ### Checklist
+
 - [x] Next.js 15 initialized
 - [x] TypeScript configured
 - [x] Tailwind CSS working
@@ -437,6 +458,7 @@ Initializes the Next.js 15 project with all necessary dependencies and configura
 - [x] Build succeeds
 
 ### Testing performed
+
 - Verified dev server starts without errors
 - Confirmed TypeScript compilation works
 - Tested ESLint and Prettier
@@ -448,18 +470,23 @@ Initializes the Next.js 15 project with all necessary dependencies and configura
 ## ⚠️ Common Issues & Solutions
 
 ### Issue: Module not found errors
+
 **Solution:** Run `pnpm install` to ensure all dependencies are installed
 
 ### Issue: TypeScript errors after setup
+
 **Solution:** Restart VS Code or run `pnpm typecheck` to regenerate types
 
 ### Issue: Prettier not formatting
+
 **Solution:** Install Prettier extension in VS Code and enable "Format on Save"
 
 ### Issue: shadcn/ui components not found
+
 **Solution:** Verify `components.json` was created and paths are correct
 
 ### Issue: Environment variables not loading
+
 **Solution:** Restart dev server after creating `.env.local`
 
 ---
@@ -498,6 +525,7 @@ After completing F01, proceed to:
 ---
 
 **Status Legend:**
+
 - ⬜ Not Started
 - 🟨 In Progress
 - ✅ Complete

@@ -13,6 +13,7 @@
 Implement side-by-side portfolio comparison allowing users to compare 2-4 portfolios across multiple metrics including total value, gains/losses, asset allocation, and best/worst performers.
 
 **What this enables:**
+
 - Compare multiple portfolios simultaneously
 - Side-by-side metric comparison
 - Asset allocation comparison with pie charts
@@ -42,6 +43,7 @@ Implement side-by-side portfolio comparison allowing users to compare 2-4 portfo
 ## 🔧 Dependencies
 
 No new dependencies required - reuses existing libraries:
+
 - Recharts (already installed in F11)
 - jsPDF (already installed in F13)
 
@@ -160,15 +162,9 @@ export function calculateComparisonMetrics(comparisons: PortfolioComparison[]) {
     (a, b) => b.summary.totalGainLoss - a.summary.totalGainLoss
   )[0]
 
-  const totalValueAcrossAll = comparisons.reduce(
-    (sum, comp) => sum + comp.summary.totalValue,
-    0
-  )
+  const totalValueAcrossAll = comparisons.reduce((sum, comp) => sum + comp.summary.totalValue, 0)
 
-  const totalGainAcrossAll = comparisons.reduce(
-    (sum, comp) => sum + comp.summary.totalGainLoss,
-    0
-  )
+  const totalGainAcrossAll = comparisons.reduce((sum, comp) => sum + comp.summary.totalGainLoss, 0)
 
   const avgGainPercent =
     comparisons.reduce((sum, comp) => sum + comp.summary.totalGainLossPercent, 0) /
@@ -804,12 +800,14 @@ export function exportComparisonPDF(comparisons: PortfolioComparison[]) {
     doc.text(comparison.name, 14, currentY)
     currentY += 8
 
-    const investmentData = comparison.summary.investments.slice(0, 10).map((inv) => [
-      inv.investment.ticker,
-      inv.investment.assetName,
-      inv.metrics.currentValue.toFixed(2),
-      `${inv.metrics.gainLossPercent >= 0 ? '+' : ''}${inv.metrics.gainLossPercent.toFixed(2)}%`,
-    ])
+    const investmentData = comparison.summary.investments
+      .slice(0, 10)
+      .map((inv) => [
+        inv.investment.ticker,
+        inv.investment.assetName,
+        inv.metrics.currentValue.toFixed(2),
+        `${inv.metrics.gainLossPercent >= 0 ? '+' : ''}${inv.metrics.gainLossPercent.toFixed(2)}%`,
+      ])
 
     autoTable(doc, {
       startY: currentY,
@@ -864,6 +862,7 @@ curl "http://localhost:3000/api/portfolios/compare?portfolios=id1"
 ### Update README.md
 
 Add Portfolio Comparison section:
+
 ```markdown
 ## Portfolio Comparison
 
@@ -880,6 +879,7 @@ Add Portfolio Comparison section:
 ## [0.4.0] - Phase 2: Portfolio Comparison
 
 ### Added
+
 - Portfolio comparison page
 - Side-by-side comparison of 2-4 portfolios
 - Asset allocation comparison charts
@@ -888,6 +888,7 @@ Add Portfolio Comparison section:
 - Responsive comparison grid layout
 
 ### Technical
+
 - Created comparison service
 - Built comparison API endpoint
 - Implemented portfolio selector component
@@ -903,6 +904,7 @@ Add Portfolio Comparison section:
 **Problem:** Slow comparison with large portfolios
 
 **Solution:** Limit displayed investments:
+
 ```typescript
 // Show top 10 investments per portfolio
 const topInvestments = comparison.summary.investments.slice(0, 10)
@@ -913,6 +915,7 @@ const topInvestments = comparison.summary.investments.slice(0, 10)
 **Problem:** Comparing portfolios with different base currencies
 
 **Solution:** Add currency conversion or warning:
+
 ```typescript
 const currencies = new Set(comparisons.map((c) => c.baseCurrency))
 if (currencies.size > 1) {
@@ -925,6 +928,7 @@ if (currencies.size > 1) {
 **Problem:** Comparison grid not responsive
 
 **Solution:** Use responsive grid:
+
 ```typescript
 <div className="grid gap-6 lg:grid-cols-2">
   {/* Stacks vertically on mobile, side-by-side on desktop */}
@@ -954,6 +958,7 @@ After completing this feature, you should have:
 ## 🔗 Related Files
 
 ### Created Files
+
 - `lib/services/comparison-service.ts`
 - `app/api/portfolios/compare/route.ts`
 - `app/(dashboard)/compare/page.tsx`
@@ -962,6 +967,7 @@ After completing this feature, you should have:
 - `lib/pdf/comparison-export.ts` (optional)
 
 ### Modified Files
+
 - `components/layout/MainNav.tsx` (added Compare link)
 
 ---
@@ -973,6 +979,7 @@ After completing this feature, you should have:
 ---
 
 **Status Legend:**
+
 - ⬜ Not Started
 - 🟨 In Progress
 - ✅ Complete

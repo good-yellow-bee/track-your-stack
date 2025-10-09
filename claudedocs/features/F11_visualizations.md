@@ -12,6 +12,7 @@
 Create interactive pie charts showing portfolio allocation by investment using Recharts, with click-to-highlight functionality and responsive design.
 
 **What this enables:**
+
 - Visual portfolio allocation
 - Color-coded segments per investment
 - Interactive hover effects
@@ -45,6 +46,7 @@ pnpm add recharts
 ### Portfolio Pie Chart Component
 
 Create `components/portfolio/PortfolioPieChart.tsx`:
+
 ```typescript
 'use client'
 
@@ -191,6 +193,7 @@ export default function PortfolioPieChart({
 ### Asset Type Distribution Chart
 
 Create `components/portfolio/AssetTypeChart.tsx`:
+
 ```typescript
 'use client'
 
@@ -310,6 +313,7 @@ export default function AssetTypeChart({ investments, baseCurrency }: AssetTypeC
 ### Update Portfolio Page with Charts
 
 Update `app/(dashboard)/portfolios/[id]/page.tsx`:
+
 ```typescript
 import PortfolioSummary from '@/components/portfolio/PortfolioSummary'
 import PortfolioPieChart from '@/components/portfolio/PortfolioPieChart'
@@ -373,6 +377,7 @@ export default async function PortfolioPage({ params }: { params: { id: string }
 ### Interactive Chart with Table Highlighting
 
 Create `hooks/useTableHighlight.ts`:
+
 ```typescript
 'use client'
 
@@ -390,6 +395,7 @@ export const useTableHighlight = create<TableHighlightState>((set) => ({
 ```
 
 Update `InvestmentTable.tsx` to use highlighting:
+
 ```typescript
 import { useTableHighlight } from '@/hooks/useTableHighlight'
 
@@ -455,6 +461,7 @@ export default function InvestmentTable({ investments }) {
 **Congratulations!** All MVP features (F01-F11) are now documented and ready for implementation.
 
 ### Next Steps
+
 1. Begin implementation following feature order
 2. Run tests after each feature
 3. Deploy incrementally to Vercel
@@ -462,6 +469,7 @@ export default function InvestmentTable({ investments }) {
 5. Plan Phase 2 features
 
 ### Phase 2 Features (Optional)
+
 - Historical performance charts
 - Portfolio comparison
 - CSV import/export
@@ -471,6 +479,7 @@ export default function InvestmentTable({ investments }) {
 ---
 
 **Status Legend:**
+
 - ⬜ Not Started
 - 🟨 In Progress
 - ✅ Complete

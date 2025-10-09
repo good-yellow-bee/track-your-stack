@@ -9,11 +9,13 @@
 ## Quick Start Commands
 
 ### 1. Initialize Next.js Project
+
 ```bash
 npx create-next-app@latest . --typescript --tailwind --app --src-dir --import-alias "@/*" --use-pnpm
 ```
 
 ### 2. Install Core Dependencies
+
 ```bash
 pnpm add @prisma/client @auth/prisma-adapter next-auth@beta
 pnpm add -D prisma
@@ -23,6 +25,7 @@ pnpm add recharts lucide-react
 ```
 
 ### 3. Install shadcn/ui
+
 ```bash
 pnpm dlx shadcn-ui@latest init
 pnpm dlx shadcn-ui@latest add button input label card dialog form select table
@@ -35,6 +38,7 @@ pnpm dlx shadcn-ui@latest add button input label card dialog form select table
 ### Week 1: Foundation (Days 1-7)
 
 #### ✅ Day 1-2: Project Setup
+
 - [ ] Run `npx create-next-app@latest` with TypeScript + Tailwind
 - [ ] Install dependencies (Prisma, NextAuth, shadcn/ui)
 - [ ] Setup ESLint and Prettier configuration
@@ -42,6 +46,7 @@ pnpm dlx shadcn-ui@latest add button input label card dialog form select table
 - [ ] Initialize Git repository: `git init && git add . && git commit -m "Initial commit"`
 
 **Environment Variables Template:**
+
 ```bash
 # Database
 DATABASE_URL="postgresql://user:password@localhost:5432/track_your_stack"
@@ -59,6 +64,7 @@ ALPHA_VANTAGE_API_KEY="your_api_key"
 ```
 
 #### ✅ Day 3-4: Database Setup
+
 - [ ] Create Prisma schema at `prisma/schema.prisma`
 - [ ] Copy schema from specification document
 - [ ] Setup PostgreSQL database (local or Vercel Postgres)
@@ -68,6 +74,7 @@ ALPHA_VANTAGE_API_KEY="your_api_key"
 - [ ] Test database connection
 
 **Prisma Client Setup:**
+
 ```typescript
 // lib/prisma.ts
 import { PrismaClient } from '@prisma/client'
@@ -82,6 +89,7 @@ if (process.env.NODE_ENV !== 'production') globalForPrisma.prisma = prisma
 ```
 
 #### ✅ Day 5-7: Authentication
+
 - [ ] Create `app/api/auth/[...nextauth]/route.ts`
 - [ ] Configure Google OAuth in Google Cloud Console
 - [ ] Setup NextAuth.js with Google provider
@@ -91,12 +99,13 @@ if (process.env.NODE_ENV !== 'production') globalForPrisma.prisma = prisma
 - [ ] Test authentication flow end-to-end
 
 **NextAuth Config:**
+
 ```typescript
 // app/api/auth/[...nextauth]/route.ts
-import NextAuth from "next-auth"
-import GoogleProvider from "next-auth/providers/google"
-import { PrismaAdapter } from "@auth/prisma-adapter"
-import { prisma } from "@/lib/prisma"
+import NextAuth from 'next-auth'
+import GoogleProvider from 'next-auth/providers/google'
+import { PrismaAdapter } from '@auth/prisma-adapter'
+import { prisma } from '@/lib/prisma'
 
 const handler = NextAuth({
   adapter: PrismaAdapter(prisma),
@@ -119,6 +128,7 @@ export { handler as GET, handler as POST }
 ### Week 2: Core Features (Days 8-14)
 
 #### ✅ Day 8-10: Alpha Vantage Integration
+
 - [ ] Create `lib/api/alphaVantage.ts` client class
 - [ ] Implement `getStockQuote()` method
 - [ ] Implement `getCryptoPrice()` method
@@ -128,12 +138,13 @@ export { handler as GET, handler as POST }
 - [ ] Test all API endpoints
 
 **Alpha Vantage Client:**
+
 ```typescript
 // lib/api/alphaVantage.ts
-import axios from 'axios';
+import axios from 'axios'
 
-const API_KEY = process.env.ALPHA_VANTAGE_API_KEY!;
-const BASE_URL = 'https://www.alphavantage.co/query';
+const API_KEY = process.env.ALPHA_VANTAGE_API_KEY!
+const BASE_URL = 'https://www.alphavantage.co/query'
 
 export class AlphaVantageClient {
   async getStockQuote(ticker: string) {
@@ -143,17 +154,18 @@ export class AlphaVantageClient {
         symbol: ticker,
         apikey: API_KEY,
       },
-    });
-    return response.data['Global Quote'];
+    })
+    return response.data['Global Quote']
   }
 
   // Add other methods...
 }
 
-export const alphaVantage = new AlphaVantageClient();
+export const alphaVantage = new AlphaVantageClient()
 ```
 
 #### ✅ Day 11-14: Portfolio Management
+
 - [ ] Create dashboard page: `app/(dashboard)/dashboard/page.tsx`
 - [ ] Create portfolio list component: `components/portfolio/PortfolioCard.tsx`
 - [ ] Create "New Portfolio" form: `components/portfolio/CreatePortfolioForm.tsx`
@@ -163,6 +175,7 @@ export const alphaVantage = new AlphaVantageClient();
 - [ ] Test all portfolio operations
 
 **Server Actions Example:**
+
 ```typescript
 // lib/actions/portfolio.ts
 'use server'
@@ -193,6 +206,7 @@ export async function createPortfolio(name: string, baseCurrency: string) {
 ### Week 3: Investment Features (Days 15-21)
 
 #### ✅ Day 15-17: Investment Entry
+
 - [ ] Create portfolio detail page: `app/(dashboard)/portfolios/[id]/page.tsx`
 - [ ] Create "Add Investment" form: `components/investment/AddInvestmentForm.tsx`
 - [ ] Implement ticker search with autocomplete
@@ -202,6 +216,7 @@ export async function createPortfolio(name: string, baseCurrency: string) {
 - [ ] Test investment creation with various scenarios
 
 **Add Investment Form:**
+
 ```typescript
 // components/investment/AddInvestmentForm.tsx
 'use client'
@@ -229,6 +244,7 @@ export function AddInvestmentForm({ portfolioId }: { portfolioId: string }) {
 ```
 
 #### ✅ Day 18-19: Investment Management
+
 - [ ] Create investment table: `components/investment/InvestmentTable.tsx`
 - [ ] Add edit investment modal: `components/investment/EditInvestmentModal.tsx`
 - [ ] Implement delete functionality with confirmation
@@ -237,6 +253,7 @@ export function AddInvestmentForm({ portfolioId }: { portfolioId: string }) {
 - [ ] Test edit and delete operations
 
 #### ✅ Day 20-21: Calculations & Display
+
 - [ ] Implement calculation utilities: `lib/calculations/investment.ts`
 - [ ] Create average cost basis calculator
 - [ ] Create gains/loss calculator
@@ -245,6 +262,7 @@ export function AddInvestmentForm({ portfolioId }: { portfolioId: string }) {
 - [ ] Test calculations with sample data
 
 **Calculation Utilities:**
+
 ```typescript
 // lib/calculations/investment.ts
 
@@ -254,16 +272,12 @@ export function calculateAverageCostBasis(
   newQty: number,
   newPrice: number
 ): number {
-  const totalCost = (existingQty * existingAvg) + (newQty * newPrice)
+  const totalCost = existingQty * existingAvg + newQty * newPrice
   const totalQty = existingQty + newQty
   return totalCost / totalQty
 }
 
-export function calculateGainsLoss(
-  currentPrice: number,
-  avgCost: number,
-  quantity: number
-) {
+export function calculateGainsLoss(currentPrice: number, avgCost: number, quantity: number) {
   const currentValue = currentPrice * quantity
   const totalCost = avgCost * quantity
   const gainLossDollar = currentValue - totalCost
@@ -283,6 +297,7 @@ export function calculateGainsLoss(
 ### Week 4: Visualization & Polish (Days 22-28)
 
 #### ✅ Day 22-24: Portfolio Summary
+
 - [ ] Create summary cards: `components/portfolio/PortfolioSummary.tsx`
 - [ ] Display total value, cost, gains/loss
 - [ ] Add best/worst performer indicators
@@ -291,6 +306,7 @@ export function calculateGainsLoss(
 - [ ] Add loading states and error handling
 
 #### ✅ Day 25-27: Pie Chart Visualization
+
 - [ ] Install and setup Recharts
 - [ ] Create pie chart component: `components/portfolio/PortfolioPieChart.tsx`
 - [ ] Show percentage allocation by investment
@@ -299,6 +315,7 @@ export function calculateGainsLoss(
 - [ ] Test with various portfolio sizes
 
 **Pie Chart Component:**
+
 ```typescript
 // components/portfolio/PortfolioPieChart.tsx
 'use client'
@@ -339,6 +356,7 @@ export function PortfolioPieChart({ investments }: { investments: any[] }) {
 ```
 
 #### ✅ Day 28: MVP Testing & Bug Fixes
+
 - [ ] End-to-end testing of all features
 - [ ] Fix any bugs discovered
 - [ ] Performance optimization
@@ -350,18 +368,22 @@ export function PortfolioPieChart({ investments }: { investments: any[] }) {
 ## Phase 2 Implementation (Weeks 5-8)
 
 ### Week 5: Historical & Comparison
+
 - [ ] Day 29-32: Historical performance charts
 - [ ] Day 33-35: Portfolio comparison feature
 
 ### Week 6: Import/Export
+
 - [ ] Day 36-38: CSV import functionality
 - [ ] Day 39-42: Export reports (CSV/PDF)
 
 ### Week 7: PWA & Polish
+
 - [ ] Day 43-45: Progressive Web App setup
 - [ ] Day 46-49: UI/UX improvements and polish
 
 ### Week 8: Launch
+
 - [ ] Day 50-51: Production deployment
 - [ ] Day 52-53: Testing and monitoring
 - [ ] Day 54-56: Soft launch and iteration
@@ -371,6 +393,7 @@ export function PortfolioPieChart({ investments }: { investments: any[] }) {
 ## Key Files to Create
 
 ### Configuration Files
+
 - [ ] `prisma/schema.prisma` - Database schema
 - [ ] `.env.local` - Environment variables
 - [ ] `middleware.ts` - Auth protection
@@ -379,6 +402,7 @@ export function PortfolioPieChart({ investments }: { investments: any[] }) {
 - [ ] `.prettierrc` - Code formatting
 
 ### Library Files
+
 - [ ] `lib/prisma.ts` - Prisma client
 - [ ] `lib/auth.ts` - Auth utilities
 - [ ] `lib/api/alphaVantage.ts` - API client
@@ -389,6 +413,7 @@ export function PortfolioPieChart({ investments }: { investments: any[] }) {
 - [ ] `lib/calculations/portfolio.ts` - Portfolio calculations
 
 ### Component Files
+
 - [ ] `components/ui/*` - shadcn/ui components
 - [ ] `components/layout/Header.tsx`
 - [ ] `components/layout/Navigation.tsx`
@@ -402,6 +427,7 @@ export function PortfolioPieChart({ investments }: { investments: any[] }) {
 - [ ] `components/investment/TickerSearch.tsx`
 
 ### Page Files
+
 - [ ] `app/page.tsx` - Landing page
 - [ ] `app/layout.tsx` - Root layout
 - [ ] `app/auth/signin/page.tsx` - Sign-in page
@@ -444,6 +470,7 @@ export function PortfolioPieChart({ investments }: { investments: any[] }) {
 ## Testing Checklist
 
 ### Manual Testing
+
 - [ ] User can sign in with Google
 - [ ] User can create portfolio with custom name
 - [ ] User can add investment with ticker search
@@ -458,6 +485,7 @@ export function PortfolioPieChart({ investments }: { investments: any[] }) {
 - [ ] User can delete portfolios
 
 ### Edge Cases
+
 - [ ] Adding same ticker multiple times (aggregation)
 - [ ] Zero quantity after edit
 - [ ] Invalid ticker symbol
@@ -471,6 +499,7 @@ export function PortfolioPieChart({ investments }: { investments: any[] }) {
 ## Deployment Checklist
 
 ### Vercel Deployment
+
 - [ ] Create Vercel account
 - [ ] Connect GitHub repository
 - [ ] Add environment variables in Vercel dashboard
@@ -485,6 +514,7 @@ export function PortfolioPieChart({ investments }: { investments: any[] }) {
 ## Resources & Links
 
 ### Documentation
+
 - Next.js 15: https://nextjs.org/docs
 - Prisma: https://www.prisma.io/docs
 - NextAuth.js: https://next-auth.js.org/
@@ -493,6 +523,7 @@ export function PortfolioPieChart({ investments }: { investments: any[] }) {
 - Recharts: https://recharts.org/
 
 ### Tools
+
 - Google Cloud Console: https://console.cloud.google.com/
 - Alpha Vantage API: https://www.alphavantage.co/
 - Vercel: https://vercel.com/

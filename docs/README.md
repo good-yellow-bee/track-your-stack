@@ -15,31 +15,38 @@ When running in parallel with development:
 ## Documentation Structure
 
 ### `/user-guide`
+
 End-user documentation with screenshots showing how to use the application.
 
 **Files:**
+
 - `getting-started.md` - First-time user onboarding
 - `managing-portfolios.md` - Portfolio CRUD operations
 - `adding-investments.md` - Investment management
 - `screenshots/` - UI screenshots with descriptive names
 
 ### `/api`
+
 Technical documentation for developers working with the codebase.
 
 **Files:**
+
 - `authentication.md` - NextAuth.js implementation details
 - `server-actions.md` - All Server Actions with signatures and examples
 - `alpha-vantage-integration.md` - External API integration
 
 ### `/architecture`
+
 System design, database schema, and calculation logic.
 
 **Files:**
+
 - `database-schema.md` - Prisma schema with ERD diagrams
 - `calculation-logic.md` - Business logic formulas and implementations
 - `diagrams/` - Architecture diagrams (ERD, sequence, flow)
 
 ### `/changelog.md`
+
 Chronological record of all changes, following Keep a Changelog format.
 
 ## Documentation Standards
@@ -52,6 +59,7 @@ Chronological record of all changes, following Keep a Changelog format.
    - Before and after states for modifications
 
 2. **Naming convention:**
+
    ```
    [feature]-[state].png
 
@@ -72,6 +80,7 @@ Chronological record of all changes, following Keep a Changelog format.
 ### Code Examples
 
 1. **Use actual implementation code:**
+
    ```typescript
    // ✅ GOOD - Actual code from implementation
    export async function createPortfolio(name: string, baseCurrency: string) {
@@ -98,6 +107,7 @@ Chronological record of all changes, following Keep a Changelog format.
 ## [0.1.0] - 2025-10-09
 
 ### Added
+
 - Authentication with Google OAuth ([docs/api/authentication.md](api/authentication.md))
   - Screenshot: ![Sign-in page](user-guide/screenshots/signin-page.png)
 - Portfolio creation and management
@@ -105,9 +115,11 @@ Chronological record of all changes, following Keep a Changelog format.
   - Base currency selection (USD, EUR, GBP)
 
 ### Changed
+
 - Updated database schema to include `baseCurrency` field
 
 ### Fixed
+
 - Fixed session persistence issue on page refresh
 ```
 
@@ -116,6 +128,7 @@ Chronological record of all changes, following Keep a Changelog format.
 ### Triggers for Updates
 
 Update documentation when:
+
 - ✅ New feature is implemented
 - ✅ UI changes are made
 - ✅ Database schema is modified

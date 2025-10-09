@@ -12,6 +12,7 @@
 Implement a robust Alpha Vantage API client for fetching real-time stock prices, cryptocurrency prices, currency exchange rates, and ticker symbol search. Include rate limiting, caching, error handling, and retry logic.
 
 **What this enables:**
+
 - Real-time stock and ETF price quotes
 - Cryptocurrency price fetching
 - Currency exchange rate conversion
@@ -62,6 +63,7 @@ pnpm add -D @types/node
 3. Copy the API key
 
 Add to `.env.local`:
+
 ```bash
 ALPHA_VANTAGE_API_KEY="your_api_key_here"
 ```
@@ -69,6 +71,7 @@ ALPHA_VANTAGE_API_KEY="your_api_key_here"
 ### Step 2: Create API Response Types (30 min)
 
 Create `types/alpha-vantage.ts`:
+
 ```typescript
 // Stock Quote Response
 export interface GlobalQuoteResponse {
@@ -153,14 +156,15 @@ export interface SymbolMatch {
 // Error types
 export interface AlphaVantageError {
   'Error Message'?: string
-  'Note'?: string
-  'Information'?: string
+  Note?: string
+  Information?: string
 }
 ```
 
 ### Step 3: Create Rate Limiter (20 min)
 
 Create `lib/api/rateLimiter.ts`:
+
 ```typescript
 import Bottleneck from 'bottleneck'
 
@@ -205,6 +209,7 @@ export function getRemainingRequests() {
 ### Step 4: Create Alpha Vantage Client (90 min)
 
 Create `lib/api/alphaVantage.ts`:
+
 ```typescript
 import axios, { AxiosError } from 'axios'
 import { getRateLimiter, incrementRequestCount } from './rateLimiter'
@@ -374,6 +379,7 @@ export const alphaVantageClient = new AlphaVantageClient()
 ### Step 5: Create Price Caching Utilities (45 min)
 
 Create `lib/cache/priceCache.ts`:
+
 ```typescript
 import { prisma } from '@/lib/prisma'
 import { PRICE_CACHE_TTL } from '@/lib/constants'
@@ -474,9 +480,14 @@ export async function updateCachedCurrencyRate(from: string, to: string, rate: n
 ### Step 6: Create Price Service with Caching (45 min)
 
 Create `lib/services/priceService.ts`:
+
 ```typescript
 import { alphaVantageClient } from '@/lib/api/alphaVantage'
-import { getCachedStockPrice, getCachedCurrencyRate, updateCachedCurrencyRate } from '@/lib/cache/priceCache'
+import {
+  getCachedStockPrice,
+  getCachedCurrencyRate,
+  updateCachedCurrencyRate,
+} from '@/lib/cache/priceCache'
 import { AssetType } from '@prisma/client'
 
 /**
@@ -535,6 +546,7 @@ export async function searchTickers(query: string) {
 ### Step 7: Create API Test Endpoint (30 min)
 
 Create `app/api/test-alpha-vantage/route.ts`:
+
 ```typescript
 import { NextResponse } from 'next/server'
 import { alphaVantageClient } from '@/lib/api/alphaVantage'
@@ -588,6 +600,7 @@ export async function GET(request: Request) {
 ## 🧪 Testing Requirements
 
 ### Manual Testing Checklist
+
 - [ ] Stock quote returns valid data
 - [ ] Crypto price returns valid data
 - [ ] Currency exchange returns valid data
@@ -599,6 +612,7 @@ export async function GET(request: Request) {
 - [ ] API key validation works
 
 ### Test Commands
+
 ```bash
 # Test stock quote
 curl "http://localhost:3000/api/test-alpha-vantage?test=stock"
@@ -614,6 +628,7 @@ curl "http://localhost:3000/api/test-alpha-vantage?test=search"
 ```
 
 ### Expected Responses
+
 ```json
 // Stock quote
 {
@@ -621,7 +636,7 @@ curl "http://localhost:3000/api/test-alpha-vantage?test=search"
   "test": "stock",
   "data": {
     "symbol": "AAPL",
-    "price": 178.50,
+    "price": 178.5,
     "previousClose": 177.25,
     "change": 1.25,
     "changePercent": 0.71,
@@ -637,10 +652,12 @@ curl "http://localhost:3000/api/test-alpha-vantage?test=search"
 ## 📚 Documentation Updates
 
 ### Changelog Entry
+
 ```markdown
 ## [0.5.0] - 2025-10-08
 
 ### Added
+
 - Alpha Vantage API client with full integration
 - Stock and ETF quote fetching
 - Cryptocurrency price fetching
@@ -657,6 +674,7 @@ curl "http://localhost:3000/api/test-alpha-vantage?test=search"
 ## 🔀 Git Workflow
 
 ### Commit Messages
+
 ```bash
 git commit -m "feat(api): create Alpha Vantage response types"
 git commit -m "feat(api): implement rate limiter for API calls"
@@ -671,15 +689,19 @@ git commit -m "feat(api): add API test endpoint"
 ## ⚠️ Common Issues & Solutions
 
 ### Issue: API key not found
+
 **Solution:** Ensure `ALPHA_VANTAGE_API_KEY` is in `.env.local`
 
 ### Issue: Rate limit exceeded
+
 **Solution:** Wait 12 seconds between requests, check daily limit
 
 ### Issue: Invalid symbol error
+
 **Solution:** Verify ticker symbol is correct and exists
 
 ### Issue: Timeout errors
+
 **Solution:** Check internet connection, Alpha Vantage may be down
 
 ---
@@ -714,6 +736,7 @@ After completing F05, proceed to:
 ---
 
 **Status Legend:**
+
 - ⬜ Not Started
 - 🟨 In Progress
 - ✅ Complete

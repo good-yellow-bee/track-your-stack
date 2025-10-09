@@ -19,6 +19,7 @@ Based on 2025 market analysis, performance benchmarks, and developer trends, the
 ### 1. **Next.js Full-Stack (RECOMMENDED)**
 
 **Stack Components:**
+
 - Frontend: React 19 + Next.js 15
 - Language: TypeScript
 - Backend: Next.js API routes/Server Actions
@@ -26,6 +27,7 @@ Based on 2025 market analysis, performance benchmarks, and developer trends, the
 - Deployment: Vercel
 
 **Why This Stack:**
+
 - ✅ Handles both frontend and backend in one framework
 - ✅ Excellent performance with SSR/SSG/ISR flexibility
 - ✅ Rust-based compiler for faster builds
@@ -35,6 +37,7 @@ Based on 2025 market analysis, performance benchmarks, and developer trends, the
 - ✅ Strong job market and community support
 
 **Trade-offs:**
+
 - ❌ Larger bundle sizes than Svelte
 - ❌ Virtual DOM overhead vs compiled approaches
 
@@ -45,6 +48,7 @@ Based on 2025 market analysis, performance benchmarks, and developer trends, the
 ### 2. **SvelteKit (PERFORMANCE LEADER)**
 
 **Stack Components:**
+
 - Frontend: Svelte 5 + SvelteKit
 - Language: TypeScript
 - Backend: Node.js + Express OR Python FastAPI
@@ -52,6 +56,7 @@ Based on 2025 market analysis, performance benchmarks, and developer trends, the
 - Deployment: Vercel/Netlify
 
 **Why This Stack:**
+
 - ✅ **Fastest performance** (compiler-based, no virtual DOM)
 - ✅ Smallest bundle sizes
 - ✅ 72.8% developer satisfaction rating (highest)
@@ -59,6 +64,7 @@ Based on 2025 market analysis, performance benchmarks, and developer trends, the
 - ✅ Consistent benchmark winner for load times and runtime
 
 **Trade-offs:**
+
 - ❌ Smaller ecosystem than React (83k vs 236k GitHub stars)
 - ❌ Fewer third-party libraries and tooling
 - ❌ Smaller job market
@@ -70,12 +76,14 @@ Based on 2025 market analysis, performance benchmarks, and developer trends, the
 ### 3. **MERN Stack (MAXIMUM FLEXIBILITY)**
 
 **Stack Components:**
+
 - MongoDB (Database)
 - Express.js (Backend framework)
 - React (Frontend)
 - Node.js (Runtime)
 
 **Why This Stack:**
+
 - ✅ JavaScript everywhere (seamless integration)
 - ✅ Highly customizable and adaptable
 - ✅ Completely open-source and cost-effective
@@ -83,6 +91,7 @@ Based on 2025 market analysis, performance benchmarks, and developer trends, the
 - ✅ Mature, battle-tested stack
 
 **Trade-offs:**
+
 - ❌ MongoDB not ideal for all data structures
 - ❌ JavaScript limitations for certain backend tasks
 
@@ -93,6 +102,7 @@ Based on 2025 market analysis, performance benchmarks, and developer trends, the
 ### 4. **JAMstack + Serverless (MODERN ARCHITECTURE)**
 
 **Stack Components:**
+
 - Frontend: Next.js or SvelteKit (SSG/SSR)
 - APIs: Serverless functions (AWS Lambda, Vercel Functions)
 - Markup: MDX for content
@@ -100,6 +110,7 @@ Based on 2025 market analysis, performance benchmarks, and developer trends, the
 - Database: Supabase/PlanetScale
 
 **Why This Stack:**
+
 - ✅ Excellent scalability with minimal infrastructure
 - ✅ Superior performance via CDN distribution
 - ✅ Cost-effective (pay per execution)
@@ -107,6 +118,7 @@ Based on 2025 market analysis, performance benchmarks, and developer trends, the
 - ✅ Growing adoption trend in 2025
 
 **Trade-offs:**
+
 - ❌ Cold start latency for serverless functions
 - ❌ Potential vendor lock-in
 - ❌ Different debugging/monitoring approach
@@ -117,14 +129,15 @@ Based on 2025 market analysis, performance benchmarks, and developer trends, the
 
 ## Performance Benchmarks (2025)
 
-| Framework | Speed | Bundle Size | Satisfaction | Market Share |
-|-----------|-------|-------------|--------------|--------------|
-| **Svelte** | 🥇 Fastest | Smallest | 72.8% | 6.5% |
-| **Vue** | 🥈 Very Fast | Small | High | ~15% |
-| **React** | 🥉 Fast | Medium | High | 39% |
-| **Angular** | Moderate | Large | Moderate | ~12% |
+| Framework   | Speed        | Bundle Size | Satisfaction | Market Share |
+| ----------- | ------------ | ----------- | ------------ | ------------ |
+| **Svelte**  | 🥇 Fastest   | Smallest    | 72.8%        | 6.5%         |
+| **Vue**     | 🥈 Very Fast | Small       | High         | ~15%         |
+| **React**   | 🥉 Fast      | Medium      | High         | 39%          |
+| **Angular** | Moderate     | Large       | Moderate     | ~12%         |
 
 **Key Findings:**
+
 - Svelte consistently outperforms React in load times and runtime efficiency
 - React 19 compiler improvements closed the gap but still has virtual DOM overhead
 - Vue balances simplicity and performance effectively
@@ -134,11 +147,13 @@ Based on 2025 market analysis, performance benchmarks, and developer trends, the
 ## Backend Technology Trends
 
 ### Rising Stars (2025)
+
 1. **FastAPI (Python)** - +5 point increase, significant momentum for performant APIs
 2. **Node.js + Express** - Still dominant for JavaScript full-stack
 3. **Serverless Architecture** - Major shift toward managed infrastructure
 
 ### Infrastructure Trends
+
 - **Docker** - Massive +17 point jump in adoption (largest single-year increase)
 - **TypeScript** - No longer optional, essential for modern development
 - **AI Tooling** - GitHub Copilot and AI assistants becoming standard
@@ -148,24 +163,28 @@ Based on 2025 market analysis, performance benchmarks, and developer trends, the
 ## Decision Framework
 
 ### Choose **Next.js** if you need:
+
 - Balanced performance, ecosystem, and modern features
 - Full-stack capabilities in one framework
 - Strong team hiring potential
 - Production-ready with enterprise support
 
 ### Choose **Svelte** if you prioritize:
+
 - Maximum performance above all else
 - Smallest possible bundle sizes
 - Simple, elegant syntax
 - Startup agility over ecosystem size
 
 ### Choose **MERN** if you want:
+
 - Single language across entire stack
 - Maximum flexibility and customization
 - Open-source cost advantages
 - Rapid prototyping capabilities
 
 ### Choose **JAMstack** if you need:
+
 - Global CDN performance
 - Minimal infrastructure management
 - Content-heavy applications
@@ -176,6 +195,7 @@ Based on 2025 market analysis, performance benchmarks, and developer trends, the
 ## Essential 2025 Stack Components
 
 **Regardless of framework choice, include:**
+
 - ✅ **TypeScript** - Type safety is mandatory
 - ✅ **Docker** - Containerization for deployment consistency
 - ✅ **CI/CD** - GitHub Actions, Vercel, or Railway
@@ -183,6 +203,7 @@ Based on 2025 market analysis, performance benchmarks, and developer trends, the
 - ✅ **Testing** - Vitest/Jest + Playwright/Cypress
 
 **Modern Developer Tools:**
+
 - GitHub Copilot or similar AI coding assistant
 - ESLint + Prettier for code quality
 - Turborepo for monorepo management (if applicable)
@@ -196,6 +217,7 @@ For a **fast, modern, and flexible** web app in 2025:
 **🎯 Start with: Next.js + TypeScript + PostgreSQL + Vercel**
 
 This combination offers:
+
 - Modern architecture with latest React features
 - Full-stack capabilities (frontend + backend)
 - Excellent performance with multiple rendering strategies

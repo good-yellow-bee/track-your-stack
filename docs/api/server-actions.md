@@ -11,12 +11,15 @@
 ```
 
 **Parameters:**
+
 - [To be documented]
 
 **Returns:**
+
 - [To be documented]
 
 **Example Usage:**
+
 ```typescript
 // To be filled with actual usage example
 ```

@@ -9,31 +9,35 @@ This directory contains comprehensive feature documentation for building the Tra
 ## 📚 Feature Files Overview
 
 ### Phase 1: Foundation (Week 1)
-| File | Feature | Priority | Time | Status |
-|------|---------|----------|------|--------|
-| [F01](F01_project_setup.md) | Project Setup & Configuration | 🔴 Critical | 1-2 days | ⬜ Not Started |
-| [F02](F02_database_schema.md) | Database Schema & Prisma | 🔴 Critical | 3-4 hours | ⬜ Not Started |
-| [F03](F03_authentication.md) | NextAuth.js with Google OAuth | 🔴 Critical | 4-5 hours | ⬜ Not Started |
+
+| File                          | Feature                       | Priority    | Time      | Status         |
+| ----------------------------- | ----------------------------- | ----------- | --------- | -------------- |
+| [F01](F01_project_setup.md)   | Project Setup & Configuration | 🔴 Critical | 1-2 days  | ⬜ Not Started |
+| [F02](F02_database_schema.md) | Database Schema & Prisma      | 🔴 Critical | 3-4 hours | ⬜ Not Started |
+| [F03](F03_authentication.md)  | NextAuth.js with Google OAuth | 🔴 Critical | 4-5 hours | ⬜ Not Started |
 
 ### Phase 2: Core Features (Week 2)
-| File | Feature | Priority | Time | Status |
-|------|---------|----------|------|--------|
-| [F04](F04_portfolio_crud.md) | Portfolio CRUD Operations | 🔴 Critical | 4-5 hours | ⬜ Not Started |
+
+| File                                    | Feature                       | Priority    | Time      | Status         |
+| --------------------------------------- | ----------------------------- | ----------- | --------- | -------------- |
+| [F04](F04_portfolio_crud.md)            | Portfolio CRUD Operations     | 🔴 Critical | 4-5 hours | ⬜ Not Started |
 | [F05](F05_alpha_vantage_integration.md) | Alpha Vantage API Integration | 🔴 Critical | 3-4 hours | ⬜ Not Started |
 
 ### Phase 3: Investment Management (Week 3)
-| File | Feature | Priority | Time | Status |
-|------|---------|----------|------|--------|
-| [F06](F06_investment_entry.md) | Investment Entry Form | 🔴 Critical | 5-6 hours | ⬜ Not Started |
+
+| File                                | Feature                     | Priority    | Time      | Status         |
+| ----------------------------------- | --------------------------- | ----------- | --------- | -------------- |
+| [F06](F06_investment_entry.md)      | Investment Entry Form       | 🔴 Critical | 5-6 hours | ⬜ Not Started |
 | [F07](F07_investment_management.md) | Investment List/Edit/Delete | 🔴 Critical | 4-5 hours | ⬜ Not Started |
-| [F08](F08_calculation_engine.md) | Calculation Engine | 🔴 Critical | 3-4 hours | ⬜ Not Started |
+| [F08](F08_calculation_engine.md)    | Calculation Engine          | 🔴 Critical | 3-4 hours | ⬜ Not Started |
 
 ### Phase 4: Visualization & Polish (Week 4)
-| File | Feature | Priority | Time | Status |
-|------|---------|----------|------|--------|
-| [F09](F09_price_refresh.md) | Price Refresh System | 🟡 Important | 3-4 hours | ⬜ Not Started |
-| [F10](F10_portfolio_summary.md) | Portfolio Summary Cards | 🟡 Important | 3-4 hours | ⬜ Not Started |
-| [F11](F11_visualizations.md) | Pie Charts & Visualizations | 🟡 Important | 3-4 hours | ⬜ Not Started |
+
+| File                            | Feature                     | Priority     | Time      | Status         |
+| ------------------------------- | --------------------------- | ------------ | --------- | -------------- |
+| [F09](F09_price_refresh.md)     | Price Refresh System        | 🟡 Important | 3-4 hours | ⬜ Not Started |
+| [F10](F10_portfolio_summary.md) | Portfolio Summary Cards     | 🟡 Important | 3-4 hours | ⬜ Not Started |
+| [F11](F11_visualizations.md)    | Pie Charts & Visualizations | 🟡 Important | 3-4 hours | ⬜ Not Started |
 
 ---
 
@@ -89,26 +93,34 @@ Every feature file follows the same comprehensive structure:
 ## 🚀 Getting Started
 
 ### 1. Read the Specification
+
 First, review the complete technical specification:
+
 ```bash
 cat ../investment-tracker-specification.md
 ```
 
 ### 2. Start with F01
+
 Begin with project setup:
+
 ```bash
 cat F01_project_setup.md
 ```
 
 ### 3. Follow Implementation Steps
+
 Each feature provides:
+
 - Exact commands to run
 - Complete code examples
 - Testing procedures
 - Validation steps
 
 ### 4. Update Status
+
 As you complete features, update the status in each file:
+
 - ⬜ Not Started → 🟨 In Progress → ✅ Complete
 
 ---
@@ -116,12 +128,14 @@ As you complete features, update the status in each file:
 ## 🧪 Testing Strategy
 
 ### After Each Feature
+
 - Run manual testing checklist
 - Execute verification commands
 - Test edge cases
 - Validate acceptance criteria
 
 ### Before Moving to Next Feature
+
 - All acceptance criteria met ✅
 - No errors in console ✅
 - Tests passing ✅
@@ -132,20 +146,24 @@ As you complete features, update the status in each file:
 ## 📊 Progress Tracking
 
 ### Week 1 Goal: Foundation Complete
+
 - [ ] F01: Project Setup
 - [ ] F02: Database Schema
 - [ ] F03: Authentication
 
 ### Week 2 Goal: Core Features Complete
+
 - [ ] F04: Portfolio CRUD
 - [ ] F05: Alpha Vantage API
 
 ### Week 3 Goal: Investment Management Complete
+
 - [ ] F06: Investment Entry
 - [ ] F07: Investment Management
 - [ ] F08: Calculation Engine
 
 ### Week 4 Goal: MVP Complete
+
 - [ ] F09: Price Refresh
 - [ ] F10: Portfolio Summary
 - [ ] F11: Visualizations
@@ -155,11 +173,13 @@ As you complete features, update the status in each file:
 ## 🔗 Key Resources
 
 ### Documentation
+
 - [Technical Specification](../investment-tracker-specification.md)
 - [Database Schema](../database-schema.md) (to be created in F02)
 - [API Documentation](../api-documentation.md) (to be created in F05)
 
 ### External Resources
+
 - [Next.js 15 Docs](https://nextjs.org/docs)
 - [Prisma Docs](https://www.prisma.io/docs)
 - [NextAuth.js Docs](https://next-auth.js.org)
@@ -171,6 +191,7 @@ As you complete features, update the status in each file:
 ## 🎉 Completion Criteria
 
 The MVP is complete when:
+
 - ✅ All 11 features implemented
 - ✅ All acceptance criteria met
 - ✅ All tests passing
@@ -183,6 +204,7 @@ The MVP is complete when:
 ## 🔮 Phase 2 Features (Post-MVP)
 
 After completing F01-F11, consider these advanced features:
+
 - Historical performance charts
 - Portfolio comparison
 - CSV import/export

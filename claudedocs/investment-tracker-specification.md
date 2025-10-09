@@ -8,6 +8,7 @@
 ---
 
 ## Table of Contents
+
 1. [Executive Summary](#executive-summary)
 2. [Technical Stack](#technical-stack)
 3. [Architecture Overview](#architecture-overview)
@@ -28,6 +29,7 @@
 **Track Your Stack** is a modern investment portfolio tracking application that allows users to monitor their investments across multiple portfolios with real-time price updates, multi-currency support, and comprehensive analytics.
 
 ### Core Value Proposition
+
 - **Multi-Asset Support:** Stocks, ETFs, mutual funds, and cryptocurrency
 - **Smart Aggregation:** Automatic average cost basis calculation across multiple purchases
 - **Multi-Currency:** Portfolio tracking in any major currency with real-time conversion
@@ -35,6 +37,7 @@
 - **Visual Analytics:** Pie charts, performance tracking, and gains/loss reporting
 
 ### Target Users
+
 - Individual investors managing personal portfolios
 - Users with diverse asset types across multiple currencies
 - Investors who want simple, accurate tracking without manual spreadsheets
@@ -44,6 +47,7 @@
 ## Technical Stack
 
 ### Frontend
+
 - **Framework:** Next.js 15 (React 19)
 - **Language:** TypeScript 5.x
 - **Styling:** Tailwind CSS 4.x
@@ -53,6 +57,7 @@
 - **Forms:** React Hook Form + Zod validation
 
 ### Backend
+
 - **Runtime:** Node.js 20+ (Next.js Server Actions + API Routes)
 - **ORM:** Prisma 5.x
 - **Database:** PostgreSQL 16+ (Vercel Postgres or Supabase)
@@ -60,12 +65,14 @@
 - **API Client:** Axios or native fetch with retry logic
 
 ### External Services
+
 - **Market Data:** Alpha Vantage API (free tier: 500 calls/day)
 - **Currency Exchange:** Alpha Vantage CURRENCY_EXCHANGE_RATE
 - **Deployment:** Vercel (hosting + serverless functions)
 - **Storage:** Vercel Postgres or Supabase PostgreSQL
 
 ### Development Tools
+
 - **Package Manager:** pnpm (fast, efficient)
 - **Linting:** ESLint + Prettier
 - **Testing:** Vitest + React Testing Library + Playwright
@@ -341,12 +348,14 @@ model PortfolioSnapshot {
 **API Key:** Store in environment variable `ALPHA_VANTAGE_API_KEY`
 
 **Free Tier Limits:**
+
 - 500 API calls per day
 - 5 API calls per minute
 
 ### Endpoints Used
 
 #### 1. Stock/ETF Quote
+
 ```
 GET /query?function=GLOBAL_QUOTE&symbol=AAPL&apikey=YOUR_KEY
 
@@ -363,6 +372,7 @@ Response:
 ```
 
 #### 2. Cryptocurrency Quote
+
 ```
 GET /query?function=CURRENCY_EXCHANGE_RATE&from_currency=BTC&to_currency=USD&apikey=YOUR_KEY
 
@@ -377,6 +387,7 @@ Response:
 ```
 
 #### 3. Currency Exchange Rate
+
 ```
 GET /query?function=CURRENCY_EXCHANGE_RATE&from_currency=EUR&to_currency=USD&apikey=YOUR_KEY
 
@@ -389,6 +400,7 @@ Response:
 ```
 
 #### 4. Company Name Lookup (Symbol Search)
+
 ```
 GET /query?function=SYMBOL_SEARCH&keywords=apple&apikey=YOUR_KEY
 
@@ -437,26 +449,26 @@ Response:
 ```typescript
 // lib/api/alphaVantage.ts
 
-import axios from 'axios';
+import axios from 'axios'
 
-const API_KEY = process.env.ALPHA_VANTAGE_API_KEY!;
-const BASE_URL = 'https://www.alphavantage.co/query';
+const API_KEY = process.env.ALPHA_VANTAGE_API_KEY!
+const BASE_URL = 'https://www.alphavantage.co/query'
 
 export class AlphaVantageClient {
   private async request(params: Record<string, string>) {
     const response = await axios.get(BASE_URL, {
       params: { ...params, apikey: API_KEY },
       timeout: 10000,
-    });
-    return response.data;
+    })
+    return response.data
   }
 
   async getStockQuote(ticker: string) {
     const data = await this.request({
       function: 'GLOBAL_QUOTE',
       symbol: ticker,
-    });
-    return data['Global Quote'];
+    })
+    return data['Global Quote']
   }
 
   async getCryptoPrice(symbol: string, currency: string = 'USD') {
@@ -464,8 +476,8 @@ export class AlphaVantageClient {
       function: 'CURRENCY_EXCHANGE_RATE',
       from_currency: symbol,
       to_currency: currency,
-    });
-    return data['Realtime Currency Exchange Rate'];
+    })
+    return data['Realtime Currency Exchange Rate']
   }
 
   async getExchangeRate(from: string, to: string) {
@@ -473,16 +485,16 @@ export class AlphaVantageClient {
       function: 'CURRENCY_EXCHANGE_RATE',
       from_currency: from,
       to_currency: to,
-    });
-    return data['Realtime Currency Exchange Rate'];
+    })
+    return data['Realtime Currency Exchange Rate']
   }
 
   async searchSymbol(keywords: string) {
     const data = await this.request({
       function: 'SYMBOL_SEARCH',
       keywords,
-    });
-    return data.bestMatches || [];
+    })
+    return data.bestMatches || []
   }
 }
 ```
@@ -501,13 +513,13 @@ export class AlphaVantageClient {
 // New purchase: 5 shares @ $160 = $800 total cost
 
 // Aggregation:
-const newTotalQuantity = 10 + 5; // 15 shares
-const newTotalCost = 1500 + 800; // $2,300
-const newAverageCostBasis = 2300 / 15; // $153.33 per share
+const newTotalQuantity = 10 + 5 // 15 shares
+const newTotalCost = 1500 + 800 // $2,300
+const newAverageCostBasis = 2300 / 15 // $153.33 per share
 
 // Update investment record:
-investment.totalQuantity = 15;
-investment.averageCostBasis = 153.33;
+investment.totalQuantity = 15
+investment.averageCostBasis = 153.33
 
 // Create transaction record:
 purchaseTransaction.create({
@@ -515,31 +527,31 @@ purchaseTransaction.create({
   quantity: 5,
   pricePerUnit: 160,
   purchaseDate: new Date(),
-});
+})
 ```
 
 ### Gains/Loss Calculation (Single Investment)
 
 ```typescript
 interface InvestmentMetrics {
-  currentValue: number;      // Current Price × Quantity
-  totalCost: number;         // Avg Cost Basis × Quantity
-  gainLossDollar: number;    // Current Value - Total Cost
-  gainLossPercent: number;   // ((Current - Cost) / Cost) × 100
+  currentValue: number // Current Price × Quantity
+  totalCost: number // Avg Cost Basis × Quantity
+  gainLossDollar: number // Current Value - Total Cost
+  gainLossPercent: number // ((Current - Cost) / Cost) × 100
 }
 
 function calculateInvestmentMetrics(investment: Investment): InvestmentMetrics {
-  const currentValue = investment.currentPrice * investment.totalQuantity;
-  const totalCost = investment.averageCostBasis * investment.totalQuantity;
-  const gainLossDollar = currentValue - totalCost;
-  const gainLossPercent = (gainLossDollar / totalCost) * 100;
+  const currentValue = investment.currentPrice * investment.totalQuantity
+  const totalCost = investment.averageCostBasis * investment.totalQuantity
+  const gainLossDollar = currentValue - totalCost
+  const gainLossPercent = (gainLossDollar / totalCost) * 100
 
   return {
     currentValue,
     totalCost,
     gainLossDollar,
     gainLossPercent,
-  };
+  }
 }
 ```
 
@@ -547,10 +559,10 @@ function calculateInvestmentMetrics(investment: Investment): InvestmentMetrics {
 
 ```typescript
 interface ConvertedInvestment {
-  currentValueInBase: number;
-  totalCostInBase: number;
-  gainLossDollar: number;
-  gainLossPercent: number;
+  currentValueInBase: number
+  totalCostInBase: number
+  gainLossDollar: number
+  gainLossPercent: number
 }
 
 async function convertToBaseCurrency(
@@ -558,25 +570,22 @@ async function convertToBaseCurrency(
   baseCurrency: string
 ): Promise<ConvertedInvestment> {
   // Get exchange rate (with caching)
-  const rate = await getExchangeRate(
-    investment.purchaseCurrency,
-    baseCurrency
-  );
+  const rate = await getExchangeRate(investment.purchaseCurrency, baseCurrency)
 
-  const currentValueOriginal = investment.currentPrice * investment.totalQuantity;
-  const totalCostOriginal = investment.averageCostBasis * investment.totalQuantity;
+  const currentValueOriginal = investment.currentPrice * investment.totalQuantity
+  const totalCostOriginal = investment.averageCostBasis * investment.totalQuantity
 
-  const currentValueInBase = currentValueOriginal * rate;
-  const totalCostInBase = totalCostOriginal * rate;
-  const gainLossDollar = currentValueInBase - totalCostInBase;
-  const gainLossPercent = (gainLossDollar / totalCostInBase) * 100;
+  const currentValueInBase = currentValueOriginal * rate
+  const totalCostInBase = totalCostOriginal * rate
+  const gainLossDollar = currentValueInBase - totalCostInBase
+  const gainLossPercent = (gainLossDollar / totalCostInBase) * 100
 
   return {
     currentValueInBase,
     totalCostInBase,
     gainLossDollar,
     gainLossPercent,
-  };
+  }
 }
 ```
 
@@ -584,21 +593,19 @@ async function convertToBaseCurrency(
 
 ```typescript
 interface PortfolioSummary {
-  totalValue: number;
-  totalCost: number;
-  totalGainLoss: number;
-  totalGainLossPercent: number;
+  totalValue: number
+  totalCost: number
+  totalGainLoss: number
+  totalGainLossPercent: number
   investments: Array<{
-    investment: Investment;
-    metrics: ConvertedInvestment;
-    percentOfPortfolio: number;
-  }>;
+    investment: Investment
+    metrics: ConvertedInvestment
+    percentOfPortfolio: number
+  }>
 }
 
-async function calculatePortfolioSummary(
-  portfolio: Portfolio
-): Promise<PortfolioSummary> {
-  const investments = await getInvestments(portfolio.id);
+async function calculatePortfolioSummary(portfolio: Portfolio): Promise<PortfolioSummary> {
+  const investments = await getInvestments(portfolio.id)
 
   // Convert all investments to base currency
   const convertedInvestments = await Promise.all(
@@ -606,25 +613,25 @@ async function calculatePortfolioSummary(
       investment: inv,
       metrics: await convertToBaseCurrency(inv, portfolio.baseCurrency),
     }))
-  );
+  )
 
   const totalValue = convertedInvestments.reduce(
     (sum, { metrics }) => sum + metrics.currentValueInBase,
     0
-  );
+  )
 
   const totalCost = convertedInvestments.reduce(
     (sum, { metrics }) => sum + metrics.totalCostInBase,
     0
-  );
+  )
 
-  const totalGainLoss = totalValue - totalCost;
-  const totalGainLossPercent = (totalGainLoss / totalCost) * 100;
+  const totalGainLoss = totalValue - totalCost
+  const totalGainLossPercent = (totalGainLoss / totalCost) * 100
 
   const investmentsWithPercentage = convertedInvestments.map((item) => ({
     ...item,
     percentOfPortfolio: (item.metrics.currentValueInBase / totalValue) * 100,
-  }));
+  }))
 
   return {
     totalValue,
@@ -632,7 +639,7 @@ async function calculatePortfolioSummary(
     totalGainLoss,
     totalGainLossPercent,
     investments: investmentsWithPercentage,
-  };
+  }
 }
 ```
 
@@ -645,6 +652,7 @@ async function calculatePortfolioSummary(
 **Google OAuth via NextAuth.js v5**
 
 **Flow:**
+
 1. User clicks "Sign in with Google"
 2. NextAuth redirects to Google OAuth consent screen
 3. User authorizes app
@@ -658,10 +666,10 @@ async function calculatePortfolioSummary(
 ```typescript
 // app/api/auth/[...nextauth]/route.ts
 
-import NextAuth from "next-auth";
-import GoogleProvider from "next-auth/providers/google";
-import { PrismaAdapter } from "@auth/prisma-adapter";
-import { prisma } from "@/lib/prisma";
+import NextAuth from 'next-auth'
+import GoogleProvider from 'next-auth/providers/google'
+import { PrismaAdapter } from '@auth/prisma-adapter'
+import { prisma } from '@/lib/prisma'
 
 export const authOptions = {
   adapter: PrismaAdapter(prisma),
@@ -677,18 +685,19 @@ export const authOptions = {
   callbacks: {
     session: async ({ session, user }) => {
       if (session?.user) {
-        session.user.id = user.id;
+        session.user.id = user.id
       }
-      return session;
+      return session
     },
   },
-};
+}
 
-const handler = NextAuth(authOptions);
-export { handler as GET, handler as POST };
+const handler = NextAuth(authOptions)
+export { handler as GET, handler as POST }
 ```
 
 **Environment Variables:**
+
 ```bash
 GOOGLE_CLIENT_ID=your_client_id_here
 GOOGLE_CLIENT_SECRET=your_client_secret_here
@@ -701,12 +710,14 @@ NEXTAUTH_SECRET=generate_with_openssl_rand_base64_32
 ## Phase 1: MVP Features
 
 ### 1. Authentication
+
 - [x] Google OAuth sign-in
 - [x] Session management
 - [x] Protected routes
 - [x] Sign out functionality
 
 ### 2. Portfolio Management
+
 - [x] Create portfolio with custom name
 - [x] Select base currency (USD, EUR, GBP, etc.)
 - [x] Edit portfolio name
@@ -714,6 +725,7 @@ NEXTAUTH_SECRET=generate_with_openssl_rand_base64_32
 - [x] List all portfolios on dashboard
 
 ### 3. Investment Entry
+
 - [x] **Add Investment Form:**
   - Ticker symbol input (autocomplete search)
   - Asset name auto-populated from API
@@ -738,6 +750,7 @@ NEXTAUTH_SECRET=generate_with_openssl_rand_base64_32
   - Valid ticker symbol
 
 ### 4. Investment Management
+
 - [x] View all investments in portfolio (table view)
 - [x] Edit investment:
   - Modify quantity, price, date (recalculates avg cost)
@@ -747,6 +760,7 @@ NEXTAUTH_SECRET=generate_with_openssl_rand_base64_32
 - [x] Auto-refresh prices (15-min interval)
 
 ### 5. Portfolio Visualization
+
 - [x] **Pie Chart:**
   - Show percentage allocation by investment
   - Color-coded by asset
@@ -761,6 +775,7 @@ NEXTAUTH_SECRET=generate_with_openssl_rand_base64_32
   - Best/worst performer
 
 ### 6. Gains/Loss Display
+
 - [x] **Per Investment:**
   - Current value
   - Total cost
@@ -779,29 +794,33 @@ NEXTAUTH_SECRET=generate_with_openssl_rand_base64_32
 ## Phase 2: Advanced Features
 
 ### 1. Historical Performance Charts
+
 **Priority:** High Value, Medium Complexity
 
 **Features:**
+
 - Line chart showing portfolio value over time
 - Date range selector: 1W, 1M, 3M, 6M, 1Y, ALL
 - Multiple portfolio comparison on same chart
 - Benchmark comparison (S&P 500 equivalent)
 
 **Implementation:**
+
 - Daily cron job to snapshot portfolio values
 - Store in `portfolio_snapshots` table
 - Chart.js or Recharts for visualization
 - API endpoint: `/api/portfolios/[id]/history?range=1M`
 
 **Data Model:**
+
 ```typescript
 interface PortfolioSnapshot {
-  id: string;
-  portfolioId: string;
-  totalValue: number;
-  baseCurrency: string;
-  snapshotDate: Date;
-  createdAt: Date;
+  id: string
+  portfolioId: string
+  totalValue: number
+  baseCurrency: string
+  snapshotDate: Date
+  createdAt: Date
 }
 ```
 
@@ -810,9 +829,11 @@ interface PortfolioSnapshot {
 ---
 
 ### 2. Portfolio Comparison
+
 **Priority:** Medium Value, Low Complexity
 
 **Features:**
+
 - Side-by-side comparison of 2-4 portfolios
 - Comparison metrics:
   - Total value
@@ -822,6 +843,7 @@ interface PortfolioSnapshot {
 - Export comparison report
 
 **Implementation:**
+
 - Reuse existing calculation functions
 - Grid layout with comparison cards
 - No new data model required
@@ -831,9 +853,11 @@ interface PortfolioSnapshot {
 ---
 
 ### 3. Import from CSV
+
 **Priority:** High Value, Medium Complexity
 
 **Features:**
+
 - Upload CSV file with investment data
 - Required columns: ticker, quantity, purchase_price, purchase_date
 - Optional columns: currency, notes
@@ -842,6 +866,7 @@ interface PortfolioSnapshot {
 - Bulk import to selected portfolio
 
 **CSV Format Example:**
+
 ```csv
 ticker,quantity,purchase_price,purchase_date,currency,notes
 AAPL,10,150.50,2024-01-15,USD,Initial purchase
@@ -850,6 +875,7 @@ BTC,0.5,42000.00,2024-03-10,USD,Crypto investment
 ```
 
 **Implementation:**
+
 - Use Papa Parse library for CSV parsing
 - Server Action for bulk import
 - Transaction support (all or nothing)
@@ -860,9 +886,11 @@ BTC,0.5,42000.00,2024-03-10,USD,Crypto investment
 ---
 
 ### 4. Export Reports
+
 **Priority:** Medium Value, Low Complexity
 
 **Features:**
+
 - Export portfolio to CSV
 - Export to PDF (summary report)
 - Tax reporting format (FIFO/LIFO)
@@ -871,12 +899,14 @@ BTC,0.5,42000.00,2024-03-10,USD,Crypto investment
 **Formats:**
 
 **CSV Export:**
+
 ```csv
 ticker,name,quantity,avg_cost,current_price,total_value,gain_loss,$,gain_loss_%
 AAPL,Apple Inc.,10,153.33,178.50,1785.00,251.70,16.41%
 ```
 
 **PDF Report:**
+
 - Portfolio summary
 - Investment table
 - Pie chart
@@ -884,6 +914,7 @@ AAPL,Apple Inc.,10,153.33,178.50,1785.00,251.70,16.41%
 - Generated date
 
 **Implementation:**
+
 - CSV: Native JavaScript
 - PDF: jsPDF or Puppeteer
 - Server Action for generation
@@ -893,9 +924,11 @@ AAPL,Apple Inc.,10,153.33,178.50,1785.00,251.70,16.41%
 ---
 
 ### 5. Mobile App / PWA
+
 **Priority:** High Value, Variable Complexity
 
 **Approach 1: Progressive Web App (PWA) - RECOMMENDED**
+
 - Same Next.js codebase
 - Add PWA manifest and service worker
 - Installable on mobile devices
@@ -903,6 +936,7 @@ AAPL,Apple Inc.,10,153.33,178.50,1785.00,251.70,16.41%
 - Push notifications for price alerts
 
 **Implementation:**
+
 ```json
 // public/manifest.json
 {
@@ -931,6 +965,7 @@ AAPL,Apple Inc.,10,153.33,178.50,1785.00,251.70,16.41%
 **Timeline:** Week 7-8 (PWA)
 
 **Approach 2: React Native (Future)**
+
 - Separate mobile app
 - Shared API with web app
 - Native features: camera, notifications
@@ -943,7 +978,9 @@ AAPL,Apple Inc.,10,153.33,178.50,1785.00,251.70,16.41%
 ## Implementation Roadmap
 
 ### Week 1: Project Setup & Authentication
+
 **Days 1-2: Project Initialization**
+
 - [ ] Create Next.js 15 project with TypeScript
 - [ ] Install dependencies (Prisma, NextAuth, Tailwind, shadcn/ui)
 - [ ] Setup ESLint, Prettier, Husky
@@ -951,6 +988,7 @@ AAPL,Apple Inc.,10,153.33,178.50,1785.00,251.70,16.41%
 - [ ] Setup Vercel project
 
 **Days 3-4: Database & Authentication**
+
 - [ ] Design and create Prisma schema
 - [ ] Setup PostgreSQL (Vercel Postgres)
 - [ ] Run migrations
@@ -959,6 +997,7 @@ AAPL,Apple Inc.,10,153.33,178.50,1785.00,251.70,16.41%
 - [ ] Test authentication flow
 
 **Days 5-7: Base UI Components**
+
 - [ ] Setup shadcn/ui components
 - [ ] Create layout components (header, nav, footer)
 - [ ] Create loading states and error boundaries
@@ -970,7 +1009,9 @@ AAPL,Apple Inc.,10,153.33,178.50,1785.00,251.70,16.41%
 ---
 
 ### Week 2: Core Portfolio Features
+
 **Days 1-3: Portfolio CRUD**
+
 - [ ] Create portfolio creation form
 - [ ] Implement portfolio list view
 - [ ] Add edit portfolio functionality
@@ -978,6 +1019,7 @@ AAPL,Apple Inc.,10,153.33,178.50,1785.00,251.70,16.41%
 - [ ] Create portfolio detail page
 
 **Days 4-7: Alpha Vantage Integration**
+
 - [ ] Create Alpha Vantage API client
 - [ ] Implement ticker search with autocomplete
 - [ ] Test stock quote endpoint
@@ -990,7 +1032,9 @@ AAPL,Apple Inc.,10,153.33,178.50,1785.00,251.70,16.41%
 ---
 
 ### Week 3: Investment Management
+
 **Days 1-3: Add Investment**
+
 - [ ] Create add investment form
 - [ ] Implement ticker search autocomplete
 - [ ] Add form validation with Zod
@@ -998,6 +1042,7 @@ AAPL,Apple Inc.,10,153.33,178.50,1785.00,251.70,16.41%
 - [ ] Test aggregation logic
 
 **Days 4-5: Investment List & Actions**
+
 - [ ] Create investment table component
 - [ ] Add edit investment modal
 - [ ] Implement delete functionality
@@ -1005,6 +1050,7 @@ AAPL,Apple Inc.,10,153.33,178.50,1785.00,251.70,16.41%
 - [ ] Setup auto-refresh (15-min interval)
 
 **Days 6-7: Calculations & Display**
+
 - [ ] Implement average cost basis calculation
 - [ ] Implement gains/loss calculation
 - [ ] Add multi-currency conversion
@@ -1016,7 +1062,9 @@ AAPL,Apple Inc.,10,153.33,178.50,1785.00,251.70,16.41%
 ---
 
 ### Week 4: Visualization & Phase 2 Start
+
 **Days 1-3: Portfolio Summary**
+
 - [ ] Implement portfolio summary calculations
 - [ ] Create summary cards (total value, gain/loss)
 - [ ] Build pie chart with Recharts
@@ -1024,6 +1072,7 @@ AAPL,Apple Inc.,10,153.33,178.50,1785.00,251.70,16.41%
 - [ ] Test with multiple currencies
 
 **Days 4-7: Phase 2 - Export Reports**
+
 - [ ] Create CSV export functionality
 - [ ] Implement PDF report generation
 - [ ] Add download buttons
@@ -1035,7 +1084,9 @@ AAPL,Apple Inc.,10,153.33,178.50,1785.00,251.70,16.41%
 ---
 
 ### Week 5: Phase 2 - Historical & Comparison
+
 **Days 1-4: Historical Performance**
+
 - [ ] Create portfolio snapshot cron job
 - [ ] Implement daily snapshot logic
 - [ ] Create history API endpoint
@@ -1044,6 +1095,7 @@ AAPL,Apple Inc.,10,153.33,178.50,1785.00,251.70,16.41%
 - [ ] Test historical data display
 
 **Days 5-7: Portfolio Comparison**
+
 - [ ] Create comparison page layout
 - [ ] Implement comparison calculations
 - [ ] Add comparison UI (side-by-side)
@@ -1055,7 +1107,9 @@ AAPL,Apple Inc.,10,153.33,178.50,1785.00,251.70,16.41%
 ---
 
 ### Week 6: Phase 2 - Import & Testing
+
 **Days 1-3: CSV Import**
+
 - [ ] Create CSV upload UI
 - [ ] Implement CSV parser with Papa Parse
 - [ ] Add validation logic
@@ -1064,6 +1118,7 @@ AAPL,Apple Inc.,10,153.33,178.50,1785.00,251.70,16.41%
 - [ ] Test with sample CSV files
 
 **Days 4-7: Testing & Bug Fixes**
+
 - [ ] Write unit tests for calculations
 - [ ] Write integration tests for API
 - [ ] Write E2E tests with Playwright
@@ -1076,7 +1131,9 @@ AAPL,Apple Inc.,10,153.33,178.50,1785.00,251.70,16.41%
 ---
 
 ### Week 7: Phase 2 - PWA & Polish
+
 **Days 1-3: Progressive Web App**
+
 - [ ] Create PWA manifest.json
 - [ ] Setup service worker
 - [ ] Add offline support
@@ -1084,6 +1141,7 @@ AAPL,Apple Inc.,10,153.33,178.50,1785.00,251.70,16.41%
 - [ ] Add push notification setup
 
 **Days 4-7: Polish & Documentation**
+
 - [ ] UI/UX improvements
 - [ ] Accessibility audit (a11y)
 - [ ] Performance optimization
@@ -1096,7 +1154,9 @@ AAPL,Apple Inc.,10,153.33,178.50,1785.00,251.70,16.41%
 ---
 
 ### Week 8: Deployment & Launch
+
 **Days 1-2: Production Deployment**
+
 - [ ] Configure production environment variables
 - [ ] Setup production database
 - [ ] Deploy to Vercel
@@ -1104,6 +1164,7 @@ AAPL,Apple Inc.,10,153.33,178.50,1785.00,251.70,16.41%
 - [ ] Configure monitoring (Sentry)
 
 **Days 3-4: Testing & Monitoring**
+
 - [ ] Production smoke tests
 - [ ] Load testing
 - [ ] Monitor error rates
@@ -1111,6 +1172,7 @@ AAPL,Apple Inc.,10,153.33,178.50,1785.00,251.70,16.41%
 - [ ] Setup alerts
 
 **Days 5-7: Launch & Iteration**
+
 - [ ] Soft launch to beta users
 - [ ] Collect feedback
 - [ ] Fix critical issues
@@ -1124,6 +1186,7 @@ AAPL,Apple Inc.,10,153.33,178.50,1785.00,251.70,16.41%
 ## Security Considerations
 
 ### Authentication Security
+
 - [x] Secure session management with NextAuth.js
 - [x] HTTP-only cookies for session tokens
 - [x] CSRF protection enabled
@@ -1131,6 +1194,7 @@ AAPL,Apple Inc.,10,153.33,178.50,1785.00,251.70,16.41%
 - [x] Session expiration (30 days)
 
 ### API Security
+
 - [x] API key stored in environment variables (never client-side)
 - [x] Rate limiting on API routes (5 req/min per user)
 - [x] Input validation on all Server Actions
@@ -1138,6 +1202,7 @@ AAPL,Apple Inc.,10,153.33,178.50,1785.00,251.70,16.41%
 - [x] XSS prevention via React auto-escaping
 
 ### Data Security
+
 - [x] Database connection over SSL
 - [x] User data isolation (userId foreign key constraints)
 - [x] No sensitive data in client state
@@ -1145,32 +1210,34 @@ AAPL,Apple Inc.,10,153.33,178.50,1785.00,251.70,16.41%
 - [x] Regular backups (Vercel Postgres auto-backup)
 
 ### Authorization
+
 - [x] Verify user ownership before any portfolio/investment operation
 - [x] Protected API routes (check session)
 - [x] Protected pages (middleware redirect)
 - [x] No direct database ID exposure (use UUIDs)
 
 ### Example Authorization Check:
+
 ```typescript
 // Server Action example
 async function deleteInvestment(investmentId: string) {
-  const session = await getServerSession();
+  const session = await getServerSession()
   if (!session?.user?.id) {
-    throw new Error('Unauthorized');
+    throw new Error('Unauthorized')
   }
 
   const investment = await prisma.investment.findUnique({
     where: { id: investmentId },
     include: { portfolio: true },
-  });
+  })
 
   if (investment?.portfolio.userId !== session.user.id) {
-    throw new Error('Forbidden');
+    throw new Error('Forbidden')
   }
 
   await prisma.investment.delete({
     where: { id: investmentId },
-  });
+  })
 }
 ```
 
@@ -1179,6 +1246,7 @@ async function deleteInvestment(investmentId: string) {
 ## Performance Optimization
 
 ### Frontend Performance
+
 - **Code Splitting:** Lazy load chart components
 - **Image Optimization:** Next.js Image component
 - **Font Optimization:** Next.js font optimization
@@ -1186,6 +1254,7 @@ async function deleteInvestment(investmentId: string) {
 - **Prefetching:** Next.js Link prefetching
 
 ### Backend Performance
+
 - **Database Indexing:** Add indexes on foreign keys, frequently queried fields
 - **Query Optimization:** Use Prisma select/include efficiently
 - **Caching:** Cache prices and exchange rates
@@ -1193,11 +1262,13 @@ async function deleteInvestment(investmentId: string) {
 - **Background Jobs:** Price updates via cron, not on-demand
 
 ### API Rate Limiting
+
 - **Request Queue:** Prevent exceeding 5 req/min Alpha Vantage limit
 - **Exponential Backoff:** Retry failed requests with backoff
 - **Graceful Degradation:** Show cached data when API unavailable
 
 ### Monitoring
+
 - **Error Tracking:** Sentry for error monitoring
 - **Performance Monitoring:** Vercel Analytics
 - **Database Monitoring:** Prisma query logging
@@ -1315,6 +1386,7 @@ track-your-stack/
 ## Success Metrics
 
 ### MVP (Phase 1)
+
 - [ ] User can create account with Google OAuth
 - [ ] User can create and manage multiple portfolios
 - [ ] User can add investments with ticker search
@@ -1324,6 +1396,7 @@ track-your-stack/
 - [ ] Multi-currency support works correctly
 
 ### Phase 2
+
 - [ ] Historical performance charts display correctly
 - [ ] Portfolio comparison feature works
 - [ ] CSV import successfully imports bulk data
@@ -1331,12 +1404,14 @@ track-your-stack/
 - [ ] PWA installable on mobile devices
 
 ### Performance
+
 - [ ] Page load time < 2 seconds
 - [ ] API response time < 500ms
 - [ ] Database query time < 100ms
 - [ ] Price updates complete < 5 seconds
 
 ### Quality
+
 - [ ] Zero security vulnerabilities
 - [ ] 80%+ test coverage
 - [ ] 90+ Lighthouse score

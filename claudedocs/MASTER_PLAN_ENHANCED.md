@@ -11,29 +11,29 @@
 
 ## 📊 Progress Overview
 
-| Phase | Features | Status | Progress |
-|-------|----------|--------|----------|
-| **Phase 1: MVP** | 11 features | Not Started | 0/11 (0%) |
-| **Phase 2: Advanced** | 4 features | Not Started | 0/4 (0%) |
-| **Total** | 15 features | Not Started | 0/15 (0%) |
+| Phase                 | Features    | Status      | Progress  |
+| --------------------- | ----------- | ----------- | --------- |
+| **Phase 1: MVP**      | 11 features | Not Started | 0/11 (0%) |
+| **Phase 2: Advanced** | 4 features  | Not Started | 0/4 (0%)  |
+| **Total**             | 15 features | Not Started | 0/15 (0%) |
 
 ---
 
 ## 🎯 MVP Feature List (Phase 1)
 
-| ID | Feature | Dependencies | Estimated Time | Status |
-|----|---------|--------------|----------------|--------|
-| [F01](features/F01_project_setup.md) | Project Setup & Configuration | None | 1-2 days | ⬜ Not Started |
-| [F02](features/F02_database_schema.md) | Database Schema & Prisma | F01 | 1 day | ⬜ Not Started |
-| [F03](features/F03_authentication.md) | Authentication (Google OAuth) | F01, F02 | 2 days | ⬜ Not Started |
-| [F04](features/F04_portfolio_crud.md) | Portfolio Management (CRUD) | F02, F03 | 2-3 days | ⬜ Not Started |
-| [F05](features/F05_alpha_vantage_integration.md) | Alpha Vantage API Integration | F01 | 2 days | ⬜ Not Started |
-| [F06](features/F06_investment_entry.md) | Investment Entry Form | F04, F05 | 2-3 days | ⬜ Not Started |
-| [F07](features/F07_investment_management.md) | Investment Management (Edit/Delete) | F06 | 2 days | ⬜ Not Started |
-| [F08](features/F08_calculation_engine.md) | Calculation Engine | F06 | 2 days | ⬜ Not Started |
-| [F09](features/F09_price_refresh.md) | Price Refresh & Caching | F05, F06 | 2 days | ⬜ Not Started |
-| [F10](features/F10_portfolio_summary.md) | Portfolio Summary & Metrics | F08 | 1-2 days | ⬜ Not Started |
-| [F11](features/F11_visualizations.md) | Charts & Visualizations | F10 | 2-3 days | ⬜ Not Started |
+| ID                                               | Feature                             | Dependencies | Estimated Time | Status         |
+| ------------------------------------------------ | ----------------------------------- | ------------ | -------------- | -------------- |
+| [F01](features/F01_project_setup.md)             | Project Setup & Configuration       | None         | 1-2 days       | ⬜ Not Started |
+| [F02](features/F02_database_schema.md)           | Database Schema & Prisma            | F01          | 1 day          | ⬜ Not Started |
+| [F03](features/F03_authentication.md)            | Authentication (Google OAuth)       | F01, F02     | 2 days         | ⬜ Not Started |
+| [F04](features/F04_portfolio_crud.md)            | Portfolio Management (CRUD)         | F02, F03     | 2-3 days       | ⬜ Not Started |
+| [F05](features/F05_alpha_vantage_integration.md) | Alpha Vantage API Integration       | F01          | 2 days         | ⬜ Not Started |
+| [F06](features/F06_investment_entry.md)          | Investment Entry Form               | F04, F05     | 2-3 days       | ⬜ Not Started |
+| [F07](features/F07_investment_management.md)     | Investment Management (Edit/Delete) | F06          | 2 days         | ⬜ Not Started |
+| [F08](features/F08_calculation_engine.md)        | Calculation Engine                  | F06          | 2 days         | ⬜ Not Started |
+| [F09](features/F09_price_refresh.md)             | Price Refresh & Caching             | F05, F06     | 2 days         | ⬜ Not Started |
+| [F10](features/F10_portfolio_summary.md)         | Portfolio Summary & Metrics         | F08          | 1-2 days       | ⬜ Not Started |
+| [F11](features/F11_visualizations.md)            | Charts & Visualizations             | F10          | 2-3 days       | ⬜ Not Started |
 
 **MVP Total Estimated Time:** 19-24 days + 4-5 days buffer = **5-6 weeks**
 
@@ -41,12 +41,12 @@
 
 ## 🚀 Phase 2 Feature List (Advanced)
 
-| ID | Feature | Dependencies | Estimated Time | Status |
-|----|---------|--------------|----------------|--------|
-| [F12](features/phase2/F12_historical_charts.md) | Historical Performance Charts | F11 | 3-4 days | ⬜ Not Started |
-| [F13](features/phase2/F13_csv_import_export.md) | CSV Import/Export | F06 | 2-3 days | ⬜ Not Started |
-| [F14](features/phase2/F14_portfolio_comparison.md) | Portfolio Comparison | F10 | 2 days | ⬜ Not Started |
-| [F15](features/phase2/F15_pwa_setup.md) | Progressive Web App | F11 | 2-3 days | ⬜ Not Started |
+| ID                                                 | Feature                       | Dependencies | Estimated Time | Status         |
+| -------------------------------------------------- | ----------------------------- | ------------ | -------------- | -------------- |
+| [F12](features/phase2/F12_historical_charts.md)    | Historical Performance Charts | F11          | 3-4 days       | ⬜ Not Started |
+| [F13](features/phase2/F13_csv_import_export.md)    | CSV Import/Export             | F06          | 2-3 days       | ⬜ Not Started |
+| [F14](features/phase2/F14_portfolio_comparison.md) | Portfolio Comparison          | F10          | 2 days         | ⬜ Not Started |
+| [F15](features/phase2/F15_pwa_setup.md)            | Progressive Web App           | F11          | 2-3 days       | ⬜ Not Started |
 
 **Phase 2 Total Estimated Time:** 9-12 days = **2-3 weeks**
 
@@ -115,6 +115,7 @@ graph TD
 ```
 
 **Legend:**
+
 - 🟢 Green: Foundation (F01-F02)
 - 🟡 Yellow: Core Features (F03-F05)
 - 🔴 Red: Investment Features (F06-F09)
@@ -128,39 +129,42 @@ graph TD
 
 ### Risk Register
 
-| ID | Risk | Probability | Impact | Mitigation Strategy | Owner |
-|----|------|-------------|--------|---------------------|-------|
-| R01 | Alpha Vantage API discontinuation or rate limit changes | Medium | High | Implement adapter pattern; prepare fallback to Financial Modeling Prep API; cache aggressively | Tech Lead |
-| R02 | Database migration failure causing data corruption | Low | Critical | Automated backups before migrations; test migrations on staging; maintain rollback scripts; use Prisma's safe migration workflow | Backend Dev |
-| R03 | Timeline overrun by 50%+ | High | Medium | 20% buffer time per feature; prioritize MVP ruthlessly; defer Phase 2; bi-weekly progress reviews | Project Manager |
-| R04 | Security vulnerability (auth bypass, data exposure) | Low | Critical | Security review after F03, F04, F06; OWASP Top 10 checklist; penetration testing pre-production | Security Lead |
-| R05 | Developer unavailability (illness, emergency) | Medium | High | Documentation-first approach; daily commits with clear messages; knowledge transfer at milestones | Team |
-| R06 | Performance degradation as data grows | Medium | High | Performance testing with 10K portfolios; database indexing strategy; query optimization reviews | Backend Dev |
-| R07 | Google OAuth policy changes breaking authentication | Low | Critical | Monitor Google Cloud Platform announcements; implement email/password fallback (Phase 2.5); test auth flow regularly | Backend Dev |
-| R08 | Currency conversion inaccuracy affecting portfolios | Medium | Medium | Validate against multiple sources; log all conversion calculations; allow manual rate override | Backend Dev |
-| R09 | Browser compatibility issues discovered late | Medium | Medium | Test on Chrome, Firefox, Safari from Week 1; use Browserstack for mobile testing | Frontend Dev |
-| R10 | Production deployment failure | Low | High | Blue-green deployment strategy; health checks; automated rollback; staging environment mirrors production | DevOps |
+| ID  | Risk                                                    | Probability | Impact   | Mitigation Strategy                                                                                                              | Owner           |
+| --- | ------------------------------------------------------- | ----------- | -------- | -------------------------------------------------------------------------------------------------------------------------------- | --------------- |
+| R01 | Alpha Vantage API discontinuation or rate limit changes | Medium      | High     | Implement adapter pattern; prepare fallback to Financial Modeling Prep API; cache aggressively                                   | Tech Lead       |
+| R02 | Database migration failure causing data corruption      | Low         | Critical | Automated backups before migrations; test migrations on staging; maintain rollback scripts; use Prisma's safe migration workflow | Backend Dev     |
+| R03 | Timeline overrun by 50%+                                | High        | Medium   | 20% buffer time per feature; prioritize MVP ruthlessly; defer Phase 2; bi-weekly progress reviews                                | Project Manager |
+| R04 | Security vulnerability (auth bypass, data exposure)     | Low         | Critical | Security review after F03, F04, F06; OWASP Top 10 checklist; penetration testing pre-production                                  | Security Lead   |
+| R05 | Developer unavailability (illness, emergency)           | Medium      | High     | Documentation-first approach; daily commits with clear messages; knowledge transfer at milestones                                | Team            |
+| R06 | Performance degradation as data grows                   | Medium      | High     | Performance testing with 10K portfolios; database indexing strategy; query optimization reviews                                  | Backend Dev     |
+| R07 | Google OAuth policy changes breaking authentication     | Low         | Critical | Monitor Google Cloud Platform announcements; implement email/password fallback (Phase 2.5); test auth flow regularly             | Backend Dev     |
+| R08 | Currency conversion inaccuracy affecting portfolios     | Medium      | Medium   | Validate against multiple sources; log all conversion calculations; allow manual rate override                                   | Backend Dev     |
+| R09 | Browser compatibility issues discovered late            | Medium      | Medium   | Test on Chrome, Firefox, Safari from Week 1; use Browserstack for mobile testing                                                 | Frontend Dev    |
+| R10 | Production deployment failure                           | Low         | High     | Blue-green deployment strategy; health checks; automated rollback; staging environment mirrors production                        | DevOps          |
 
 ### Contingency Plans
 
 **API Failure Contingency:**
+
 ```typescript
 // Fallback strategy for Alpha Vantage failures
 const PRICE_FETCH_STRATEGY = {
   primary: 'alpha-vantage',
   fallback: ['twelve-data', 'finnhub', 'manual-entry'],
   cache: '7-days-rolling',
-  degradedMode: 'allow-stale-prices-with-warning'
+  degradedMode: 'allow-stale-prices-with-warning',
 }
 ```
 
 **Data Corruption Recovery:**
+
 1. Daily automated backups (3am UTC)
 2. Point-in-time recovery capability (last 7 days)
 3. Data validation scripts run post-migration
 4. Emergency rollback procedure: `pnpm db:rollback-emergency`
 
 **Production Outage Response:**
+
 1. Auto-rollback if error rate >5% within 5 minutes
 2. Circuit breaker activates for external API failures
 3. Graceful degradation: show cached data with staleness warning
@@ -184,6 +188,7 @@ graph LR
 ### Environment Configurations
 
 **1. Development Environment**
+
 - **URL:** `https://dev.track-your-stack.vercel.app`
 - **Deploy Trigger:** Auto-deploy on push to `main` branch
 - **Database:** Vercel Postgres (development instance)
@@ -194,6 +199,7 @@ graph LR
 - **Purpose:** Continuous integration testing, rapid iteration
 
 **2. Staging Environment**
+
 - **URL:** `https://staging.track-your-stack.vercel.app`
 - **Deploy Trigger:** Manual deploy after milestone completion
 - **Database:** Vercel Postgres (staging instance) - production-like
@@ -204,6 +210,7 @@ graph LR
 - **Purpose:** User acceptance testing, final validation before production
 
 **3. Production Environment**
+
 - **URL:** `https://track-your-stack.com`
 - **Deploy Trigger:** Manual deploy after staging validation
 - **Database:** Vercel Postgres (production instance) with automated backups
@@ -216,6 +223,7 @@ graph LR
 ### Deployment Pipeline
 
 **Per-Feature Deployment Flow:**
+
 ```bash
 # 1. Feature Development (local)
 git checkout -b feature/portfolio-crud
@@ -259,6 +267,7 @@ vercel --prod
 ### Rollback Procedures
 
 **When to Rollback:**
+
 - Critical bug affecting >10% of users
 - Data corruption detected
 - Error rate >5% for 5+ minutes
@@ -292,6 +301,7 @@ curl https://track-your-stack.com/api/health
 ```
 
 **Rollback Testing:**
+
 - Practice rollback procedure monthly
 - Document rollback times (target: <5 minutes)
 - Maintain rollback runbook
@@ -299,6 +309,7 @@ curl https://track-your-stack.com/api/health
 ### Deployment Checklist (Per Feature)
 
 **Pre-Deployment:**
+
 - [ ] All tests passing (unit, integration, E2E)
 - [ ] Code review completed and approved
 - [ ] Database migrations tested on staging
@@ -310,6 +321,7 @@ curl https://track-your-stack.com/api/health
 - [ ] Changelog updated
 
 **Deployment:**
+
 - [ ] Deploy to staging first
 - [ ] Run smoke tests on staging
 - [ ] UAT completed successfully
@@ -318,6 +330,7 @@ curl https://track-your-stack.com/api/health
 - [ ] Monitor deployment progress
 
 **Post-Deployment:**
+
 - [ ] Health checks passing
 - [ ] Error rate <1% for 30 minutes
 - [ ] Performance within SLA (response time, throughput)
@@ -348,6 +361,7 @@ gantt
 **Focus:** Authentication & Session Security
 
 **Review Checklist:**
+
 - [ ] OAuth flow secure (state parameter validated, PKCE implemented)
 - [ ] Session tokens HttpOnly, Secure, SameSite=Lax
 - [ ] CSRF protection enabled (NextAuth.js default)
@@ -358,6 +372,7 @@ gantt
 - [ ] Brute force protection (account lockout after 5 failures)
 
 **Security Tests:**
+
 ```typescript
 describe('Authentication Security', () => {
   test('should prevent session hijacking', async () => {
@@ -373,6 +388,7 @@ describe('Authentication Security', () => {
 ```
 
 **Tools:**
+
 ```bash
 # Run OWASP ZAP security scan on auth endpoints
 docker run -t owasp/zap2docker-stable zap-baseline.py \
@@ -386,6 +402,7 @@ docker run -t owasp/zap2docker-stable zap-baseline.py \
 **Focus:** Authorization & Data Isolation
 
 **Review Checklist:**
+
 - [ ] User can only access their own portfolios (row-level security)
 - [ ] Authorization checks on all API endpoints (Server Actions)
 - [ ] SQL injection prevented (Prisma parameterized queries)
@@ -395,6 +412,7 @@ docker run -t owasp/zap2docker-stable zap-baseline.py \
 - [ ] Audit log for sensitive operations (delete portfolio)
 
 **Security Tests:**
+
 ```typescript
 describe('Authorization Security', () => {
   test('should prevent access to other users portfolios', async () => {
@@ -403,12 +421,12 @@ describe('Authorization Security', () => {
 
     // User1 tries to access User2's portfolio
     const response = await fetch(`/api/portfolios/${user2Portfolio.id}`, {
-      headers: { Cookie: user1.sessionCookie }
+      headers: { Cookie: user1.sessionCookie },
     })
 
     expect(response.status).toBe(403)
     expect(await response.json()).toMatchObject({
-      error: 'Forbidden'
+      error: 'Forbidden',
     })
   })
 })
@@ -421,6 +439,7 @@ describe('Authorization Security', () => {
 **Focus:** Input Validation & XSS Prevention
 
 **Review Checklist:**
+
 - [ ] All user inputs validated server-side (Zod schemas)
 - [ ] Ticker symbol validation (alphanumeric, 1-10 chars)
 - [ ] Quantity/price validation (positive numbers, reasonable limits)
@@ -431,12 +450,13 @@ describe('Authorization Security', () => {
 - [ ] API key never exposed to client
 
 **Security Tests:**
+
 ```typescript
 describe('Input Validation Security', () => {
   test('should prevent XSS in investment notes', async () => {
     const xssPayload = '<script>alert("XSS")</script>'
     const investment = await createInvestment({
-      notes: xssPayload
+      notes: xssPayload,
     })
 
     // Verify stored as plain text, not executed
@@ -463,6 +483,7 @@ describe('Input Validation Security', () => {
 **Focus:** Comprehensive Security Review
 
 **OWASP Top 10 Checklist:**
+
 - [ ] **A01: Broken Access Control** - All endpoints check user ownership
 - [ ] **A02: Cryptographic Failures** - HTTPS only, secure cookies, API keys encrypted
 - [ ] **A03: Injection** - Prisma prevents SQL injection, input validation everywhere
@@ -475,6 +496,7 @@ describe('Input Validation Security', () => {
 - [ ] **A10: SSRF** - External API calls validated, no user-controlled URLs
 
 **Automated Security Scanning:**
+
 ```bash
 # 1. Dependency vulnerability scan
 pnpm audit --audit-level=moderate
@@ -495,6 +517,7 @@ curl -X POST https://http-observatory.security.mozilla.org/api/v1/analyze?host=s
 ```
 
 **Manual Penetration Testing:**
+
 - [ ] Attempt session hijacking
 - [ ] Test CSRF protection
 - [ ] Try SQL injection in all inputs
@@ -504,6 +527,7 @@ curl -X POST https://http-observatory.security.mozilla.org/api/v1/analyze?host=s
 - [ ] Test password/API key handling
 
 **Security Documentation:**
+
 - [ ] Security architecture documented
 - [ ] Threat model created
 - [ ] Incident response plan ready
@@ -533,30 +557,32 @@ curl -X POST https://http-observatory.security.mozilla.org/api/v1/analyze?host=s
 
 ### Test Coverage Targets
 
-| Layer | Coverage Target | Purpose | Tools |
-|-------|----------------|---------|-------|
-| **Unit Tests** | 80% code coverage | Test individual functions and components | Vitest, React Testing Library |
-| **Integration Tests** | All API endpoints | Test feature interactions, database operations | Vitest, Supertest |
-| **E2E Tests** | Critical user paths | Test complete workflows end-to-end | Playwright |
-| **Performance Tests** | Key operations | Validate response times, load handling | k6, Artillery |
-| **Security Tests** | OWASP Top 10 | Identify vulnerabilities | OWASP ZAP, Snyk |
+| Layer                 | Coverage Target     | Purpose                                        | Tools                         |
+| --------------------- | ------------------- | ---------------------------------------------- | ----------------------------- |
+| **Unit Tests**        | 80% code coverage   | Test individual functions and components       | Vitest, React Testing Library |
+| **Integration Tests** | All API endpoints   | Test feature interactions, database operations | Vitest, Supertest             |
+| **E2E Tests**         | Critical user paths | Test complete workflows end-to-end             | Playwright                    |
+| **Performance Tests** | Key operations      | Validate response times, load handling         | k6, Artillery                 |
+| **Security Tests**    | OWASP Top 10        | Identify vulnerabilities                       | OWASP ZAP, Snyk               |
 
 ### Test Development Approach
 
 **Test-Driven Development (TDD) for:**
+
 - ✅ Calculation engine (F08) - Critical business logic, high complexity
 - ✅ Currency conversion (F08) - Precision required, edge cases
 - ✅ Average cost basis (F08) - Complex aggregation, mathematical accuracy
 - ✅ Price caching logic (F09) - Time-sensitive, cache invalidation
 
 **TDD Workflow:**
+
 ```typescript
 // 1. Write failing test FIRST
 describe('Average Cost Basis Calculation', () => {
   it('should calculate weighted average for multiple purchases', () => {
     const purchases = [
       { qty: 10, price: 150 }, // $1,500 total
-      { qty: 5, price: 160 }   // $800 total
+      { qty: 5, price: 160 }, // $800 total
     ]
 
     const avgCostBasis = calculateAverageCostBasis(purchases)
@@ -569,7 +595,7 @@ describe('Average Cost Basis Calculation', () => {
 
 // 3. Write MINIMUM code to make test pass
 export function calculateAverageCostBasis(purchases) {
-  const totalCost = purchases.reduce((sum, p) => sum + (p.qty * p.price), 0)
+  const totalCost = purchases.reduce((sum, p) => sum + p.qty * p.price, 0)
   const totalQty = purchases.reduce((sum, p) => sum + p.qty, 0)
   return Number((totalCost / totalQty).toFixed(2))
 }
@@ -580,6 +606,7 @@ export function calculateAverageCostBasis(purchases) {
 ```
 
 **Test-After Development for:**
+
 - ✅ UI components (F06, F07, F10, F11) - Rapid iteration, visual validation needed
 - ✅ Authentication integration (F03) - External dependency (Google OAuth)
 - ✅ API integration (F05) - External service (Alpha Vantage)
@@ -589,6 +616,7 @@ export function calculateAverageCostBasis(purchases) {
 **Example: F06 (Investment Entry)**
 
 **Unit Tests (Target: 40 tests):**
+
 ```typescript
 // Components
 - InvestmentForm component renders correctly (5 tests)
@@ -603,6 +631,7 @@ export function calculateAverageCostBasis(purchases) {
 ```
 
 **Integration Tests (Target: 15 tests):**
+
 ```typescript
 // Server Actions
 - createInvestment Server Action (5 tests)
@@ -611,6 +640,7 @@ export function calculateAverageCostBasis(purchases) {
 ```
 
 **E2E Tests (Target: 3 tests):**
+
 ```typescript
 // User Workflows
 test('User can add first investment to portfolio', async ({ page }) => {
@@ -708,6 +738,7 @@ jobs:
 ### Test Data Management
 
 **Development Environment:**
+
 ```typescript
 // prisma/seed.ts
 import { PrismaClient } from '@prisma/client'
@@ -721,7 +752,7 @@ async function main() {
       data: {
         email: `user${i}@test.com`,
         name: `Test User ${i}`,
-      }
+      },
     })
 
     // Create 10 portfolios per user
@@ -731,7 +762,7 @@ async function main() {
           userId: user.id,
           name: `Portfolio ${j}`,
           baseCurrency: ['USD', 'EUR', 'GBP'][j % 3],
-        }
+        },
       })
 
       // Create 10 investments per portfolio
@@ -746,7 +777,7 @@ async function main() {
             totalQuantity: Math.random() * 100,
             averageCostBasis: Math.random() * 500,
             purchaseCurrency: portfolio.baseCurrency,
-          }
+          },
         })
       }
     }
@@ -759,16 +790,19 @@ main()
 ```
 
 **Run seed:**
+
 ```bash
 pnpm prisma db seed
 ```
 
 **Staging Environment:**
+
 - Anonymized production data subset (last 30 days)
 - Synthetic test data for edge cases
 - No PII from production
 
 **Production Environment:**
+
 - Real user data only
 - No test accounts in production
 
@@ -779,6 +813,7 @@ pnpm prisma db seed
 **Focus:** Test integration between completed foundation features
 
 **Test Scenarios:**
+
 ```typescript
 describe('Foundation Integration Tests', () => {
   test('Authenticated user can create portfolio and it persists', async () => {
@@ -794,17 +829,15 @@ describe('Foundation Integration Tests', () => {
 
   test('Alpha Vantage API integration works with rate limiting', async () => {
     // F05 (Alpha Vantage) + Rate Limiting
-    const promises = Array.from({ length: 10 }, () =>
-      alphaVantage.getStockQuote('AAPL')
-    )
+    const promises = Array.from({ length: 10 }, () => alphaVantage.getStockQuote('AAPL'))
 
     const results = await Promise.allSettled(promises)
 
     // First 5 should succeed (5 calls/minute limit)
-    expect(results.slice(0, 5).every(r => r.status === 'fulfilled')).toBe(true)
+    expect(results.slice(0, 5).every((r) => r.status === 'fulfilled')).toBe(true)
 
     // Remaining should be rate limited or cached
-    const rateLimited = results.slice(5).filter(r => r.status === 'rejected')
+    const rateLimited = results.slice(5).filter((r) => r.status === 'rejected')
     expect(rateLimited.length).toBeGreaterThan(0)
   })
 
@@ -814,14 +847,13 @@ describe('Foundation Integration Tests', () => {
     const user2Portfolio = await createPortfolioAsUser('user2@test.com')
 
     // User1 tries to access User2's portfolio
-    await expect(
-      getPortfolio(user2Portfolio.id, user1.sessionToken)
-    ).rejects.toThrow('Forbidden')
+    await expect(getPortfolio(user2Portfolio.id, user1.sessionToken)).rejects.toThrow('Forbidden')
   })
 })
 ```
 
 **Success Criteria:**
+
 - All foundation integration tests passing
 - Zero authorization bugs
 - API rate limiting working correctly
@@ -833,6 +865,7 @@ describe('Foundation Integration Tests', () => {
 **Focus:** Complete investment workflow integration
 
 **Test Scenarios:**
+
 ```typescript
 describe('Investment Workflow Integration', () => {
   test('Complete investment lifecycle with price refresh', async () => {
@@ -908,7 +941,7 @@ describe('Investment Workflow Integration', () => {
     expect(summary.investments.length).toBe(2)
 
     // Verify each investment shows value in base currency
-    summary.investments.forEach(inv => {
+    summary.investments.forEach((inv) => {
       expect(inv.currentValueInBase).toBeGreaterThan(0)
       expect(inv.currency).toBe('USD') // Converted to base
     })
@@ -917,6 +950,7 @@ describe('Investment Workflow Integration', () => {
 ```
 
 **Success Criteria:**
+
 - Complete investment workflow working end-to-end
 - Currency conversion accurate (±0.1%)
 - Price refresh and caching working correctly
@@ -928,6 +962,7 @@ describe('Investment Workflow Integration', () => {
 **Focus:** Full end-to-end user journey validation
 
 **Test Scenarios:**
+
 ```gherkin
 Feature: Complete Portfolio Tracking Workflow
 
@@ -973,6 +1008,7 @@ Scenario: New user onboards and manages portfolio
 ```
 
 **Automated E2E Test:**
+
 ```typescript
 import { test, expect } from '@playwright/test'
 
@@ -1062,6 +1098,7 @@ test('Complete user workflow from signup to portfolio management', async ({ page
 ```
 
 **Success Criteria:**
+
 - Complete E2E test passes (signup → manage → persist)
 - All user flows work without errors
 - Data persists correctly across sessions
@@ -1073,35 +1110,38 @@ test('Complete user workflow from signup to portfolio management', async ({ page
 
 ### Response Time Targets (p95 Percentile)
 
-| Operation | Target | Maximum | Measurement Method |
-|-----------|--------|---------|-------------------|
-| **Page Load (First Contentful Paint)** | <1s | <2s | Lighthouse, Web Vitals |
-| **Page Load (Largest Contentful Paint)** | <2s | <4s | Lighthouse, Web Vitals |
-| **Time to Interactive (TTI)** | <3s | <5s | Lighthouse |
-| **API Response (GET requests)** | <200ms | <500ms | Server logs, Vercel Analytics |
-| **API Response (POST/PUT/DELETE)** | <300ms | <500ms | Server logs |
-| **Database Query** | <50ms | <100ms | Prisma query logging |
-| **Ticker Search (cached)** | <100ms | <200ms | Client-side timing |
-| **Ticker Search (API call)** | <200ms | <300ms | Alpha Vantage response time |
-| **Portfolio Calculation** | <100ms | <200ms | Server Action timing |
-| **Price Refresh (1 portfolio)** | <400ms | <500ms | API + DB time combined |
-| **Price Refresh (cached)** | <50ms | <100ms | DB query only |
-| **Currency Conversion** | <50ms | <100ms | Calculation + cache lookup |
+| Operation                                | Target | Maximum | Measurement Method            |
+| ---------------------------------------- | ------ | ------- | ----------------------------- |
+| **Page Load (First Contentful Paint)**   | <1s    | <2s     | Lighthouse, Web Vitals        |
+| **Page Load (Largest Contentful Paint)** | <2s    | <4s     | Lighthouse, Web Vitals        |
+| **Time to Interactive (TTI)**            | <3s    | <5s     | Lighthouse                    |
+| **API Response (GET requests)**          | <200ms | <500ms  | Server logs, Vercel Analytics |
+| **API Response (POST/PUT/DELETE)**       | <300ms | <500ms  | Server logs                   |
+| **Database Query**                       | <50ms  | <100ms  | Prisma query logging          |
+| **Ticker Search (cached)**               | <100ms | <200ms  | Client-side timing            |
+| **Ticker Search (API call)**             | <200ms | <300ms  | Alpha Vantage response time   |
+| **Portfolio Calculation**                | <100ms | <200ms  | Server Action timing          |
+| **Price Refresh (1 portfolio)**          | <400ms | <500ms  | API + DB time combined        |
+| **Price Refresh (cached)**               | <50ms  | <100ms  | DB query only                 |
+| **Currency Conversion**                  | <50ms  | <100ms  | Calculation + cache lookup    |
 
 ### Scalability Targets
 
 **User Capacity:**
+
 - **Concurrent Users:** Support 1,000 concurrent users without degradation
 - **Total Users:** Scale to 10,000 registered users
 - **Peak Load:** Handle 100 requests/second
 
 **Data Capacity:**
+
 - **Portfolios:** Support 10,000+ portfolios (avg 10 per user)
 - **Investments:** Support 100,000+ investments (avg 10 per portfolio)
 - **Price History:** Store 90 days of price snapshots (Phase 2)
 - **Database Size:** Target <1GB for 1,000 users
 
 **API Limits:**
+
 - **Alpha Vantage:** 500 calls/day (free tier) = ~0.35 calls/minute sustained
 - **Optimization:** 95% cache hit rate to stay under limit
 - **Rate Limiting:** 5 calls/minute burst allowed with queue
@@ -1127,15 +1167,15 @@ import { check, sleep } from 'k6'
 
 export const options = {
   stages: [
-    { duration: '2m', target: 100 },  // Ramp up to 100 users
-    { duration: '5m', target: 100 },  // Stay at 100 users for 5 minutes
-    { duration: '2m', target: 200 },  // Ramp up to 200 users
-    { duration: '5m', target: 200 },  // Stay at 200 users
-    { duration: '2m', target: 0 },    // Ramp down
+    { duration: '2m', target: 100 }, // Ramp up to 100 users
+    { duration: '5m', target: 100 }, // Stay at 100 users for 5 minutes
+    { duration: '2m', target: 200 }, // Ramp up to 200 users
+    { duration: '5m', target: 200 }, // Stay at 200 users
+    { duration: '2m', target: 0 }, // Ramp down
   ],
   thresholds: {
     http_req_duration: ['p(95)<500'], // 95% of requests must complete below 500ms
-    http_req_failed: ['rate<0.01'],   // Error rate must be below 1%
+    http_req_failed: ['rate<0.01'], // Error rate must be below 1%
   },
 }
 
@@ -1153,9 +1193,12 @@ export default function () {
   sleep(1)
 
   // Test investment list page
-  const investmentList = http.get(`https://track-your-stack.com/api/portfolios/${__ENV.PORTFOLIO_ID}/investments`, {
-    headers: { Cookie: __ENV.SESSION_COOKIE },
-  })
+  const investmentList = http.get(
+    `https://track-your-stack.com/api/portfolios/${__ENV.PORTFOLIO_ID}/investments`,
+    {
+      headers: { Cookie: __ENV.SESSION_COOKIE },
+    }
+  )
 
   check(investmentList, {
     'status is 200': (r) => r.status === 200,
@@ -1167,11 +1210,13 @@ export default function () {
 ```
 
 **Run load test:**
+
 ```bash
 SESSION_COOKIE="your-test-session" PORTFOLIO_ID="test-portfolio-id" k6 run load-test.js
 ```
 
 **Performance Testing Schedule:**
+
 - **Week 2 (After F04):** Portfolio CRUD load test (100 concurrent users)
 - **Week 4 (After F09):** Full investment workflow load test (200 concurrent users)
 - **Week 5 (Before MVP):** Complete application load test (1,000 concurrent users)
@@ -1180,6 +1225,7 @@ SESSION_COOKIE="your-test-session" PORTFOLIO_ID="test-portfolio-id" k6 run load-
 ### Performance Budget
 
 **Frontend Bundle Sizes:**
+
 ```yaml
 JavaScript:
   initial: <200KB (gzipped)
@@ -1202,6 +1248,7 @@ Fonts:
 ```
 
 **Enforcement:**
+
 ```json
 // next.config.js
 module.exports = {
@@ -1221,6 +1268,7 @@ module.exports = {
 ### Database Performance
 
 **Indexing Strategy:**
+
 ```sql
 -- Portfolio queries
 CREATE INDEX idx_portfolios_user_id ON portfolios(user_id);
@@ -1242,16 +1290,17 @@ CREATE INDEX idx_currency_rates_fetched ON currency_rates(fetched_at);
 ```
 
 **Query Optimization:**
+
 ```typescript
 // BAD: N+1 query problem
 async function getPortfoliosWithInvestments(userId: string) {
   const portfolios = await prisma.portfolio.findMany({
-    where: { userId }
+    where: { userId },
   })
 
   for (const portfolio of portfolios) {
     portfolio.investments = await prisma.investment.findMany({
-      where: { portfolioId: portfolio.id }
+      where: { portfolioId: portfolio.id },
     })
   }
 
@@ -1263,8 +1312,8 @@ async function getPortfoliosWithInvestments(userId: string) {
   return await prisma.portfolio.findMany({
     where: { userId },
     include: {
-      investments: true
-    }
+      investments: true,
+    },
   })
 }
 ```
@@ -1272,6 +1321,7 @@ async function getPortfoliosWithInvestments(userId: string) {
 ### Monitoring Thresholds & Alerts
 
 **Error Rate Alerts:**
+
 ```yaml
 Critical:
   - condition: error_rate > 5% for 5 minutes
@@ -1285,6 +1335,7 @@ Warning:
 ```
 
 **Performance Alerts:**
+
 ```yaml
 Critical:
   - condition: p95_response_time > 1000ms for 10 minutes
@@ -1298,6 +1349,7 @@ Warning:
 ```
 
 **Resource Alerts:**
+
 ```yaml
 Critical:
   - condition: database_connections > 90% of pool for 5 minutes
@@ -1313,11 +1365,13 @@ Warning:
 ### Performance Monitoring Tools
 
 **Vercel Analytics:**
+
 - Real User Monitoring (RUM) for Web Vitals
 - Server-side function execution times
 - Edge function performance
 
 **Prisma Logging:**
+
 ```typescript
 // lib/prisma.ts
 export const prisma = new PrismaClient({
@@ -1337,6 +1391,7 @@ prisma.$on('query', (e) => {
 ```
 
 **Custom Performance Tracking:**
+
 ```typescript
 // lib/performance.ts
 export function measurePerformance(name: string) {
@@ -1359,7 +1414,7 @@ export function measurePerformance(name: string) {
       }
 
       return duration
-    }
+    },
   }
 }
 
@@ -1568,40 +1623,45 @@ Complete this checklist before deploying MVP to production. Each section must be
 
 ### Alternative Scenarios
 
-| Team Size | Weekly Hours | MVP Timeline | Phase 2 Timeline | Total Timeline | Notes |
-|-----------|--------------|--------------|------------------|----------------|-------|
-| **1 developer** | 40 hrs/week | 5-6 weeks | 2-3 weeks | 7-9 weeks | Base scenario, no coordination overhead |
-| **1 developer** | 20 hrs/week<br/>(part-time) | 10-12 weeks | 4-6 weeks | 14-18 weeks | Double timeline, good for side projects |
-| **2 developers** | 40 hrs/week each | 3-4 weeks | 1-2 weeks | 4-6 weeks | 30% faster with parallel work, +10% coordination overhead |
-| **3 developers** | 40 hrs/week each | 3 weeks | 1 week | 4 weeks | Diminishing returns, +20% coordination overhead |
+| Team Size        | Weekly Hours                | MVP Timeline | Phase 2 Timeline | Total Timeline | Notes                                                     |
+| ---------------- | --------------------------- | ------------ | ---------------- | -------------- | --------------------------------------------------------- |
+| **1 developer**  | 40 hrs/week                 | 5-6 weeks    | 2-3 weeks        | 7-9 weeks      | Base scenario, no coordination overhead                   |
+| **1 developer**  | 20 hrs/week<br/>(part-time) | 10-12 weeks  | 4-6 weeks        | 14-18 weeks    | Double timeline, good for side projects                   |
+| **2 developers** | 40 hrs/week each            | 3-4 weeks    | 1-2 weeks        | 4-6 weeks      | 30% faster with parallel work, +10% coordination overhead |
+| **3 developers** | 40 hrs/week each            | 3 weeks      | 1 week           | 4 weeks        | Diminishing returns, +20% coordination overhead           |
 
 ### Parallel Development Opportunities (2 Developers)
 
 **Week 1 (Foundation):**
+
 - **Dev 1:** F01 (Day 1-2), F02 (Day 3), F03 (Day 4-5)
 - **Dev 2:** F01 setup support, F05 (Day 3-5) - parallel with F03
 - **Coordination:** Integration testing (Day 5 afternoon)
 - **Time Saved:** 1 day (F03 and F05 in parallel)
 
 **Week 2 (Core Infrastructure):**
+
 - **Dev 1:** F04 (Day 6-8)
 - **Dev 2:** F05 completion + start F06 (Day 6-8)
 - **Coordination:** Integration testing (Day 8 afternoon)
 - **Time Saved:** 1 day (F04 and F05 overlap)
 
 **Week 3 (Investment Features):**
+
 - **Dev 1:** F06 completion + F08 (Day 9-11)
 - **Dev 2:** F07 + F09 (Day 9-11)
 - **Coordination:** Integration testing (Day 11 afternoon)
 - **Time Saved:** 2 days (F07, F08, F09 parallelized)
 
 **Week 4 (Visualization):**
+
 - **Dev 1:** F10 (Day 12-13)
 - **Dev 2:** F11 start (Day 12-13)
 - **Coordination:** Integration testing + polish (Day 14-15)
 - **Time Saved:** 1 day (F10 and F11 overlap)
 
 **Optimized Timeline (2 Developers):**
+
 - MVP: 3-4 weeks (vs 5-6 weeks solo)
 - Savings: 2 weeks (33% faster)
 - Trade-off: +5 hours coordination overhead per week
@@ -1609,6 +1669,7 @@ Complete this checklist before deploying MVP to production. Each section must be
 ### Skills Required
 
 **Essential (Must Have):**
+
 - ✅ **Next.js 15 App Router** - Core framework
 - ✅ **TypeScript** - Type safety throughout
 - ✅ **React 19** - UI components
@@ -1616,6 +1677,7 @@ Complete this checklist before deploying MVP to production. Each section must be
 - ✅ **NextAuth.js v5** - Authentication
 
 **Important (Should Have):**
+
 - ✅ **PostgreSQL** - Database design, queries, indexing
 - ✅ **API Integration** - RESTful APIs, error handling, rate limiting
 - ✅ **Tailwind CSS** - Rapid UI styling
@@ -1623,6 +1685,7 @@ Complete this checklist before deploying MVP to production. Each section must be
 - ✅ **Testing** - Unit, integration, E2E testing concepts
 
 **Useful (Nice to Have):**
+
 - ✅ **Recharts** - Data visualization (can learn during F11)
 - ✅ **Playwright** - E2E testing (can learn during testing phases)
 - ✅ **Vercel** - Deployment platform (straightforward to learn)
@@ -1631,24 +1694,28 @@ Complete this checklist before deploying MVP to production. Each section must be
 ### Learning Curve Adjustment
 
 **If developer is new to Next.js 15 App Router:**
+
 - **Add 1 week** for learning
 - **Approach:** Complete [Next.js tutorial](https://nextjs.org/learn) before F01
 - **Resources:** Official Next.js docs, YouTube tutorials
 - **Timeline:** 6-7 weeks for MVP (vs 5-6 weeks)
 
 **If developer is new to TypeScript:**
+
 - **Add 1 week** for TypeScript basics
 - **Approach:** [TypeScript Handbook](https://www.typescriptlang.org/docs/handbook/intro.html) + practice
 - **Leverage:** AI assistants (Claude, GitHub Copilot) for TypeScript syntax
 - **Timeline:** 6-7 weeks for MVP
 
 **If developer is new to both:**
+
 - **Add 2 weeks** total for learning (weeks overlap)
 - **Timeline:** 7-8 weeks for MVP
 
 ### Coordination Overhead (Multi-Developer)
 
 **Daily Activities:**
+
 - **Standup:** 15 minutes/day (What did you do? What will you do? Blockers?)
 - **Code Review:** 30 minutes/PR (average 2 PRs/developer/week = 2 hours/week)
 - **Integration Testing:** 2 hours/week (end of each milestone)
@@ -1656,6 +1723,7 @@ Complete this checklist before deploying MVP to production. Each section must be
 - **Total:** ~5 hours/week overhead per developer
 
 **Coordination Tools:**
+
 - **Slack/Discord:** Real-time communication
 - **GitHub PRs:** Code review and discussion
 - **Linear/Jira:** Task tracking (optional)
@@ -1664,6 +1732,7 @@ Complete this checklist before deploying MVP to production. Each section must be
 ### Buffer Time Recommendation
 
 **Add 20% buffer** to account for:
+
 - Unexpected bugs (30% of buffer)
 - Learning curve for new technologies (25% of buffer)
 - Integration issues between features (20% of buffer)
@@ -1671,11 +1740,13 @@ Complete this checklist before deploying MVP to production. Each section must be
 - Polish and refinement (10% of buffer)
 
 **Example Calculation:**
+
 - **Planned:** 25 days (5 weeks × 5 days)
 - **Buffer:** 25 days × 20% = 5 days
 - **Total:** 30 days = **6 weeks** realistic delivery
 
 **Confidence Levels:**
+
 - **5 weeks (no buffer):** 50% confidence
 - **6 weeks (20% buffer):** 80% confidence ✅ Recommended
 - **7 weeks (40% buffer):** 95% confidence (conservative)
@@ -1691,6 +1762,7 @@ Complete this checklist before deploying MVP to production. Each section must be
 **SMART Milestone:**
 
 **✅ Measurable Success Criteria:**
+
 - [ ] User can sign in with Google OAuth within 3 seconds
 - [ ] Session token persists for 30 days without re-authentication
 - [ ] Protected routes `/dashboard` and `/portfolios/*` redirect unauthenticated users to `/auth/signin` with proper redirect-back functionality
@@ -1704,6 +1776,7 @@ Complete this checklist before deploying MVP to production. Each section must be
 - [ ] All GitHub Actions CI/CD checks passing
 
 **Validation Tests:**
+
 ```typescript
 describe('Week 1 Milestone Validation', () => {
   test('User can sign in with Google OAuth', async () => {
@@ -1745,6 +1818,7 @@ describe('Week 1 Milestone Validation', () => {
 ```
 
 **Demo Scenario (for stakeholder review):**
+
 ```gherkin
 Given a new user visits the application
 When they click "Sign in with Google"
@@ -1769,6 +1843,7 @@ And they should no longer have access to protected routes
 **SMART Milestone:**
 
 **✅ Measurable Success Criteria:**
+
 - [ ] User can create up to 100 portfolios with unique names (validated unique constraint in database)
 - [ ] Each portfolio supports 10 different base currencies (USD, EUR, GBP, JPY, CAD, AUD, CHF, CNY, INR, BRL)
 - [ ] Portfolio create/update/delete operations complete within 200ms (p95)
@@ -1783,6 +1858,7 @@ And they should no longer have access to protected routes
 - [ ] Zero authorization bugs (users can only access their own portfolios)
 
 **Validation Tests:**
+
 ```typescript
 describe('Week 2 Milestone Validation', () => {
   test('User can create portfolio with all currencies', async () => {
@@ -1821,18 +1897,16 @@ describe('Week 2 Milestone Validation', () => {
   })
 
   test('API rate limiting works correctly', async () => {
-    const promises = Array.from({ length: 10 }, () =>
-      alphaVantage.getStockQuote('AAPL')
-    )
+    const promises = Array.from({ length: 10 }, () => alphaVantage.getStockQuote('AAPL'))
 
     const results = await Promise.allSettled(promises)
 
     // First 5 should succeed (5 calls/minute limit)
-    const succeeded = results.filter(r => r.status === 'fulfilled')
+    const succeeded = results.filter((r) => r.status === 'fulfilled')
     expect(succeeded.length).toBeGreaterThanOrEqual(5)
 
     // Some should be rate limited or use cache
-    const failed = results.filter(r => r.status === 'rejected')
+    const failed = results.filter((r) => r.status === 'rejected')
     expect(failed.length + succeeded.length).toBe(10)
   })
 
@@ -1840,14 +1914,13 @@ describe('Week 2 Milestone Validation', () => {
     const user1 = await signInAsUser('user1@test.com')
     const user2Portfolio = await createPortfolioAsUser('user2@test.com')
 
-    await expect(
-      getPortfolio(user2Portfolio.id, user1.sessionToken)
-    ).rejects.toThrow('Forbidden')
+    await expect(getPortfolio(user2Portfolio.id, user1.sessionToken)).rejects.toThrow('Forbidden')
   })
 })
 ```
 
 **Demo Scenario:**
+
 ```gherkin
 Given an authenticated user on the dashboard
 When they click "Create Portfolio"
@@ -1876,6 +1949,7 @@ And clicking it should show current price from Alpha Vantage
 **SMART Milestone:**
 
 **✅ Measurable Success Criteria:**
+
 - [ ] User can add investment with ticker search returning results in <300ms
 - [ ] Ticker autocomplete suggests top 5 matches from 10,000+ symbols
 - [ ] Investment form validates all fields:
@@ -1894,6 +1968,7 @@ And clicking it should show current price from Alpha Vantage
 - [ ] Form shows real-time validation errors (debounced 300ms)
 
 **Validation Tests:**
+
 ```typescript
 describe('Week 3 Milestone Validation', () => {
   test('Ticker search returns results within 300ms', async () => {
@@ -1918,7 +1993,9 @@ describe('Week 3 Milestone Validation', () => {
     // Invalid date (future)
     const futureDate = new Date()
     futureDate.setFullYear(futureDate.getFullYear() + 1)
-    await expect(createInvestment({ date: futureDate })).rejects.toThrow('Date cannot be in the future')
+    await expect(createInvestment({ date: futureDate })).rejects.toThrow(
+      'Date cannot be in the future'
+    )
   })
 
   test('Adding same ticker aggregates correctly', async () => {
@@ -1975,6 +2052,7 @@ describe('Week 3 Milestone Validation', () => {
 ```
 
 **Demo Scenario:**
+
 ```gherkin
 Given an authenticated user viewing their portfolio
 When they click "Add Investment"
@@ -2010,6 +2088,7 @@ And after confirming, the investment should be removed
 **SMART Milestone:**
 
 **✅ Measurable Success Criteria:**
+
 - [ ] Average cost basis calculation accurate to 2 decimal places
 - [ ] Gains/loss calculation correct for 1,000+ test scenarios
 - [ ] Multi-currency conversion accurate within ±0.1% of actual exchange rate
@@ -2024,13 +2103,14 @@ And after confirming, the investment should be removed
 - [ ] Rounding errors do not accumulate over multiple transactions
 
 **Validation Tests:**
+
 ```typescript
 describe('Week 4 Milestone Validation', () => {
   test('Average cost basis accurate to 2 decimals', () => {
     const purchases = [
-      { qty: 10, price: 150.00 },  // $1,500.00
-      { qty: 5, price: 160.50 },   // $802.50
-      { qty: 3, price: 155.75 },   // $467.25
+      { qty: 10, price: 150.0 }, // $1,500.00
+      { qty: 5, price: 160.5 }, // $802.50
+      { qty: 3, price: 155.75 }, // $467.25
     ]
 
     const avgCost = calculateAverageCostBasis(purchases)
@@ -2047,9 +2127,9 @@ describe('Week 4 Milestone Validation', () => {
 
     const metrics = calculateGainsLoss(investment)
 
-    expect(metrics.currentValue).toBe(1750)   // 10 × $175
-    expect(metrics.totalCost).toBe(1500)      // 10 × $150
-    expect(metrics.gainLossDollar).toBe(250)  // $1750 - $1500
+    expect(metrics.currentValue).toBe(1750) // 10 × $175
+    expect(metrics.totalCost).toBe(1500) // 10 × $150
+    expect(metrics.gainLossDollar).toBe(250) // $1750 - $1500
     expect(metrics.gainLossPercent).toBeCloseTo(16.67, 2) // (250/1500) × 100
   })
 
@@ -2059,7 +2139,7 @@ describe('Week 4 Milestone Validation', () => {
 
     const investment = {
       quantity: 10,
-      price: 100,      // 100 EUR per share
+      price: 100, // 100 EUR per share
       currency: 'EUR',
     }
 
@@ -2119,15 +2199,13 @@ describe('Week 4 Milestone Validation', () => {
   })
 
   test('Calculations are deterministic', () => {
-    const investment = { qty: 10, avgCost: 150.50, currentPrice: 175.75 }
+    const investment = { qty: 10, avgCost: 150.5, currentPrice: 175.75 }
 
-    const results = Array.from({ length: 1000 }, () =>
-      calculateGainsLoss(investment)
-    )
+    const results = Array.from({ length: 1000 }, () => calculateGainsLoss(investment))
 
     // All results should be identical
     const firstResult = results[0]
-    results.forEach(result => {
+    results.forEach((result) => {
       expect(result).toEqual(firstResult)
     })
   })
@@ -2135,6 +2213,7 @@ describe('Week 4 Milestone Validation', () => {
 ```
 
 **Demo Scenario:**
+
 ```gherkin
 Given a portfolio with 3 investments in different currencies
 - 10 AAPL shares @ $150 USD
@@ -2168,6 +2247,7 @@ And suggest manual refresh
 **SMART Milestone:**
 
 **✅ Measurable Success Criteria:**
+
 - [ ] Portfolio summary displays within 200ms after data load
 - [ ] Summary cards show:
   - Total portfolio value (with currency symbol)
@@ -2188,6 +2268,7 @@ And suggest manual refresh
 - [ ] Lighthouse score >90 (performance, accessibility, best practices, SEO)
 
 **Validation Tests:**
+
 ```typescript
 describe('Week 5 Milestone Validation', () => {
   test('Portfolio summary displays within 200ms', async () => {
@@ -2241,10 +2322,10 @@ describe('Week 5 Milestone Validation', () => {
 
     const summary = await getPortfolioSummary(portfolio.id)
 
-    const aaplAllocation = summary.investments.find(inv => inv.ticker === 'AAPL')
-    const googlAllocation = summary.investments.find(inv => inv.ticker === 'GOOGL')
+    const aaplAllocation = summary.investments.find((inv) => inv.ticker === 'AAPL')
+    const googlAllocation = summary.investments.find((inv) => inv.ticker === 'GOOGL')
 
-    expect(aaplAllocation.percentOfPortfolio).toBeCloseTo(25, 1)  // 1000/4000 = 25%
+    expect(aaplAllocation.percentOfPortfolio).toBeCloseTo(25, 1) // 1000/4000 = 25%
     expect(googlAllocation.percentOfPortfolio).toBeCloseTo(75, 1) // 3000/4000 = 75%
   })
 
@@ -2266,7 +2347,7 @@ describe('Week 5 Milestone Validation', () => {
     const chart = await page.locator('[data-testid="portfolio-pie-chart"]')
     await expect(chart).toBeVisible()
 
-    const chartWidth = await chart.evaluate(el => el.clientWidth)
+    const chartWidth = await chart.evaluate((el) => el.clientWidth)
     expect(chartWidth).toBeLessThanOrEqual(320)
   })
 
@@ -2293,6 +2374,7 @@ describe('Week 5 Milestone Validation', () => {
 ```
 
 **Demo Scenario (Complete MVP Walkthrough):**
+
 ```gherkin
 Given a new user signs in for the first time
 When they create a portfolio "Investment Portfolio" in USD
@@ -2338,6 +2420,7 @@ And all functionality should work on touch devices
 **SMART Milestone: Production-Ready Application**
 
 **✅ Measurable Success Criteria:**
+
 - [ ] Historical performance chart displays last 90 days of data
 - [ ] Date range selector works (1W, 1M, 3M, ALL)
 - [ ] Line chart renders smoothly with 90+ data points
@@ -2356,6 +2439,7 @@ And all functionality should work on touch devices
 ## 🎯 Git Workflow for Each Feature
 
 ### 1. Start Feature
+
 ```bash
 git checkout main
 git pull origin main
@@ -2370,6 +2454,7 @@ git checkout -b feature/price-refresh
 ### 2. Implement & Commit
 
 **Commit frequently with descriptive messages:**
+
 ```bash
 # Make changes
 git add <files>
@@ -2403,6 +2488,7 @@ git commit -m "docs(auth): update authentication documentation
 ### 3. Test & Push
 
 **Run all checks before pushing:**
+
 ```bash
 # 1. Type checking
 pnpm typecheck
@@ -2427,6 +2513,7 @@ git push origin feature/<feature-name>
 ```
 
 **Create Pull Request:**
+
 ```bash
 # Using GitHub CLI
 gh pr create \
@@ -2461,12 +2548,14 @@ EOF
 ### 4. After PR Approval
 
 **Merge via GitHub interface (recommended):**
+
 1. Go to GitHub PR page
 2. Click "Merge pull request"
 3. Confirm merge
 4. Delete branch on GitHub (checkbox after merge)
 
 **Cleanup local branches:**
+
 ```bash
 # Switch back to main
 git checkout main
@@ -2488,6 +2577,7 @@ git branch -a
 Each feature is considered complete when **ALL** of the following criteria are met:
 
 **Implementation:**
+
 - [ ] All implementation steps from feature file completed
 - [ ] All acceptance criteria met and verified
 - [ ] Code follows project conventions (see CLAUDE.md)
@@ -2495,6 +2585,7 @@ Each feature is considered complete when **ALL** of the following criteria are m
 - [ ] Error handling comprehensive (all edge cases covered)
 
 **Testing:**
+
 - [ ] Unit tests written and passing (80%+ coverage for this feature)
 - [ ] Integration tests passing (if applicable)
 - [ ] E2E tests passing (if applicable)
@@ -2503,6 +2594,7 @@ Each feature is considered complete when **ALL** of the following criteria are m
 - [ ] Mobile responsiveness tested (iOS, Android)
 
 **Code Quality:**
+
 - [ ] No TypeScript errors (`pnpm typecheck`)
 - [ ] No ESLint warnings (`pnpm lint`)
 - [ ] Code formatted with Prettier (`pnpm format`)
@@ -2511,6 +2603,7 @@ Each feature is considered complete when **ALL** of the following criteria are m
 - [ ] Code reviewed and approved by at least 1 person (or AI review if solo)
 
 **Documentation:**
+
 - [ ] User guide updated (`docs/user-guide/`)
 - [ ] API documentation updated (`docs/api/`)
 - [ ] Architecture docs updated if structure changes (`docs/architecture/`)
@@ -2519,6 +2612,7 @@ Each feature is considered complete when **ALL** of the following criteria are m
 - [ ] CLAUDE.md updated if new patterns introduced
 
 **Git Workflow:**
+
 - [ ] Feature branch created from latest main
 - [ ] Commits follow Conventional Commits format
 - [ ] PR created with proper title and description
@@ -2528,6 +2622,7 @@ Each feature is considered complete when **ALL** of the following criteria are m
 - [ ] Local branch deleted after merge
 
 **Deployment:**
+
 - [ ] Feature deployed to development environment
 - [ ] Feature verified working in development
 - [ ] No errors in development logs
@@ -2535,6 +2630,7 @@ Each feature is considered complete when **ALL** of the following criteria are m
 - [ ] Security review completed (if auth/data changes)
 
 **Tracking:**
+
 - [ ] Feature status updated in MASTER_PLAN.md (change ⬜ to ✅)
 - [ ] Progress percentage updated
 - [ ] Blockers documented (if any)
@@ -2547,11 +2643,14 @@ Each feature is considered complete when **ALL** of the following criteria are m
 As you complete features, update this section:
 
 ### Completed Features
+
 - None yet
 
 **When a feature is complete**, update like this:
+
 ```markdown
 ### Completed Features
+
 - ✅ **F01 (Project Setup)** - Completed 2025-10-10
   - All dependencies installed
   - Development environment working
@@ -2563,11 +2662,14 @@ As you complete features, update this section:
 ```
 
 ### In Progress
+
 - None
 
 **While working on a feature**, update like this:
+
 ```markdown
 ### In Progress
+
 - 🟨 **F03 (Authentication)** - Started 2025-10-12
   - ✅ NextAuth.js configured
   - ✅ Google OAuth credentials obtained
@@ -2576,11 +2678,14 @@ As you complete features, update this section:
 ```
 
 ### Blocked
+
 - None
 
 **If blocked**, document like this:
+
 ```markdown
 ### Blocked
+
 - ⛔ **F05 (Alpha Vantage Integration)** - Blocked 2025-10-15
   - Reason: Waiting for Alpha Vantage API key approval (submitted 2025-10-14)
   - Impact: Cannot test ticker search or price refresh
@@ -2589,11 +2694,14 @@ As you complete features, update this section:
 ```
 
 ### Notes & Decisions
+
 - None yet
 
 **Document important decisions:**
+
 ```markdown
 ### Notes & Decisions
+
 - **2025-10-10:** Decided to use Vercel Postgres instead of Supabase for simpler deployment
 - **2025-10-12:** Chose to implement ticker search with client-side filtering for better UX (instant results)
 - **2025-10-15:** Added 20% time buffer due to Alpha Vantage API rate limiting complexity
@@ -2604,6 +2712,7 @@ As you complete features, update this section:
 ## 🔗 Quick Links
 
 ### Documentation
+
 - [Full Specification](investment-tracker-specification.md)
 - [Original Implementation Plan](implementation-plan.md)
 - [User Documentation](../docs/user-guide/)
@@ -2611,11 +2720,13 @@ As you complete features, update this section:
 - [Architecture Docs](../docs/architecture/)
 
 ### Development
+
 - [CLAUDE.md](../CLAUDE.md) - Development guidelines
 - [README.md](../README.md) - Project overview
 - [Changelog](../docs/changelog.md) - Change history
 
 ### External Resources
+
 - [Next.js Documentation](https://nextjs.org/docs)
 - [Prisma Documentation](https://www.prisma.io/docs)
 - [NextAuth.js Documentation](https://next-auth.js.org/)
@@ -2659,18 +2770,21 @@ If you're new to any of the technologies:
 ## 🆘 Need Help?
 
 ### Technical Questions
+
 - Review feature dependencies in the dependency graph
 - Check [CLAUDE.md](../CLAUDE.md) for code patterns and examples
 - Read [investment-tracker-specification.md](investment-tracker-specification.md) for detailed specs
 - Consult official documentation for technologies used (links above)
 
 ### Blockers
+
 - Document in "Blocked" section of Progress Tracking
 - Identify workarounds if possible (mock data, stub implementations)
 - Update MASTER_PLAN.md with blocker status
 - Communicate with team/stakeholders
 
 ### Getting Unstuck
+
 - Review the feature's "Common Issues & Solutions" section
 - Check GitHub Issues for similar problems
 - Use AI assistants (Claude, GitHub Copilot) for code generation
