@@ -289,6 +289,170 @@ git tag -a v1.0.1 -m "Hotfix: <description>"
 git push origin v1.0.1
 ```
 
+## CI/CD Pipeline
+
+### Automated Quality Checks
+
+Every pull request triggers automated quality checks via GitHub Actions. The CI pipeline ensures no broken code reaches the main branch.
+
+**CI Workflow** (`.github/workflows/ci.yml`):
+
+```yaml
+Quality Checks Pipeline:
+├── Lint (ESLint)           ✅ Code style and best practices
+├── TypeCheck (TypeScript)  ✅ Type safety verification
+├── Format (Prettier)       ✅ Code formatting standards
+├── Build (Next.js)         ✅ Production build verification
+├── Test (Vitest/Jest)      ⏭️ Unit tests (when configured)
+└── E2E (Playwright)        ⏭️ End-to-end tests (when configured)
+```
+
+**How It Works:**
+
+1. **On PR Creation/Update:** All checks run automatically in parallel
+2. **Status Checks:** Results appear on the PR page
+3. **Merge Protection:** PR cannot be merged if any check fails
+4. **Local Preview:** Run same checks locally before pushing:
+   ```bash
+   pnpm lint && pnpm typecheck && pnpm format:check && pnpm build
+   ```
+
+### Current Quality Gates
+
+**✅ Active Checks:**
+
+- **ESLint:** `pnpm lint` - Enforces code quality rules
+- **TypeScript:** `pnpm typecheck` - Ensures type safety
+- **Prettier:** `pnpm format:check` - Verifies code formatting
+- **Build:** `pnpm build` - Confirms production build succeeds
+
+**⏭️ Placeholder Checks (Future):**
+
+- **Unit Tests:** `pnpm test` - Runs when test framework installed
+- **E2E Tests:** `pnpm test:e2e` - Runs when Playwright configured
+- Both checks auto-skip if not configured, but activate automatically once installed
+
+### Adding Test Framework
+
+When you're ready to add tests, the CI pipeline will automatically detect and run them:
+
+**For Unit Tests (Vitest recommended):**
+
+```bash
+# Install testing dependencies
+pnpm add -D vitest @testing-library/react @testing-library/jest-dom @vitejs/plugin-react
+
+# Create vitest.config.ts
+# Update package.json "test" script to: "vitest"
+# CI will automatically start running tests on every PR
+```
+
+**For E2E Tests (Playwright):**
+
+```bash
+# Install Playwright
+pnpm add -D @playwright/test
+
+# Initialize Playwright
+pnpm create playwright
+
+# Update package.json "test:e2e" script to: "playwright test"
+# CI will automatically start running E2E tests on every PR
+```
+
+### GitHub Actions Workflows
+
+**1. CI Quality Checks** (`.github/workflows/ci.yml`)
+
+- **Trigger:** Every PR to main/develop
+- **Purpose:** Automated quality verification
+- **Duration:** ~3-5 minutes (with caching)
+- **Required:** Yes - blocks PR merge if fails
+
+**2. Claude Code Review** (`.github/workflows/claude-code-review.yml`)
+
+- **Trigger:** Every PR creation/update
+- **Purpose:** AI-powered code review feedback
+- **Required:** No - advisory only
+
+**3. Claude Code Assistant** (`.github/workflows/claude.yml`)
+
+- **Trigger:** @claude mentions in comments
+- **Purpose:** On-demand AI assistance
+- **Required:** No - interactive help
+
+### CI Performance Optimizations
+
+**Caching Strategy:**
+
+- pnpm dependencies cached across jobs
+- Next.js build cache preserved
+- Playwright browsers cached when installed
+
+**Parallel Execution:**
+
+- All quality checks run simultaneously
+- Typical runtime: 3-5 minutes
+- No sequential dependencies between jobs
+
+**Smart Skipping:**
+
+- Test jobs check if framework installed before running
+- Prevents CI failures when tests not yet configured
+- Zero configuration needed - auto-detects setup
+
+### Troubleshooting CI Failures
+
+**ESLint Failures:**
+
+```bash
+# Fix locally
+pnpm lint --fix
+
+# Verify
+pnpm lint
+```
+
+**TypeScript Failures:**
+
+```bash
+# Check errors
+pnpm typecheck
+
+# Common fixes: update types, fix imports, add type annotations
+```
+
+**Prettier Failures:**
+
+```bash
+# Auto-fix formatting
+pnpm format
+
+# Verify
+pnpm format:check
+```
+
+**Build Failures:**
+
+```bash
+# Test build locally
+pnpm build
+
+# Check .env.local has all required variables
+# CI uses placeholder values for build-time validation
+```
+
+### Future Enhancements
+
+**Planned Additions:**
+
+- Test coverage reporting (Codecov)
+- Security scanning (npm audit, Snyk)
+- Bundle size tracking
+- Performance budgets
+- Preview deployments with smoke tests
+- Automated dependency updates (Dependabot)
+
 ## Essential Commands
 
 ### Development
