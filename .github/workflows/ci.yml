@@ -1,0 +1,286 @@
+name: CI Quality Checks
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+    branches:
+      - main
+      - develop
+  push:
+    branches:
+      - main
+
+# Cancel in-progress runs when a new workflow with the same group name is triggered
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  # Setup job - installs dependencies and caches them for other jobs
+  setup:
+    name: Setup Dependencies
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'pnpm'
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Cache setup complete
+        run: echo "Dependencies installed and cached"
+
+  # Lint check - ESLint
+  lint:
+    name: Lint (ESLint)
+    needs: setup
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'pnpm'
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Run ESLint
+        run: pnpm lint
+
+  # Type check - TypeScript compilation
+  typecheck:
+    name: Type Check (TypeScript)
+    needs: setup
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'pnpm'
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Run TypeScript type checking
+        run: pnpm typecheck
+
+  # Format check - Prettier
+  format:
+    name: Format Check (Prettier)
+    needs: setup
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'pnpm'
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Check code formatting
+        run: pnpm format:check
+
+  # Build verification - Next.js production build
+  build:
+    name: Build (Next.js)
+    needs: setup
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'pnpm'
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Create .env.local for build
+        run: |
+          cat > .env.local << EOF
+          # Build-time environment variables
+          DATABASE_URL="postgresql://placeholder:placeholder@localhost:5432/placeholder"
+          NEXTAUTH_URL="http://localhost:3000"
+          NEXTAUTH_SECRET="build-time-secret-not-used"
+          GOOGLE_CLIENT_ID="placeholder"
+          GOOGLE_CLIENT_SECRET="placeholder"
+          ALPHA_VANTAGE_API_KEY="placeholder"
+          EOF
+
+      - name: Build Next.js application
+        run: pnpm build
+
+      - name: Upload build artifacts
+        if: github.event_name == 'pull_request'
+        uses: actions/upload-artifact@v4
+        with:
+          name: nextjs-build
+          path: .next
+          retention-days: 7
+
+  # Unit tests - Conditional execution (runs if test framework is installed)
+  test:
+    name: Unit Tests
+    needs: setup
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'pnpm'
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Check if test script exists
+        id: check-tests
+        run: |
+          if grep -q '"test"' package.json; then
+            echo "tests_exist=true" >> $GITHUB_OUTPUT
+          else
+            echo "tests_exist=false" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Run unit tests
+        if: steps.check-tests.outputs.tests_exist == 'true'
+        run: pnpm test
+
+      - name: Skip tests (not configured)
+        if: steps.check-tests.outputs.tests_exist == 'false'
+        run: echo "⏭️ Unit tests not configured yet - skipping. Add 'test' script to package.json when ready."
+
+  # E2E tests - Conditional execution (runs if Playwright is installed)
+  e2e:
+    name: E2E Tests (Playwright)
+    needs: setup
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'pnpm'
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Check if E2E test script exists
+        id: check-e2e
+        run: |
+          if grep -q '"test:e2e"' package.json; then
+            echo "e2e_exists=true" >> $GITHUB_OUTPUT
+          else
+            echo "e2e_exists=false" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Install Playwright browsers
+        if: steps.check-e2e.outputs.e2e_exists == 'true'
+        run: pnpm exec playwright install --with-deps
+
+      - name: Run E2E tests
+        if: steps.check-e2e.outputs.e2e_exists == 'true'
+        run: pnpm test:e2e
+
+      - name: Upload Playwright report
+        if: steps.check-e2e.outputs.e2e_exists == 'true' && always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-report
+          path: playwright-report/
+          retention-days: 7
+
+      - name: Skip E2E tests (not configured)
+        if: steps.check-e2e.outputs.e2e_exists == 'false'
+        run: echo "⏭️ E2E tests not configured yet - skipping. Add 'test:e2e' script to package.json when ready."
+
+  # Summary job - requires all checks to pass
+  quality-checks-complete:
+    name: All Quality Checks Passed ✅
+    needs: [lint, typecheck, format, build, test, e2e]
+    runs-on: ubuntu-latest
+    if: always()
+    steps:
+      - name: Check all jobs status
+        run: |
+          if [[ "${{ needs.lint.result }}" == "success" && \
+                "${{ needs.typecheck.result }}" == "success" && \
+                "${{ needs.format.result }}" == "success" && \
+                "${{ needs.build.result }}" == "success" && \
+                "${{ needs.test.result }}" == "success" && \
+                "${{ needs.e2e.result }}" == "success" ]]; then
+            echo "✅ All quality checks passed!"
+            exit 0
+          else
+            echo "❌ Some quality checks failed:"
+            echo "  - Lint: ${{ needs.lint.result }}"
+            echo "  - TypeCheck: ${{ needs.typecheck.result }}"
+            echo "  - Format: ${{ needs.format.result }}"
+            echo "  - Build: ${{ needs.build.result }}"
+            echo "  - Test: ${{ needs.test.result }}"
+            echo "  - E2E: ${{ needs.e2e.result }}"
+            exit 1
+          fi
