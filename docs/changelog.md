@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+
 - Initial project structure
 - Documentation framework
 
@@ -31,12 +32,15 @@ When features are implemented, add entries here following this format:
 ## [Version] - YYYY-MM-DD
 
 ### Added
+
 - Feature description with link to relevant docs
 - Include screenshots in user-guide when applicable
 
 ### Changed
+
 - What was modified and why
 
 ### Fixed
+
 - Bug fixes with issue references
 ```

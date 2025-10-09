@@ -13,6 +13,7 @@
 Implement historical performance tracking with daily portfolio snapshots and interactive line charts showing portfolio value over time with date range filtering and multiple portfolio comparison.
 
 **What this enables:**
+
 - Track portfolio value changes over time
 - View performance across different timeframes (1W, 1M, 3M, 6M, 1Y, ALL)
 - Compare multiple portfolios on the same chart
@@ -85,6 +86,7 @@ model Portfolio {
 ```
 
 Run migration:
+
 ```bash
 pnpm prisma migrate dev --name add_portfolio_snapshots
 ```
@@ -202,10 +204,7 @@ export function getDateRangeStart(range: DateRange): Date {
   }
 }
 
-export async function getPortfolioHistory(
-  portfolioId: string,
-  range: DateRange = '1M'
-) {
+export async function getPortfolioHistory(portfolioId: string, range: DateRange = '1M') {
   const startDate = getDateRangeStart(range)
 
   const snapshots = await db.portfolioSnapshot.findMany({
@@ -227,10 +226,7 @@ export async function getPortfolioHistory(
   }))
 }
 
-export async function getMultiplePortfolioHistory(
-  portfolioIds: string[],
-  range: DateRange = '1M'
-) {
+export async function getMultiplePortfolioHistory(portfolioIds: string[], range: DateRange = '1M') {
   const startDate = getDateRangeStart(range)
 
   const snapshots = await db.portfolioSnapshot.findMany({
@@ -256,22 +252,28 @@ export async function getMultiplePortfolioHistory(
   })
 
   // Group by portfolio
-  const groupedData = portfolioIds.reduce((acc, portfolioId) => {
-    const portfolioSnapshots = snapshots.filter((s) => s.portfolioId === portfolioId)
+  const groupedData = portfolioIds.reduce(
+    (acc, portfolioId) => {
+      const portfolioSnapshots = snapshots.filter((s) => s.portfolioId === portfolioId)
 
-    if (portfolioSnapshots.length > 0) {
-      acc[portfolioId] = {
-        name: portfolioSnapshots[0].portfolio.name,
-        currency: portfolioSnapshots[0].portfolio.baseCurrency,
-        data: portfolioSnapshots.map((s) => ({
-          date: s.snapshotDate,
-          value: s.totalValue.toNumber(),
-        })),
+      if (portfolioSnapshots.length > 0) {
+        acc[portfolioId] = {
+          name: portfolioSnapshots[0].portfolio.name,
+          currency: portfolioSnapshots[0].portfolio.baseCurrency,
+          data: portfolioSnapshots.map((s) => ({
+            date: s.snapshotDate,
+            value: s.totalValue.toNumber(),
+          })),
+        }
       }
-    }
 
-    return acc
-  }, {} as Record<string, { name: string; currency: string; data: Array<{ date: Date; value: number }> }>)
+      return acc
+    },
+    {} as Record<
+      string,
+      { name: string; currency: string; data: Array<{ date: Date; value: number }> }
+    >
+  )
 
   return groupedData
 }
@@ -379,10 +381,7 @@ import { authOptions } from '@/lib/auth'
 import { db } from '@/lib/db'
 import { getPortfolioHistory, DateRange } from '@/lib/services/snapshot-service'
 
-export async function GET(
-  request: NextRequest,
-  { params }: { params: { id: string } }
-) {
+export async function GET(request: NextRequest, { params }: { params: { id: string } }) {
   try {
     const session = await getServerSession(authOptions)
 
@@ -417,10 +416,7 @@ export async function GET(
     })
   } catch (error) {
     console.error('Failed to fetch portfolio history:', error)
-    return NextResponse.json(
-      { error: 'Failed to fetch portfolio history' },
-      { status: 500 }
-    )
+    return NextResponse.json({ error: 'Failed to fetch portfolio history' }, { status: 500 })
   }
 }
 ```
@@ -447,10 +443,7 @@ export async function GET(request: NextRequest) {
     const range = (searchParams.get('range') || '1M') as DateRange
 
     if (!portfolioIdsParam) {
-      return NextResponse.json(
-        { error: 'Portfolio IDs required' },
-        { status: 400 }
-      )
+      return NextResponse.json({ error: 'Portfolio IDs required' }, { status: 400 })
     }
 
     const portfolioIds = portfolioIdsParam.split(',')
@@ -464,10 +457,7 @@ export async function GET(request: NextRequest) {
     })
 
     if (portfolios.length !== portfolioIds.length) {
-      return NextResponse.json(
-        { error: 'One or more portfolios not found' },
-        { status: 404 }
-      )
+      return NextResponse.json({ error: 'One or more portfolios not found' }, { status: 404 })
     }
 
     // Get historical data for all portfolios
@@ -481,10 +471,7 @@ export async function GET(request: NextRequest) {
     })
   } catch (error) {
     console.error('Failed to fetch portfolio comparison:', error)
-    return NextResponse.json(
-      { error: 'Failed to fetch portfolio comparison' },
-      { status: 500 }
-    )
+    return NextResponse.json({ error: 'Failed to fetch portfolio comparison' }, { status: 500 })
   }
 }
 ```
@@ -1026,10 +1013,7 @@ export async function POST(request: NextRequest) {
     })
   } catch (error) {
     console.error('Manual snapshot failed:', error)
-    return NextResponse.json(
-      { error: 'Failed to create snapshots' },
-      { status: 500 }
-    )
+    return NextResponse.json({ error: 'Failed to create snapshots' }, { status: 500 })
   }
 }
 ```
@@ -1086,6 +1070,7 @@ HAVING COUNT(*) > 1;
 ### Update README.md
 
 Add Historical Charts section:
+
 ```markdown
 ## Historical Performance Tracking
 
@@ -1102,6 +1087,7 @@ Add Historical Charts section:
 ## [0.2.0] - Phase 2: Historical Charts
 
 ### Added
+
 - Daily portfolio snapshot cron job
 - Portfolio historical data API endpoints
 - Interactive line charts with date range selector
@@ -1110,6 +1096,7 @@ Add Historical Charts section:
 - Historical data visualization with Recharts
 
 ### Technical
+
 - Added PortfolioSnapshot model to database
 - Implemented snapshot service with cron scheduling
 - Created history API routes with date range filtering
@@ -1125,6 +1112,7 @@ Add Historical Charts section:
 **Problem:** Daily snapshots not being created
 
 **Solution:**
+
 ```typescript
 // Check server logs
 console.log('Cron job status')
@@ -1141,6 +1129,7 @@ await createDailySnapshotsForAllPortfolios()
 **Problem:** Multiple snapshots for same date
 
 **Solution:** Unique constraint in schema prevents this, but verify:
+
 ```prisma
 @@unique([portfolioId, snapshotDate])
 ```
@@ -1150,6 +1139,7 @@ await createDailySnapshotsForAllPortfolios()
 **Problem:** Chart shows empty state
 
 **Solution:**
+
 ```typescript
 // Create initial snapshots
 POST /api/admin/snapshot
@@ -1166,6 +1156,7 @@ console.log(getDateRangeStart('1M'))
 **Problem:** Slow rendering with large datasets
 
 **Solution:**
+
 ```typescript
 // Limit data points for large date ranges
 const MAX_POINTS = 365
@@ -1201,6 +1192,7 @@ After completing this feature, you should have:
 ## 🔗 Related Files
 
 ### Created Files
+
 - `lib/services/snapshot-service.ts`
 - `lib/cron/daily-snapshot.ts`
 - `lib/server-init.ts`
@@ -1211,6 +1203,7 @@ After completing this feature, you should have:
 - `app/api/admin/snapshot/route.ts`
 
 ### Modified Files
+
 - `prisma/schema.prisma` (added PortfolioSnapshot model)
 - `app/layout.tsx` (server initialization)
 - `app/(dashboard)/portfolios/[id]/page.tsx` (added historical chart)
@@ -1224,6 +1217,7 @@ After completing this feature, you should have:
 ---
 
 **Status Legend:**
+
 - ⬜ Not Started
 - 🟨 In Progress
 - ✅ Complete

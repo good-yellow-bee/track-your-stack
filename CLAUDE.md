@@ -7,6 +7,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 **Track Your Stack** is an investment portfolio tracking application built with Next.js 15, TypeScript, and PostgreSQL. It allows users to monitor investments across multiple portfolios with real-time price updates via Alpha Vantage API, supporting stocks, ETFs, mutual funds, and cryptocurrency with multi-currency conversion.
 
 **Tech Stack:**
+
 - Frontend: Next.js 15 (App Router) + React 19 + TypeScript + Tailwind CSS + shadcn/ui
 - Backend: Next.js Server Actions + API Routes
 - Database: PostgreSQL via Prisma ORM
@@ -21,6 +22,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 When implementing ANY feature or making significant changes:
 
 1. **Launch Documentation Agent in Parallel:**
+
    ```
    Launch a general-purpose agent to maintain documentation while you code
    ```
@@ -33,6 +35,7 @@ When implementing ANY feature or making significant changes:
    - Update architecture diagrams when structure changes
 
 3. **Documentation Structure:**
+
    ```
    docs/
    ├── user-guide/
@@ -68,6 +71,7 @@ When implementing ANY feature or making significant changes:
    - Store in appropriate `/docs/*/screenshots/` directory
 
 **Example Workflow:**
+
 ```
 Developer Agent: Implements portfolio creation form
 Documentation Agent (Parallel):
@@ -78,6 +82,7 @@ Documentation Agent (Parallel):
 ```
 
 **Why This Matters:**
+
 - Documentation decay is the #1 cause of project maintainability issues
 - Future Claude instances need accurate docs to understand the codebase
 - Screenshots prevent "works on my machine" confusion
@@ -107,6 +112,7 @@ Documentation Agent (Parallel):
 ```
 
 **WHY THIS RULE EXISTS:**
+
 - ✅ Enables code review and quality control
 - ✅ Maintains clean, reversible history
 - ✅ Allows CI/CD validation before merge
@@ -151,6 +157,7 @@ git commit -m "feat: implement portfolio creation form
 ### 3. Test Thoroughly
 
 **Before merging, MUST verify:**
+
 - [ ] Feature works as expected
 - [ ] All existing tests pass
 - [ ] New tests added for new functionality
@@ -182,17 +189,21 @@ gh pr create --title "feat: <feature-name>" --body "Description of changes..."
 ```
 
 **Pull Request Description Template:**
+
 ```markdown
 ## What does this PR do?
+
 Brief description of the feature/fix
 
 ## Type of change
+
 - [ ] New feature
 - [ ] Bug fix
 - [ ] Documentation update
 - [ ] Refactoring
 
 ## Checklist
+
 - [ ] Tests pass locally
 - [ ] No TypeScript errors
 - [ ] No ESLint warnings
@@ -201,9 +212,11 @@ Brief description of the feature/fix
 - [ ] Changelog updated
 
 ## Screenshots (if applicable)
+
 [Add screenshots here]
 
 ## Testing performed
+
 - Describe testing steps
 ```
 
@@ -242,6 +255,7 @@ Follow [Conventional Commits](https://www.conventionalcommits.org/):
 ```
 
 **Types:**
+
 - `feat`: New feature
 - `fix`: Bug fix
 - `docs`: Documentation
@@ -251,6 +265,7 @@ Follow [Conventional Commits](https://www.conventionalcommits.org/):
 - `chore`: Build, dependencies, CI
 
 **Examples:**
+
 ```bash
 git commit -m "feat(auth): implement Google OAuth login"
 git commit -m "fix(portfolio): resolve currency conversion rounding error"
@@ -277,6 +292,7 @@ git push origin v1.0.1
 ## Essential Commands
 
 ### Development
+
 ```bash
 # Install dependencies
 pnpm install
@@ -298,6 +314,7 @@ pnpm format
 ```
 
 ### Database Operations
+
 ```bash
 # Generate Prisma Client
 pnpm prisma generate
@@ -319,6 +336,7 @@ pnpm prisma migrate reset
 ```
 
 ### Testing
+
 ```bash
 # Run all tests
 pnpm test
@@ -342,12 +360,14 @@ pnpm test:e2e:ui
 **Server Actions for Mutations:** All data mutations (create, update, delete) use Next.js Server Actions with `'use server'` directive. These provide type-safe mutations without separate API endpoints.
 
 **API Routes for External Calls:** Use API routes (`app/api/*`) only for:
+
 - Webhook handlers
 - Background jobs (cron)
 - Third-party API proxies requiring rate limiting
 - OAuth callbacks
 
 **Data Fetching Pattern:**
+
 ```typescript
 // Server Component - direct database access
 export default async function PortfolioPage({ params }: { params: { id: string } }) {
@@ -372,11 +392,12 @@ export async function createInvestment(formData: FormData) {
 ```
 
 **Authentication Guard:** All portfolio/investment operations MUST verify user ownership:
+
 ```typescript
 // ALWAYS check authorization
 const portfolio = await prisma.portfolio.findUnique({
   where: { id: portfolioId },
-  select: { userId: true }
+  select: { userId: true },
 })
 
 if (portfolio?.userId !== session.user.id) {
@@ -434,7 +455,7 @@ When a user adds multiple purchases of the same ticker, the system aggregates th
 // Result: 15 shares @ $153.33 average
 
 const newTotalQuantity = existingQty + newQty
-const newTotalCost = (existingQty * existingAvg) + (newQty * newPrice)
+const newTotalCost = existingQty * existingAvg + newQty * newPrice
 const newAverageCostBasis = newTotalCost / newTotalQuantity
 ```
 
@@ -449,8 +470,8 @@ All portfolio values convert to the portfolio's base currency for accurate aggre
 const rate = await getExchangeRate(investmentCurrency, baseCurrency)
 
 // 2. Convert both cost and current value
-const currentValueInBase = (currentPrice * quantity) * rate
-const totalCostInBase = (avgCostBasis * quantity) * rate
+const currentValueInBase = currentPrice * quantity * rate
+const totalCostInBase = avgCostBasis * quantity * rate
 
 // 3. Calculate gains/loss in base currency
 const gainLoss = currentValueInBase - totalCostInBase
@@ -475,6 +496,7 @@ Prices stored in `investments.currentPrice` and `investments.priceUpdatedAt`. Ch
 ### Investment Aggregation
 
 The `investments` table stores **aggregated** data:
+
 - `totalQuantity`: Sum of all purchases for this ticker
 - `averageCostBasis`: Weighted average cost per unit
 - `purchaseCurrency`: Currency of purchase (may differ from portfolio base currency)
@@ -484,6 +506,7 @@ Individual purchases are preserved in `purchase_transactions` for recalculation 
 ### User Data Isolation
 
 All tables connect to `users` via foreign keys with `onDelete: Cascade`:
+
 ```prisma
 model Portfolio {
   userId String
@@ -498,16 +521,18 @@ model Portfolio {
 NextAuth.js v5 with Google OAuth. Session management uses database adapter.
 
 **Protected Route Middleware:**
+
 ```typescript
 // middleware.ts
 export { default } from 'next-auth/middleware'
 
 export const config = {
-  matcher: ['/dashboard/:path*', '/portfolios/:path*']
+  matcher: ['/dashboard/:path*', '/portfolios/:path*'],
 }
 ```
 
 **Getting Session in Server Components:**
+
 ```typescript
 import { getServerSession } from 'next-auth'
 import { authOptions } from '@/app/api/auth/[...nextauth]/route'
@@ -521,6 +546,7 @@ if (!session?.user?.id) redirect('/auth/signin')
 ### Alpha Vantage Client
 
 Wrapper class in `lib/api/alphaVantage.ts` provides methods:
+
 - `getStockQuote(ticker)` - Real-time stock price
 - `getCryptoPrice(symbol, currency)` - Cryptocurrency price
 - `getExchangeRate(from, to)` - Currency conversion rate
@@ -529,6 +555,7 @@ Wrapper class in `lib/api/alphaVantage.ts` provides methods:
 **Rate Limiting:** Implement request queue to respect 5 requests/minute limit. Use Redis or in-memory queue.
 
 **Error Handling:** All API calls should handle:
+
 - Network timeouts
 - Invalid ticker symbols
 - Rate limit exceeded (429)
@@ -537,16 +564,19 @@ Wrapper class in `lib/api/alphaVantage.ts` provides methods:
 ## Testing Strategy
 
 ### Unit Tests
+
 - Calculation functions in `lib/calculations/` (pure functions)
 - Currency conversion logic
 - Average cost basis calculations
 
 ### Integration Tests
+
 - Server Actions with mocked database
 - API client with mocked HTTP responses
 - Authentication flows
 
 ### E2E Tests (Playwright)
+
 - Complete user journey: sign in → create portfolio → add investment → view gains/loss
 - Multi-currency scenarios
 - Price refresh functionality
@@ -608,6 +638,7 @@ SENTRY_DSN="..."
 ### React Query Caching
 
 Configure TanStack Query for smart background refetching:
+
 ```typescript
 const { data } = useQuery({
   queryKey: ['portfolio', portfolioId],
@@ -646,11 +677,13 @@ const { data } = useQuery({
 ### Database Migration Process
 
 **Development:**
+
 ```bash
 pnpm prisma migrate dev --name <change_description>
 ```
 
 **Production:**
+
 ```bash
 pnpm prisma migrate deploy
 ```
@@ -660,17 +693,21 @@ pnpm prisma migrate deploy
 ## Troubleshooting
 
 ### "Prisma Client not initialized"
+
 ```bash
 pnpm prisma generate
 ```
 
 ### "Invalid session" errors
+
 Check `NEXTAUTH_SECRET` is set and matches across deployments.
 
 ### Alpha Vantage 429 errors
+
 Rate limit exceeded. Check cache logic and implement request queue.
 
 ### TypeScript errors after schema changes
+
 Regenerate Prisma Client: `pnpm prisma generate`
 
 ## Code Style

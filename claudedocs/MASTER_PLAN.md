@@ -9,29 +9,29 @@
 
 ## 📊 Progress Overview
 
-| Phase | Features | Status | Progress |
-|-------|----------|--------|----------|
-| **Phase 1: MVP** | 11 features | Not Started | 0/11 (0%) |
-| **Phase 2: Advanced** | 4 features | Not Started | 0/4 (0%) |
-| **Total** | 15 features | Not Started | 0/15 (0%) |
+| Phase                 | Features    | Status      | Progress  |
+| --------------------- | ----------- | ----------- | --------- |
+| **Phase 1: MVP**      | 11 features | Not Started | 0/11 (0%) |
+| **Phase 2: Advanced** | 4 features  | Not Started | 0/4 (0%)  |
+| **Total**             | 15 features | Not Started | 0/15 (0%) |
 
 ---
 
 ## 🎯 MVP Feature List (Phase 1)
 
-| ID | Feature | Dependencies | Estimated Time | Status |
-|----|---------|--------------|----------------|--------|
-| [F01](features/F01_project_setup.md) | Project Setup & Configuration | None | 1-2 days | ⬜ Not Started |
-| [F02](features/F02_database_schema.md) | Database Schema & Prisma | F01 | 1 day | ⬜ Not Started |
-| [F03](features/F03_authentication.md) | Authentication (Google OAuth) | F01, F02 | 2 days | ⬜ Not Started |
-| [F04](features/F04_portfolio_crud.md) | Portfolio Management (CRUD) | F02, F03 | 2-3 days | ⬜ Not Started |
-| [F05](features/F05_alpha_vantage_integration.md) | Alpha Vantage API Integration | F01 | 2 days | ⬜ Not Started |
-| [F06](features/F06_investment_entry.md) | Investment Entry Form | F04, F05 | 2-3 days | ⬜ Not Started |
-| [F07](features/F07_investment_management.md) | Investment Management (Edit/Delete) | F06 | 2 days | ⬜ Not Started |
-| [F08](features/F08_calculation_engine.md) | Calculation Engine | F06 | 2 days | ⬜ Not Started |
-| [F09](features/F09_price_refresh.md) | Price Refresh & Caching | F05, F06 | 2 days | ⬜ Not Started |
-| [F10](features/F10_portfolio_summary.md) | Portfolio Summary & Metrics | F08 | 1-2 days | ⬜ Not Started |
-| [F11](features/F11_visualizations.md) | Charts & Visualizations | F10 | 2-3 days | ⬜ Not Started |
+| ID                                               | Feature                             | Dependencies | Estimated Time | Status         |
+| ------------------------------------------------ | ----------------------------------- | ------------ | -------------- | -------------- |
+| [F01](features/F01_project_setup.md)             | Project Setup & Configuration       | None         | 1-2 days       | ⬜ Not Started |
+| [F02](features/F02_database_schema.md)           | Database Schema & Prisma            | F01          | 1 day          | ⬜ Not Started |
+| [F03](features/F03_authentication.md)            | Authentication (Google OAuth)       | F01, F02     | 2 days         | ⬜ Not Started |
+| [F04](features/F04_portfolio_crud.md)            | Portfolio Management (CRUD)         | F02, F03     | 2-3 days       | ⬜ Not Started |
+| [F05](features/F05_alpha_vantage_integration.md) | Alpha Vantage API Integration       | F01          | 2 days         | ⬜ Not Started |
+| [F06](features/F06_investment_entry.md)          | Investment Entry Form               | F04, F05     | 2-3 days       | ⬜ Not Started |
+| [F07](features/F07_investment_management.md)     | Investment Management (Edit/Delete) | F06          | 2 days         | ⬜ Not Started |
+| [F08](features/F08_calculation_engine.md)        | Calculation Engine                  | F06          | 2 days         | ⬜ Not Started |
+| [F09](features/F09_price_refresh.md)             | Price Refresh & Caching             | F05, F06     | 2 days         | ⬜ Not Started |
+| [F10](features/F10_portfolio_summary.md)         | Portfolio Summary & Metrics         | F08          | 1-2 days       | ⬜ Not Started |
+| [F11](features/F11_visualizations.md)            | Charts & Visualizations             | F10          | 2-3 days       | ⬜ Not Started |
 
 **MVP Total Estimated Time:** 4-5 weeks
 
@@ -39,12 +39,12 @@
 
 ## 🚀 Phase 2 Feature List (Advanced)
 
-| ID | Feature | Dependencies | Estimated Time | Status |
-|----|---------|--------------|----------------|--------|
-| [F12](features/phase2/F12_historical_charts.md) | Historical Performance Charts | F11 | 3-4 days | ⬜ Not Started |
-| [F13](features/phase2/F13_csv_import_export.md) | CSV Import/Export | F06 | 2-3 days | ⬜ Not Started |
-| [F14](features/phase2/F14_portfolio_comparison.md) | Portfolio Comparison | F10 | 2 days | ⬜ Not Started |
-| [F15](features/phase2/F15_pwa_setup.md) | Progressive Web App | F11 | 2-3 days | ⬜ Not Started |
+| ID                                                 | Feature                       | Dependencies | Estimated Time | Status         |
+| -------------------------------------------------- | ----------------------------- | ------------ | -------------- | -------------- |
+| [F12](features/phase2/F12_historical_charts.md)    | Historical Performance Charts | F11          | 3-4 days       | ⬜ Not Started |
+| [F13](features/phase2/F13_csv_import_export.md)    | CSV Import/Export             | F06          | 2-3 days       | ⬜ Not Started |
+| [F14](features/phase2/F14_portfolio_comparison.md) | Portfolio Comparison          | F10          | 2 days         | ⬜ Not Started |
+| [F15](features/phase2/F15_pwa_setup.md)            | Progressive Web App           | F11          | 2-3 days       | ⬜ Not Started |
 
 **Phase 2 Total Estimated Time:** 2-3 weeks
 
@@ -100,6 +100,7 @@ graph TD
 ```
 
 **Legend:**
+
 - 🟢 Green: Foundation (F01-F02)
 - 🟡 Yellow: Core Features (F03-F05)
 - 🔴 Red: Investment Features (F06-F09)
@@ -111,6 +112,7 @@ graph TD
 ## 🔄 Recommended Implementation Order
 
 ### Week 1: Foundation
+
 1. **F01** - Project Setup (Day 1-2)
 2. **F02** - Database Schema (Day 3)
 3. **F03** - Authentication (Day 4-5)
@@ -120,6 +122,7 @@ graph TD
 ---
 
 ### Week 2: Core Infrastructure
+
 4. **F04** - Portfolio CRUD (Day 6-8)
 5. **F05** - Alpha Vantage Integration (Day 9-10)
 
@@ -128,6 +131,7 @@ graph TD
 ---
 
 ### Week 3: Investment Management
+
 6. **F06** - Investment Entry (Day 11-13)
 7. **F07** - Investment Management (Day 14-15)
 
@@ -136,6 +140,7 @@ graph TD
 ---
 
 ### Week 4: Business Logic
+
 8. **F08** - Calculation Engine (Day 16-17)
 9. **F09** - Price Refresh (Day 18-19)
 
@@ -144,6 +149,7 @@ graph TD
 ---
 
 ### Week 5: Visualization
+
 10. **F10** - Portfolio Summary (Day 20-21)
 11. **F11** - Visualizations (Day 22-24)
 
@@ -152,6 +158,7 @@ graph TD
 ---
 
 ### Week 6-8: Phase 2 (Optional)
+
 12. **F12** - Historical Charts (Week 6)
 13. **F13** - CSV Import/Export (Week 6-7)
 14. **F14** - Portfolio Comparison (Week 7)
@@ -164,6 +171,7 @@ graph TD
 ## 🎯 Git Workflow for Each Feature
 
 ### 1. Start Feature
+
 ```bash
 git checkout main
 git pull origin main
@@ -175,6 +183,7 @@ git checkout -b feature/portfolio-crud
 ```
 
 ### 2. Implement & Commit
+
 ```bash
 # Make changes, commit frequently
 git add .
@@ -186,6 +195,7 @@ git commit -m "feat(<scope>): implement <feature>
 ```
 
 ### 3. Test & Push
+
 ```bash
 # Run all checks
 pnpm lint
@@ -199,6 +209,7 @@ gh pr create --title "feat: <feature-name>" --body "..."
 ```
 
 ### 4. After PR Approval
+
 ```bash
 # Merge via GitHub interface
 # Delete local branch
@@ -235,15 +246,19 @@ Each feature is considered complete when:
 As you complete features, update this section:
 
 ### Completed Features
+
 - None yet
 
 ### In Progress
+
 - None
 
 ### Blocked
+
 - None
 
 ### Notes & Decisions
+
 - None yet
 
 ---
@@ -251,6 +266,7 @@ As you complete features, update this section:
 ## 🔗 Quick Links
 
 ### Documentation
+
 - [Full Specification](investment-tracker-specification.md)
 - [Original Implementation Plan](implementation-plan.md)
 - [User Documentation](../docs/user-guide/)
@@ -258,11 +274,13 @@ As you complete features, update this section:
 - [Architecture Docs](../docs/architecture/)
 
 ### Development
+
 - [CLAUDE.md](../CLAUDE.md) - Development guidelines
 - [README.md](../README.md) - Project overview
 - [Changelog](../docs/changelog.md) - Change history
 
 ### External Resources
+
 - [Next.js Documentation](https://nextjs.org/docs)
 - [Prisma Documentation](https://www.prisma.io/docs)
 - [NextAuth.js Documentation](https://next-auth.js.org/)

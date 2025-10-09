@@ -12,6 +12,7 @@
 Create visual summary cards displaying key portfolio metrics: total value, total cost, gains/loss, and best/worst performers with color-coded indicators.
 
 **What this enables:**
+
 - Quick portfolio performance overview
 - Visual gain/loss indicators
 - Best/worst performer highlights
@@ -38,6 +39,7 @@ Create visual summary cards displaying key portfolio metrics: total value, total
 ### Summary Cards Component
 
 Create `components/portfolio/PortfolioSummary.tsx`:
+
 ```typescript
 import { Portfolio, Investment } from '@prisma/client'
 import { calculatePortfolioSummary } from '@/lib/calculations/portfolio'
@@ -132,6 +134,7 @@ export default async function PortfolioSummary({ portfolio }: PortfolioSummaryPr
 ### Metric Card Component
 
 Create `components/portfolio/MetricCard.tsx`:
+
 ```typescript
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { LucideIcon } from 'lucide-react'
@@ -171,6 +174,7 @@ export default function MetricCard({
 ### Performance Badge Component
 
 Create `components/portfolio/PerformanceBadge.tsx`:
+
 ```typescript
 import { formatPercent, getGainLossColor } from '@/lib/utils/format'
 import { TrendingUp, TrendingDown, Minus } from 'lucide-react'
@@ -199,6 +203,7 @@ export default function PerformanceBadge({ value, showIcon = true }: Performance
 ### Investment Allocation Component
 
 Create `components/portfolio/AllocationList.tsx`:
+
 ```typescript
 import { Investment } from '@prisma/client'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
@@ -252,6 +257,7 @@ export default function AllocationList({ investments, baseCurrency }: Allocation
 ### Update Portfolio Detail Page
 
 Update `app/(dashboard)/portfolios/[id]/page.tsx`:
+
 ```typescript
 import PortfolioSummary from '@/components/portfolio/PortfolioSummary'
 import AllocationList from '@/components/portfolio/AllocationList'

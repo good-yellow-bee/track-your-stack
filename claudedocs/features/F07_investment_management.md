@@ -12,6 +12,7 @@
 Display investments in a table view with edit/delete capabilities. Show current prices, gains/losses, and provide manual price refresh functionality.
 
 **What this enables:**
+
 - View all investments in portfolio
 - Edit investment details
 - Delete investments with confirmation
@@ -37,6 +38,7 @@ Display investments in a table view with edit/delete capabilities. Show current 
 ## 🔧 Key Implementation Steps
 
 ### Investment Server Actions
+
 ```typescript
 // lib/actions/investment.ts (add to existing)
 
@@ -76,6 +78,7 @@ export async function refreshInvestmentPrice(id: string) {
 ```
 
 ### Investment Table Component
+
 ```typescript
 // components/investment/InvestmentTable.tsx
 
@@ -105,6 +108,7 @@ export default function InvestmentTable({ investments, portfolioId }) {
 ```
 
 ### Edit/Delete Components
+
 - EditInvestmentModal with form
 - DeleteInvestmentButton with confirmation
 - RefreshPriceButton with loading state

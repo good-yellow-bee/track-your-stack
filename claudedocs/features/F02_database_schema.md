@@ -12,6 +12,7 @@
 Design and implement the complete database schema using Prisma ORM with PostgreSQL. Setup database connection, create all necessary tables for authentication, portfolios, investments, transactions, and price caching.
 
 **What this enables:**
+
 - Complete data model for the application
 - Type-safe database queries with Prisma
 - NextAuth.js authentication tables
@@ -39,6 +40,7 @@ Design and implement the complete database schema using Prisma ORM with PostgreS
 ## 📦 Dependencies to Install
 
 All Prisma dependencies should already be installed from F01:
+
 ```bash
 # Verify these are in package.json
 @prisma/client        # Prisma client
@@ -47,6 +49,7 @@ prisma               # Prisma CLI (dev dependency)
 ```
 
 If not installed:
+
 ```bash
 pnpm add @prisma/client @auth/prisma-adapter
 pnpm add -D prisma
@@ -68,12 +71,14 @@ npx prisma init --datasource-provider postgresql
 ```
 
 Update `.env.local`:
+
 ```bash
 # Use Vercel Postgres, Supabase, or local PostgreSQL
 DATABASE_URL="postgresql://user:password@localhost:5432/track_your_stack?schema=public"
 ```
 
 For local development with Docker:
+
 ```bash
 # Optional: Run PostgreSQL in Docker
 docker run --name track-your-stack-db \
@@ -258,6 +263,7 @@ model PortfolioSnapshot {
 ### Step 3: Create Prisma Client Instance (15 min)
 
 Create `lib/prisma.ts`:
+
 ```typescript
 import { PrismaClient } from '@prisma/client'
 
@@ -301,6 +307,7 @@ pnpm db:migrate
 ```
 
 Verify migration file created:
+
 ```bash
 ls -la prisma/migrations/
 ```
@@ -321,6 +328,7 @@ pnpm db:studio
 ### Step 7: Create Type Definitions (30 min)
 
 Create `types/database.ts`:
+
 ```typescript
 import { Prisma } from '@prisma/client'
 
@@ -361,6 +369,7 @@ export type PortfolioSnapshot = Prisma.PortfolioSnapshot
 ### Step 8: Create Database Utilities (30 min)
 
 Create `lib/db/utils.ts`:
+
 ```typescript
 import { prisma } from '@/lib/prisma'
 
@@ -406,6 +415,7 @@ export async function getDatabaseStats() {
 ### Step 9: Create Seed Script (Optional, 30 min)
 
 Create `prisma/seed.ts`:
+
 ```typescript
 import { PrismaClient } from '@prisma/client'
 
@@ -445,12 +455,12 @@ async function main() {
       assetName: 'Apple Inc.',
       assetType: 'STOCK',
       totalQuantity: 10,
-      averageCostBasis: 150.50,
+      averageCostBasis: 150.5,
       purchaseCurrency: 'USD',
       transactions: {
         create: {
           quantity: 10,
-          pricePerUnit: 150.50,
+          pricePerUnit: 150.5,
           currency: 'USD',
           purchaseDate: new Date('2024-01-15'),
         },
@@ -474,6 +484,7 @@ main()
 ```
 
 Update `package.json`:
+
 ```json
 {
   "prisma": {
@@ -486,6 +497,7 @@ Update `package.json`:
 ```
 
 Install tsx for seeding:
+
 ```bash
 pnpm add -D tsx
 ```
@@ -493,6 +505,7 @@ pnpm add -D tsx
 ### Step 10: Test Database Integration (20 min)
 
 Create `app/api/test-db/route.ts`:
+
 ```typescript
 import { NextResponse } from 'next/server'
 import { testDatabaseConnection, getDatabaseStats } from '@/lib/db/utils'
@@ -515,6 +528,7 @@ export async function GET() {
 ```
 
 Test the endpoint:
+
 ```bash
 # Start dev server
 pnpm dev
@@ -539,6 +553,7 @@ curl http://localhost:3000/api/test-db
 ## 🧪 Testing Requirements
 
 ### Manual Testing Checklist
+
 - [ ] Database connection succeeds
 - [ ] Prisma Studio opens and shows all tables
 - [ ] Can create a user record
@@ -551,6 +566,7 @@ curl http://localhost:3000/api/test-db
 - [ ] Indexes are created (check Prisma Studio)
 
 ### Verification Commands
+
 ```bash
 # Generate Prisma Client
 pnpm db:generate
@@ -617,15 +633,18 @@ const portfolio = await prisma.portfolio.findFirst({
 ## 📚 Documentation Updates
 
 ### Files to Create/Update
+
 - [ ] `claudedocs/database-schema.md` - Complete schema documentation
 - [ ] `docs/architecture/data-model.md` - ERD and relationships
 - [ ] `docs/changelog.md` - Add F02 entry
 
 ### Changelog Entry
+
 ```markdown
 ## [0.2.0] - 2025-10-08
 
 ### Added
+
 - Complete Prisma schema with all tables
 - NextAuth.js authentication tables
 - Portfolio, Investment, and Transaction models
@@ -643,11 +662,13 @@ const portfolio = await prisma.portfolio.findFirst({
 ## 🔀 Git Workflow
 
 ### Branch Name
+
 ```bash
 git checkout -b feature/database-schema
 ```
 
 ### Commit Messages
+
 ```bash
 git commit -m "feat(db): setup Prisma with PostgreSQL
 
@@ -679,24 +700,29 @@ git commit -m "feat(db): create seed script
 ```
 
 ### Pull Request Template
-```markdown
+
+````markdown
 ## F02: Database Schema & Prisma Setup
 
 ### What does this PR do?
+
 Implements the complete database schema using Prisma ORM with PostgreSQL, including all necessary tables for authentication, portfolios, investments, and price caching.
 
 ### Type of change
+
 - [x] Database schema
 - [x] New feature (Prisma setup)
 - [x] Configuration
 
 ### Database Changes
+
 - ✅ Created initial migration: `initial_schema`
 - ✅ 11 tables created
 - ✅ All relationships defined
 - ✅ Indexes added for performance
 
 ### Checklist
+
 - [x] Prisma schema created
 - [x] Initial migration applied
 - [x] Prisma Client generated
@@ -708,6 +734,7 @@ Implements the complete database schema using Prisma ORM with PostgreSQL, includ
 - [x] Documentation updated
 
 ### Testing performed
+
 - Verified database connection
 - Tested all CRUD operations
 - Confirmed relationships work
@@ -715,12 +742,15 @@ Implements the complete database schema using Prisma ORM with PostgreSQL, includ
 - Checked indexes in Prisma Studio
 
 ### Migration commands
+
 ```bash
 pnpm db:generate
 pnpm db:migrate
 pnpm db:studio
 ```
-```
+````
+
+````
 
 ---
 
@@ -743,10 +773,12 @@ pnpm db:studio
 ```bash
 pnpm db:generate
 # Restart TypeScript server in VS Code: Cmd+Shift+P → "TypeScript: Restart TS Server"
-```
+````
 
 ### Issue: Migration out of sync
+
 **Solution:**
+
 ```bash
 # Reset database (DEVELOPMENT ONLY!)
 npx prisma migrate reset
@@ -756,7 +788,9 @@ pnpm db:migrate
 ```
 
 ### Issue: Decimal type precision errors
+
 **Solution:** Use `Decimal` from Prisma for all decimal fields:
+
 ```typescript
 import { Decimal } from '@prisma/client/runtime/library'
 ```
@@ -800,6 +834,7 @@ After completing F02, proceed to:
 ---
 
 **Status Legend:**
+
 - ⬜ Not Started
 - 🟨 In Progress
 - ✅ Complete

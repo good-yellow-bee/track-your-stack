@@ -12,6 +12,7 @@
 Implement manual and automatic price refresh system using React Query for background updates, with smart caching and rate limit management.
 
 **What this enables:**
+
 - Manual price refresh on demand
 - Automatic background refresh every 15 minutes
 - Smart caching to minimize API calls
@@ -38,6 +39,7 @@ Implement manual and automatic price refresh system using React Query for backgr
 ### Setup React Query Provider
 
 Update `app/layout.tsx`:
+
 ```typescript
 'use client'
 
@@ -65,6 +67,7 @@ export function Providers({ children }: { children: React.ReactNode }) {
 ### Price Refresh Action
 
 Create `lib/actions/prices.ts`:
+
 ```typescript
 'use server'
 
@@ -155,6 +158,7 @@ export async function refreshInvestmentPrice(investmentId: string) {
 ### Refresh Button Component
 
 Create `components/investment/RefreshPricesButton.tsx`:
+
 ```typescript
 'use client'
 
@@ -205,6 +209,7 @@ export default function RefreshPricesButton({ portfolioId }: RefreshPricesButton
 ### Auto-Refresh Hook
 
 Create `hooks/useAutoRefresh.ts`:
+
 ```typescript
 import { useQuery } from '@tanstack/react-query'
 
@@ -226,6 +231,7 @@ export function useAutoRefresh(
 ### Portfolio with Auto-Refresh
 
 Update `app/(dashboard)/portfolios/[id]/page.tsx`:
+
 ```typescript
 'use client'
 

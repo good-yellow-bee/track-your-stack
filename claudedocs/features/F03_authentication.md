@@ -12,6 +12,7 @@
 Implement secure authentication using NextAuth.js v5 (Auth.js) with Google OAuth provider. Setup protected routes, session management, and user authentication flow.
 
 **What this enables:**
+
 - Secure user authentication with Google
 - Session management across application
 - Protected routes and middleware
@@ -39,6 +40,7 @@ Implement secure authentication using NextAuth.js v5 (Auth.js) with Google OAuth
 ## 📦 Dependencies to Install
 
 Dependencies should already be installed from F01:
+
 ```bash
 # Verify these exist in package.json
 next-auth@beta          # NextAuth.js v5
@@ -46,6 +48,7 @@ next-auth@beta          # NextAuth.js v5
 ```
 
 If missing:
+
 ```bash
 pnpm add next-auth@beta @auth/prisma-adapter
 ```
@@ -72,6 +75,7 @@ pnpm add next-auth@beta @auth/prisma-adapter
 8. Copy Client ID and Client Secret
 
 **Update `.env.local`:**
+
 ```bash
 # NextAuth
 NEXTAUTH_URL="http://localhost:3000"
@@ -83,6 +87,7 @@ GOOGLE_CLIENT_SECRET="your_client_secret_here"
 ```
 
 Generate `NEXTAUTH_SECRET`:
+
 ```bash
 openssl rand -base64 32
 ```
@@ -90,6 +95,7 @@ openssl rand -base64 32
 ### Step 2: Create NextAuth Configuration (45 min)
 
 Create `lib/auth.ts`:
+
 ```typescript
 import { NextAuthOptions } from 'next-auth'
 import { PrismaAdapter } from '@auth/prisma-adapter'
@@ -131,6 +137,7 @@ export const authOptions: NextAuthOptions = {
 ```
 
 Create `app/api/auth/[...nextauth]/route.ts`:
+
 ```typescript
 import NextAuth from 'next-auth'
 import { authOptions } from '@/lib/auth'
@@ -143,6 +150,7 @@ export { handler as GET, handler as POST }
 ### Step 3: Extend NextAuth Types (15 min)
 
 Create `types/next-auth.d.ts`:
+
 ```typescript
 import { DefaultSession } from 'next-auth'
 
@@ -160,6 +168,7 @@ This adds `id` to the session user object for type safety.
 ### Step 4: Create Authentication Helpers (20 min)
 
 Update `lib/auth.ts` with helpers:
+
 ```typescript
 import { getServerSession } from 'next-auth/next'
 import { redirect } from 'next/navigation'
@@ -211,6 +220,7 @@ export async function requireAuth() {
 ### Step 5: Create Sign In Page (45 min)
 
 Create `app/(auth)/auth/signin/page.tsx`:
+
 ```typescript
 import { Metadata } from 'next'
 import { redirect } from 'next/navigation'
@@ -279,6 +289,7 @@ export default async function SignInPage() {
 ```
 
 Create `components/auth/SignInButton.tsx`:
+
 ```typescript
 'use client'
 
@@ -317,6 +328,7 @@ export default function SignInButton() {
 ```
 
 Create `app/(auth)/auth/layout.tsx`:
+
 ```typescript
 export default function AuthLayout({ children }: { children: React.ReactNode }) {
   return <div className="min-h-screen bg-gray-50">{children}</div>
@@ -326,6 +338,7 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
 ### Step 6: Create Session Provider (20 min)
 
 Create `components/providers/SessionProvider.tsx`:
+
 ```typescript
 'use client'
 
@@ -341,6 +354,7 @@ export default function SessionProvider({
 ```
 
 Update `app/layout.tsx`:
+
 ```typescript
 import type { Metadata } from 'next'
 import { Inter } from 'next/font/google'
@@ -372,6 +386,7 @@ export default function RootLayout({
 ### Step 7: Create Protected Route Middleware (30 min)
 
 Create `middleware.ts` in project root:
+
 ```typescript
 import { withAuth } from 'next-auth/middleware'
 import { NextResponse } from 'next/server'
@@ -405,6 +420,7 @@ This protects all dashboard and portfolio routes.
 ### Step 8: Create User Navigation Component (40 min)
 
 Create `components/layout/UserNav.tsx`:
+
 ```typescript
 'use client'
 
@@ -474,6 +490,7 @@ export default function UserNav() {
 ### Step 9: Create Dashboard Layout (30 min)
 
 Create `app/(dashboard)/layout.tsx`:
+
 ```typescript
 import { redirect } from 'next/navigation'
 import { getServerSession } from 'next-auth'
@@ -501,6 +518,7 @@ export default async function DashboardLayout({
 ```
 
 Create `components/layout/Header.tsx`:
+
 ```typescript
 import Link from 'next/link'
 import UserNav from './UserNav'
@@ -545,6 +563,7 @@ export default function Header({ user }: HeaderProps) {
 ### Step 10: Create Dashboard Landing Page (30 min)
 
 Create `app/(dashboard)/dashboard/page.tsx`:
+
 ```typescript
 import { Metadata } from 'next'
 import { getCurrentUser } from '@/lib/auth'
@@ -598,6 +617,7 @@ export default async function DashboardPage() {
 ## 🧪 Testing Requirements
 
 ### Manual Testing Checklist
+
 - [ ] Can access sign-in page at `/auth/signin`
 - [ ] Clicking "Sign in with Google" opens Google OAuth
 - [ ] After authorizing, redirects to `/dashboard`
@@ -610,6 +630,7 @@ export default async function DashboardPage() {
 - [ ] Middleware protects all `/dashboard` and `/portfolios` routes
 
 ### Verification Commands
+
 ```bash
 # Start dev server
 pnpm dev
@@ -626,6 +647,7 @@ pnpm dev
 ```
 
 ### Database Verification
+
 ```bash
 # Open Prisma Studio
 pnpm db:studio
@@ -641,15 +663,18 @@ pnpm db:studio
 ## 📚 Documentation Updates
 
 ### Files to Create/Update
+
 - [ ] `docs/authentication.md` - Authentication flow documentation
 - [ ] `docs/changelog.md` - Add F03 entry
 - [ ] `README.md` - Add Google OAuth setup instructions
 
 ### Changelog Entry
+
 ```markdown
 ## [0.3.0] - 2025-10-08
 
 ### Added
+
 - NextAuth.js v5 authentication with Google OAuth
 - Prisma adapter for session storage
 - Protected routes with middleware
@@ -661,6 +686,7 @@ pnpm db:studio
 - Authentication helper functions
 
 ### Security
+
 - HTTP-only session cookies
 - CSRF protection enabled
 - Secure session management with 30-day expiry
@@ -671,11 +697,13 @@ pnpm db:studio
 ## 🔀 Git Workflow
 
 ### Branch Name
+
 ```bash
 git checkout -b feature/authentication
 ```
 
 ### Commit Messages
+
 ```bash
 git commit -m "feat(auth): setup NextAuth.js with Google OAuth
 
@@ -714,17 +742,21 @@ git commit -m "feat(auth): create dashboard layout
 ```
 
 ### Pull Request Template
-```markdown
+
+````markdown
 ## F03: Authentication with NextAuth.js
 
 ### What does this PR do?
+
 Implements secure authentication using NextAuth.js v5 with Google OAuth, including session management, protected routes, and user interface components.
 
 ### Type of change
+
 - [x] New feature (authentication)
 - [x] Security enhancement
 
 ### Authentication Features
+
 - ✅ Google OAuth sign-in
 - ✅ Session management with database
 - ✅ Protected routes middleware
@@ -732,6 +764,7 @@ Implements secure authentication using NextAuth.js v5 with Google OAuth, includi
 - ✅ Sign-out functionality
 
 ### Checklist
+
 - [x] NextAuth.js configured
 - [x] Google OAuth working
 - [x] Sign-in page created
@@ -743,6 +776,7 @@ Implements secure authentication using NextAuth.js v5 with Google OAuth, includi
 - [x] Documentation updated
 
 ### Testing performed
+
 - Verified Google OAuth flow
 - Tested session persistence
 - Confirmed protected routes work
@@ -750,20 +784,25 @@ Implements secure authentication using NextAuth.js v5 with Google OAuth, includi
 - Checked database records created
 
 ### Environment Variables Required
+
 ```bash
 NEXTAUTH_URL=http://localhost:3000
 NEXTAUTH_SECRET=<generate-with-openssl>
 GOOGLE_CLIENT_ID=<from-google-cloud-console>
 GOOGLE_CLIENT_SECRET=<from-google-cloud-console>
 ```
+````
 
 ### Setup Instructions
+
 1. Create Google OAuth credentials
 2. Add environment variables to `.env.local`
 3. Run migrations: `pnpm db:migrate`
 4. Start dev server: `pnpm dev`
 5. Test sign-in flow
+
 ```
+
 ```
 
 ---
@@ -771,32 +810,42 @@ GOOGLE_CLIENT_SECRET=<from-google-cloud-console>
 ## ⚠️ Common Issues & Solutions
 
 ### Issue: `NEXTAUTH_SECRET` error
+
 **Solution:** Generate a secret: `openssl rand -base64 32` and add to `.env.local`
 
 ### Issue: Google OAuth callback error
+
 **Solution:**
+
 - Verify redirect URI in Google Console matches exactly
 - Check `NEXTAUTH_URL` is correct
 - Ensure `GOOGLE_CLIENT_ID` and `GOOGLE_CLIENT_SECRET` are correct
 
 ### Issue: Session not persisting
+
 **Solution:**
+
 - Clear browser cookies
 - Check database connection
 - Verify `Session` table exists
 - Run `pnpm db:migrate`
 
 ### Issue: Middleware not protecting routes
+
 **Solution:**
+
 - Ensure `middleware.ts` is in project root (not in `app/`)
 - Verify matcher patterns are correct
 - Check for syntax errors in middleware
 
 ### Issue: Type errors with session
+
 **Solution:** Ensure `types/next-auth.d.ts` exists and TypeScript server is restarted
 
 ### Issue: "Cannot find module 'next-auth'"
+
 **Solution:**
+
 ```bash
 pnpm add next-auth@beta
 pnpm install
@@ -845,6 +894,7 @@ After completing F03, proceed to:
 ---
 
 **Status Legend:**
+
 - ⬜ Not Started
 - 🟨 In Progress
 - ✅ Complete

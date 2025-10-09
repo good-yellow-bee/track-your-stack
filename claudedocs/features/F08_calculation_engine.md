@@ -12,6 +12,7 @@
 Implement core business logic for portfolio calculations: average cost basis, multi-currency conversion, gains/loss calculation, and portfolio aggregation.
 
 **What this enables:**
+
 - Accurate average cost basis across multiple purchases
 - Multi-currency portfolio value calculation
 - Gains/loss calculation per investment
@@ -37,6 +38,7 @@ Implement core business logic for portfolio calculations: average cost basis, mu
 ### Calculation Utilities
 
 Create `lib/calculations/investment.ts`:
+
 ```typescript
 import { Investment } from '@prisma/client'
 import { getCurrencyRate } from '@/lib/services/priceService'
@@ -49,7 +51,8 @@ export interface InvestmentMetrics {
 }
 
 export function calculateInvestmentMetrics(investment: Investment): InvestmentMetrics {
-  const currentValue = (investment.currentPrice?.toNumber() || 0) * investment.totalQuantity.toNumber()
+  const currentValue =
+    (investment.currentPrice?.toNumber() || 0) * investment.totalQuantity.toNumber()
   const totalCost = investment.averageCostBasis.toNumber() * investment.totalQuantity.toNumber()
   const gainLossDollar = currentValue - totalCost
   const gainLossPercent = totalCost > 0 ? (gainLossDollar / totalCost) * 100 : 0
@@ -85,6 +88,7 @@ export async function convertToBaseCurrency(
 ```
 
 Create `lib/calculations/portfolio.ts`:
+
 ```typescript
 import { Portfolio, Investment } from '@prisma/client'
 import { convertToBaseCurrency } from './investment'
@@ -120,10 +124,7 @@ export async function calculatePortfolioSummary(
     0
   )
 
-  const totalCost = convertedInvestments.reduce(
-    (sum, { metrics }) => sum + metrics.totalCost,
-    0
-  )
+  const totalCost = convertedInvestments.reduce((sum, { metrics }) => sum + metrics.totalCost, 0)
 
   const totalGainLoss = totalValue - totalCost
   const totalGainLossPercent = totalCost > 0 ? (totalGainLoss / totalCost) * 100 : 0
@@ -154,6 +155,7 @@ export async function calculatePortfolioSummary(
 ### Format Utilities
 
 Create `lib/utils/format.ts`:
+
 ```typescript
 export function formatCurrency(amount: number, currency: string): string {
   return new Intl.NumberFormat('en-US', {
@@ -186,6 +188,7 @@ export function getGainLossColor(value: number): string {
 ### Unit Tests (Vitest)
 
 Create `lib/calculations/__tests__/investment.test.ts`:
+
 ```typescript
 import { describe, it, expect } from 'vitest'
 import { calculateInvestmentMetrics } from '../investment'

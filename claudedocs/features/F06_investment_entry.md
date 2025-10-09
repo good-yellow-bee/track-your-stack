@@ -12,6 +12,7 @@
 Create comprehensive form for adding new investments with ticker search autocomplete, asset type detection, and automatic average cost basis calculation when adding to existing holdings.
 
 **What this enables:**
+
 - Add investments to portfolios
 - Real-time ticker search with autocomplete
 - Auto-populate asset name from API
@@ -59,6 +60,7 @@ pnpm dlx shadcn-ui@latest add calendar popover
 ### Step 1: Create Investment Validation Schema (20 min)
 
 Create `lib/validations/investment.ts`:
+
 ```typescript
 import { z } from 'zod'
 import { AssetType } from '@prisma/client'
@@ -87,6 +89,7 @@ export type CreateInvestmentInput = z.infer<typeof createInvestmentSchema>
 ### Step 2: Create Investment Server Actions (90 min)
 
 Create `lib/actions/investment.ts`:
+
 ```typescript
 'use server'
 
@@ -126,7 +129,8 @@ export async function createInvestment(input: CreateInvestmentInput) {
 
     if (existing) {
       // Add to existing investment - recalculate average cost basis
-      const existingTotalCost = existing.averageCostBasis.toNumber() * existing.totalQuantity.toNumber()
+      const existingTotalCost =
+        existing.averageCostBasis.toNumber() * existing.totalQuantity.toNumber()
       const newCost = validated.pricePerUnit * validated.quantity
       const newTotalQuantity = existing.totalQuantity.toNumber() + validated.quantity
       const newAverageCostBasis = (existingTotalCost + newCost) / newTotalQuantity
@@ -190,6 +194,7 @@ export async function createInvestment(input: CreateInvestmentInput) {
 ### Step 3: Create Ticker Search Component (60 min)
 
 Create `components/investment/TickerSearch.tsx`:
+
 ```typescript
 'use client'
 
@@ -304,6 +309,7 @@ export default function TickerSearch({ value, onSelect, disabled }: TickerSearch
 ```
 
 Create `hooks/useDebounce.ts`:
+
 ```typescript
 import { useEffect, useState } from 'react'
 
@@ -327,6 +333,7 @@ export function useDebounce<T>(value: T, delay: number): T {
 ### Step 4: Create Investment Form Component (90 min)
 
 Create `components/investment/InvestmentForm.tsx`:
+
 ```typescript
 'use client'
 
@@ -638,6 +645,7 @@ export default function InvestmentForm({ portfolioId, defaultCurrency }: Investm
 ### Step 5: Create Add Investment Page (20 min)
 
 Create `app/(dashboard)/portfolios/[id]/investments/new/page.tsx`:
+
 ```typescript
 import { Metadata } from 'next'
 import { notFound } from 'next/navigation'
@@ -708,6 +716,7 @@ export default async function NewInvestmentPage({ params }: NewInvestmentPagePro
 ## 🧪 Testing Requirements
 
 ### Manual Testing Checklist
+
 - [ ] Ticker search returns results
 - [ ] Selecting ticker populates asset name
 - [ ] Asset type auto-detects correctly
@@ -724,10 +733,12 @@ export default async function NewInvestmentPage({ params }: NewInvestmentPagePro
 ## 📚 Documentation Updates
 
 ### Changelog Entry
+
 ```markdown
 ## [0.6.0] - 2025-10-08
 
 ### Added
+
 - Investment entry form with validation
 - Ticker autocomplete search
 - Auto-population of asset details
@@ -759,6 +770,7 @@ After completing F06, proceed to:
 ---
 
 **Status Legend:**
+
 - ⬜ Not Started
 - 🟨 In Progress
 - ✅ Complete

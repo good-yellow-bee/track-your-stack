@@ -12,6 +12,7 @@
 Implement complete Create, Read, Update, Delete (CRUD) operations for portfolios using Next.js Server Actions. Users can create multiple portfolios, view them, edit names/currencies, and delete with confirmation.
 
 **What this enables:**
+
 - Create new portfolios with custom names
 - Select base currency for each portfolio
 - View list of all user portfolios
@@ -40,6 +41,7 @@ Implement complete Create, Read, Update, Delete (CRUD) operations for portfolios
 ## 📦 Dependencies to Install
 
 Additional packages needed:
+
 ```bash
 # Toast notifications
 pnpm add sonner
@@ -57,6 +59,7 @@ pnpm add sonner
 ### Step 1: Create Portfolio Validation Schema (15 min)
 
 Create `lib/validations/portfolio.ts`:
+
 ```typescript
 import { z } from 'zod'
 
@@ -89,6 +92,7 @@ export type DeletePortfolioInput = z.infer<typeof deletePortfolioSchema>
 ### Step 2: Create Portfolio Server Actions (60 min)
 
 Create `lib/actions/portfolio.ts`:
+
 ```typescript
 'use server'
 
@@ -278,6 +282,7 @@ export async function deletePortfolio(input: DeletePortfolioInput) {
 ### Step 3: Create Portfolio Form Component (45 min)
 
 Create `components/portfolio/PortfolioForm.tsx`:
+
 ```typescript
 'use client'
 
@@ -427,6 +432,7 @@ export default function PortfolioForm({
 ### Step 4: Create Portfolio List Component (45 min)
 
 Create `components/portfolio/PortfolioList.tsx`:
+
 ```typescript
 import Link from 'next/link'
 import { Portfolio } from '@prisma/client'
@@ -484,6 +490,7 @@ export default function PortfolioList({ portfolios }: PortfolioListProps) {
 ```
 
 Create `components/portfolio/PortfolioCard.tsx`:
+
 ```typescript
 import Link from 'next/link'
 import { Portfolio } from '@prisma/client'
@@ -533,6 +540,7 @@ export default function PortfolioCard({ portfolio }: PortfolioCardProps) {
 ### Step 5: Create Portfolio Delete Component (30 min)
 
 Create `components/portfolio/DeletePortfolioButton.tsx`:
+
 ```typescript
 'use client'
 
@@ -625,6 +633,7 @@ export default function DeletePortfolioButton({
 ### Step 6: Create Portfolio Pages (60 min)
 
 Create `app/(dashboard)/portfolios/page.tsx`:
+
 ```typescript
 import { Metadata } from 'next'
 import { getPortfolios } from '@/lib/actions/portfolio'
@@ -660,6 +669,7 @@ export default async function PortfoliosPage() {
 ```
 
 Create `app/(dashboard)/portfolios/new/page.tsx`:
+
 ```typescript
 import { Metadata } from 'next'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
@@ -697,6 +707,7 @@ export default function NewPortfolioPage() {
 ```
 
 Create `app/(dashboard)/portfolios/[id]/page.tsx`:
+
 ```typescript
 import { Metadata } from 'next'
 import { notFound } from 'next/navigation'
@@ -790,6 +801,7 @@ export default async function PortfolioPage({ params }: PortfolioPageProps) {
 ```
 
 Create `app/(dashboard)/portfolios/[id]/edit/page.tsx`:
+
 ```typescript
 import { Metadata } from 'next'
 import { notFound } from 'next/navigation'
@@ -860,6 +872,7 @@ export default async function EditPortfolioPage({ params }: EditPortfolioPagePro
 ### Step 7: Add Toast Notifications (15 min)
 
 Update `app/layout.tsx`:
+
 ```typescript
 import type { Metadata } from 'next'
 import { Inter } from 'next/font/google'
@@ -897,6 +910,7 @@ export default function RootLayout({
 ## 🧪 Testing Requirements
 
 ### Manual Testing Checklist
+
 - [ ] Can create new portfolio with custom name
 - [ ] Can select different currencies
 - [ ] Portfolio appears in list after creation
@@ -913,6 +927,7 @@ export default function RootLayout({
 ### Test Scenarios
 
 **Scenario 1: Create Portfolio**
+
 ```bash
 1. Go to /portfolios/new
 2. Enter name: "Tech Stocks"
@@ -924,6 +939,7 @@ export default function RootLayout({
 ```
 
 **Scenario 2: Edit Portfolio**
+
 ```bash
 1. Click on a portfolio card
 2. Click "Edit" button
@@ -935,6 +951,7 @@ export default function RootLayout({
 ```
 
 **Scenario 3: Delete Portfolio**
+
 ```bash
 1. Click on a portfolio card
 2. Click "Delete Portfolio" button
@@ -951,10 +968,12 @@ export default function RootLayout({
 ## 📚 Documentation Updates
 
 ### Changelog Entry
+
 ```markdown
 ## [0.4.0] - 2025-10-08
 
 ### Added
+
 - Portfolio CRUD operations with Server Actions
 - Create portfolio form with validation
 - Portfolio list view with cards
@@ -971,6 +990,7 @@ export default function RootLayout({
 ## 🔀 Git Workflow
 
 ### Commit Messages
+
 ```bash
 git commit -m "feat(portfolio): add portfolio validation schemas"
 git commit -m "feat(portfolio): implement portfolio Server Actions"
@@ -985,15 +1005,19 @@ git commit -m "feat(portfolio): create portfolio pages and routes"
 ## ⚠️ Common Issues & Solutions
 
 ### Issue: Form not submitting
+
 **Solution:** Check form validation, ensure all required fields filled
 
 ### Issue: Unauthorized error
+
 **Solution:** Verify user is signed in and owns the portfolio
 
 ### Issue: Toast not appearing
+
 **Solution:** Ensure Toaster component is in layout
 
 ### Issue: Delete not working
+
 **Solution:** Check cascade delete in Prisma schema
 
 ---
@@ -1034,6 +1058,7 @@ After completing F04, proceed to:
 ---
 
 **Status Legend:**
+
 - ⬜ Not Started
 - 🟨 In Progress
 - ✅ Complete
