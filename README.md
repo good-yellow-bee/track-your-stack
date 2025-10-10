@@ -104,9 +104,13 @@ pnpm prisma migrate dev    # Create migration
 pnpm prisma studio         # Open database GUI
 
 # Testing
-pnpm test                  # Run tests
+pnpm test                  # Run unit tests
 pnpm test:watch            # Run tests in watch mode
+pnpm test:coverage         # Run tests with coverage
+pnpm test:ui               # Open Vitest UI
 pnpm test:e2e              # Run E2E tests
+pnpm test:e2e:ui           # Run E2E tests in UI mode
+pnpm test:all              # Run all tests (unit + E2E)
 ```
 
 ## Project Structure
@@ -122,11 +126,64 @@ track-your-stack/
 └── public/                   # Static assets
 ```
 
+## Testing
+
+Track Your Stack uses **Vitest** for unit/integration testing and **Playwright** for E2E testing.
+
+### Unit & Integration Tests
+
+```bash
+# Run tests
+pnpm test
+
+# Run tests in watch mode
+pnpm test:watch
+
+# Run tests with coverage
+pnpm test:coverage
+
+# Open Vitest UI
+pnpm test:ui
+```
+
+### E2E Tests
+
+```bash
+# Run E2E tests
+pnpm test:e2e
+
+# Run E2E tests in UI mode
+pnpm test:e2e:ui
+
+# Run E2E tests in debug mode
+pnpm test:e2e:debug
+
+# View test report
+pnpm test:e2e:report
+```
+
+### Test Coverage
+
+Minimum coverage thresholds:
+
+- Lines: 80%
+- Functions: 80%
+- Branches: 80%
+- Statements: 80%
+
+View coverage report: `open coverage/index.html`
+
+### Testing Documentation
+
+- **Unit Testing Guide:** [docs/testing/unit-testing.md](./docs/testing/unit-testing.md)
+- **E2E Testing Guide:** [docs/testing/e2e-testing.md](./docs/testing/e2e-testing.md)
+
 ## Documentation
 
 - **User Guide:** [docs/user-guide/](./docs/user-guide/)
 - **API Documentation:** [docs/api/](./docs/api/)
 - **Architecture:** [docs/architecture/](./docs/architecture/)
+- **Testing:** [docs/testing/](./docs/testing/)
 - **Developer Guide:** [CLAUDE.md](./CLAUDE.md)
 
 ## Development Workflow
