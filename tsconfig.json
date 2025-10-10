@@ -19,5 +19,5 @@
     }
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],
-  "exclude": ["node_modules", "components/__templates__", "__tests__/__examples__"]
+  "exclude": ["node_modules", "components/__templates__", "__tests__/__examples__", "test/fixtures"]
 }

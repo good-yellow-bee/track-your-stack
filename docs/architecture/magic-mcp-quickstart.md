@@ -502,6 +502,7 @@ it('should have no accessibility violations', async () => {
 **Solution:**
 
 1. **Verify Magic MCP is installed in Claude Code:**
+
    ```bash
    # Check if Magic MCP server is available
    # In Claude Code, you should see available MCP servers listed
@@ -513,10 +514,12 @@ it('should have no accessibility violations', async () => {
    - Restart Claude Code after installation
 
 3. **Verify installation:**
+
    ```bash
    # In Claude Code conversation
    /ui --help
    ```
+
    You should see command options and usage information.
 
 4. **Alternative: Use Natural Language Instead**
