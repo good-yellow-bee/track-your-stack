@@ -356,6 +356,7 @@ if (portfolio?.userId !== session.user.id) {
 ### OAuth Scope
 
 Google OAuth requests minimal scopes:
+
 - `openid` - User identification
 - `email` - Email address
 - `profile` - Basic profile info (name, picture)
@@ -387,6 +388,7 @@ No access to user's Google Drive, Gmail, or other services.
 **Problem**: Database connection issues or Prisma client not generated
 
 **Solution**:
+
 ```bash
 pnpm prisma generate
 pnpm prisma db push
@@ -461,6 +463,7 @@ test('authentication flow', async ({ page }) => {
 ### Session Caching
 
 NextAuth.js caches session data client-side. The session is only refetched from the database when:
+
 - User signs in/out
 - Session expires
 - Explicitly refetched via `update()` method
@@ -468,6 +471,7 @@ NextAuth.js caches session data client-side. The session is only refetched from 
 ### Database Queries
 
 Session lookup adds one database query per protected page load. Optimize by:
+
 - Using connection pooling (Prisma default)
 - Enabling database indexes on `sessionToken` (already configured)
 - Consider Redis session adapter for high-traffic applications
