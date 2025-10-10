@@ -65,11 +65,7 @@ interface BusinessComponentProps {
  * />
  * ```
  */
-export function BusinessComponent({
-  data,
-  onAction,
-  className,
-}: BusinessComponentProps) {
+export function BusinessComponent({ data, onAction, className }: BusinessComponentProps) {
   const router = useRouter()
   const [isLoading, setIsLoading] = useState(false)
 
@@ -95,7 +91,7 @@ export function BusinessComponent({
   }
 
   return (
-    <Card className={cn('hover:shadow-lg transition-shadow', className)}>
+    <Card className={cn('transition-shadow hover:shadow-lg', className)}>
       <CardHeader>
         <div className="flex items-center justify-between">
           <CardTitle>{/* TODO: Add title */}</CardTitle>
@@ -123,7 +119,7 @@ export function BusinessComponent({
               <p className="text-sm text-muted-foreground">Label 2</p>
               <p
                 className={cn(
-                  'text-2xl font-bold',
+                  'text-2xl font-bold'
                   // Conditional styling based on value
                   // gainLoss >= 0 ? 'text-green-600' : 'text-red-600'
                 )}
@@ -143,13 +139,15 @@ export function BusinessComponent({
                 {/* {formatPercent(progress)} */}
               </span>
             </div>
-            <div className="h-2 bg-secondary rounded-full overflow-hidden">
+            <div className="h-2 overflow-hidden rounded-full bg-secondary">
               <div
                 className="h-full bg-primary transition-all"
-                style={{
-                  // TODO: Set width based on progress
-                  // width: `${progress}%`
-                }}
+                style={
+                  {
+                    // TODO: Set width based on progress
+                    // width: `${progress}%`
+                  }
+                }
               />
             </div>
           </div>

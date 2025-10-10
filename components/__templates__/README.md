@@ -11,6 +11,7 @@ This directory contains starter templates for common component patterns in Track
 **Use when:** You need to add business logic around a Magic-generated data table.
 
 **Features:**
+
 - Currency conversion wrapper
 - Real-time price updates
 - Custom data transformations
@@ -43,6 +44,7 @@ import { InvestmentTableWrapper } from '@/components/investment/investment-table
 **Use when:** You need to add controls and data processing around a Magic-generated chart.
 
 **Features:**
+
 - Date range selector (1W, 1M, 3M, 6M, 1Y, All)
 - Chart type switcher (line, bar, pie, area)
 - Data filtering and transformation
@@ -75,6 +77,7 @@ import { PortfolioChartWrapper } from '@/components/portfolio/portfolio-chart-wr
 **Use when:** Creating custom components with business logic using shadcn/ui primitives.
 
 **Features:**
+
 - shadcn/ui Card structure
 - Metrics display layout
 - Progress indicators
@@ -100,13 +103,13 @@ import { PortfolioSummaryCard } from '@/components/portfolio/portfolio-summary-c
 
 ## Template Selection Guide
 
-| Need | Use Template | Alternative |
-|------|--------------|-------------|
-| Wrap Magic data table with logic | `data-table-wrapper.template.tsx` | - |
-| Add controls to Magic chart | `chart-wrapper.template.tsx` | - |
-| Custom business logic component | `business-component.template.tsx` | Start from scratch |
-| Simple UI with no business logic | - | Use shadcn/ui directly |
-| Complex multi-step form | - | Generate with Magic MCP |
+| Need                             | Use Template                      | Alternative             |
+| -------------------------------- | --------------------------------- | ----------------------- |
+| Wrap Magic data table with logic | `data-table-wrapper.template.tsx` | -                       |
+| Add controls to Magic chart      | `chart-wrapper.template.tsx`      | -                       |
+| Custom business logic component  | `business-component.template.tsx` | Start from scratch      |
+| Simple UI with no business logic | -                                 | Use shadcn/ui directly  |
+| Complex multi-step form          | -                                 | Generate with Magic MCP |
 
 ## General Template Usage Pattern
 
@@ -147,12 +150,12 @@ All templates use shadcn/ui theme variables:
 
 ```tsx
 // ✅ Good: Use theme variables
-className="bg-primary text-primary-foreground"
-className="border-border text-foreground"
+className = 'bg-primary text-primary-foreground'
+className = 'border-border text-foreground'
 
 // ❌ Bad: Hardcoded colors
-className="bg-blue-500 text-white"
-className="border-gray-300 text-gray-900"
+className = 'bg-blue-500 text-white'
+className = 'border-gray-300 text-gray-900'
 ```
 
 ### TypeScript

@@ -11,6 +11,7 @@ This directory contains comprehensive test templates for Track Your Stack compon
 **Use for:** Testing Magic-generated data table components with sorting, filtering, pagination.
 
 **Covers:**
+
 - Rendering (rows, columns, empty state, loading)
 - Sorting (single column, direction toggle)
 - Filtering (single select, multi-select, clear)
@@ -30,6 +31,7 @@ This directory contains comprehensive test templates for Track Your Stack compon
 **Use for:** Testing Magic-generated chart components (line, bar, pie, area).
 
 **Covers:**
+
 - Rendering (canvas/SVG, dimensions, empty state)
 - Data visualization (points, colors, formatting)
 - Legend (visibility toggle, colors)
@@ -147,7 +149,9 @@ describe('ComponentName', () => {
 
 ```tsx
 describe('ComponentName', () => {
-  const defaultProps = { /* ... */ }
+  const defaultProps = {
+    /* ... */
+  }
 
   beforeEach(() => {
     jest.clearAllMocks()
@@ -373,7 +377,7 @@ describe('Component', () => {
   const mockPush = jest.fn()
 
   beforeEach(() => {
-    (useRouter as jest.Mock).mockReturnValue({
+    ;(useRouter as jest.Mock).mockReturnValue({
       push: mockPush,
       pathname: '/test',
     })
@@ -396,7 +400,7 @@ jest.mock('@/lib/actions/investment')
 
 describe('AddInvestmentForm', () => {
   beforeEach(() => {
-    (createInvestment as jest.Mock).mockResolvedValue({ success: true })
+    ;(createInvestment as jest.Mock).mockResolvedValue({ success: true })
   })
 
   it('should call server action on submit', async () => {
@@ -472,12 +476,12 @@ node --inspect-brk node_modules/.bin/jest --runInBand
 Maintain high test coverage for critical components:
 
 | Component Type | Target Coverage |
-|----------------|-----------------|
-| Data Tables | 85%+ |
-| Charts | 80%+ |
-| Forms | 90%+ |
-| Business Logic | 95%+ |
-| UI Components | 70%+ |
+| -------------- | --------------- |
+| Data Tables    | 85%+            |
+| Charts         | 80%+            |
+| Forms          | 90%+            |
+| Business Logic | 95%+            |
+| UI Components  | 70%+            |
 
 Check coverage report:
 

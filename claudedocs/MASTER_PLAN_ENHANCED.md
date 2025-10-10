@@ -21,11 +21,11 @@
 
 ## 🎯 MVP Feature List (Phase 1)
 
-| ID                                                    | Feature                             | Dependencies | Estimated Time | Status         |
-| ----------------------------------------------------- | ----------------------------------- | ------------ | -------------- | -------------- |
-| [F01](features/F01_project_setup.md)                  | Project Setup & Configuration       | None         | 1-2 days       | ⬜ Not Started |
-| [F01b](features/F01b_testing_framework_setup.md)      | Testing Framework Setup             | F01          | 0.5-1 day      | ⬜ Not Started |
-| [F02](features/F02_database_schema.md)                | Database Schema & Prisma            | F01          | 1 day          | ⬜ Not Started |
+| ID                                               | Feature                             | Dependencies | Estimated Time | Status         |
+| ------------------------------------------------ | ----------------------------------- | ------------ | -------------- | -------------- |
+| [F01](features/F01_project_setup.md)             | Project Setup & Configuration       | None         | 1-2 days       | ⬜ Not Started |
+| [F01b](features/F01b_testing_framework_setup.md) | Testing Framework Setup             | F01          | 0.5-1 day      | ⬜ Not Started |
+| [F02](features/F02_database_schema.md)           | Database Schema & Prisma            | F01          | 1 day          | ⬜ Not Started |
 | [F03](features/F03_authentication.md)            | Authentication (Google OAuth)       | F01, F02     | 2 days         | ⬜ Not Started |
 | [F04](features/F04_portfolio_crud.md)            | Portfolio Management (CRUD)         | F02, F03     | 2-3 days       | ⬜ Not Started |
 | [F05](features/F05_alpha_vantage_integration.md) | Alpha Vantage API Integration       | F01          | 2 days         | ⬜ Not Started |

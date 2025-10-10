@@ -299,9 +299,7 @@ describe('Utils', () => {
 
     it('should handle conditional classes', () => {
       expect(cn('base-class', false && 'conditional-class')).toBe('base-class')
-      expect(cn('base-class', true && 'conditional-class')).toBe(
-        'base-class conditional-class'
-      )
+      expect(cn('base-class', true && 'conditional-class')).toBe('base-class conditional-class')
     })
 
     it('should merge Tailwind classes correctly', () => {
@@ -419,10 +417,7 @@ import { ReactElement } from 'react'
 import { render, RenderOptions } from '@testing-library/react'
 
 // Custom render function that wraps components with providers
-export function renderWithProviders(
-  ui: ReactElement,
-  options?: Omit<RenderOptions, 'wrapper'>
-) {
+export function renderWithProviders(ui: ReactElement, options?: Omit<RenderOptions, 'wrapper'>) {
   return render(ui, { ...options })
 }
 
@@ -519,6 +514,7 @@ pnpm test:e2e:ui
 ### CI Integration Verification
 
 The CI workflow (`.github/workflows/ci.yml`) should now:
+
 - Detect that Vitest is installed
 - Detect that Playwright is installed
 - Run unit tests automatically
@@ -553,7 +549,7 @@ pnpm list @playwright/test --depth=0
 
 Add to `README.md`:
 
-```markdown
+````markdown
 ## Testing
 
 ### Unit & Integration Tests
@@ -571,6 +567,7 @@ pnpm test:coverage
 # Open Vitest UI
 pnpm test:ui
 ```
+````
 
 ### E2E Tests
 
@@ -591,13 +588,15 @@ pnpm test:e2e:report
 ### Test Coverage
 
 Minimum coverage thresholds:
+
 - Lines: 80%
 - Functions: 80%
 - Branches: 80%
 - Statements: 80%
 
 View coverage report: `open coverage/index.html`
-```
+
+````
 
 ### Changelog Entry
 
@@ -613,7 +612,7 @@ View coverage report: `open coverage/index.html`
 - Sample tests to verify testing infrastructure
 - Test utilities and helper functions
 - CI integration for automated testing
-```
+````
 
 ---
 
@@ -696,16 +695,18 @@ Installs and configures Vitest for unit/integration testing and Playwright for E
 - ✅ CI detects Playwright: `pnpm list @playwright/test`
 
 ### Coverage Report
+```
+
+--------------------|---------|----------|---------|---------|
+File | % Stmts | % Branch | % Funcs | % Lines |
+--------------------|---------|----------|---------|---------|
+All files | 100 | 100 | 100 | 100 |
+lib/constants.ts | 100 | 100 | 100 | 100 |
+lib/utils.ts | 100 | 100 | 100 | 100 |
+--------------------|---------|----------|---------|---------|
 
 ```
---------------------|---------|----------|---------|---------|
-File                | % Stmts | % Branch | % Funcs | % Lines |
---------------------|---------|----------|---------|---------|
-All files           |     100 |      100 |     100 |     100 |
- lib/constants.ts   |     100 |      100 |     100 |     100 |
- lib/utils.ts       |     100 |      100 |     100 |     100 |
---------------------|---------|----------|---------|---------|
-```
+
 ```
 
 ---

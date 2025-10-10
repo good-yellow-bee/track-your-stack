@@ -15,6 +15,7 @@ This library contains production-ready Magic MCP commands specifically tailored 
 ```
 
 **Best Practices:**
+
 - Be specific about features (sorting, filtering, pagination)
 - Include data structure (columns, fields, types)
 - Specify interactions (click, hover, expand)

@@ -84,7 +84,7 @@ _Write brief justification:_
 - [ ] Checked import statements are valid
 - [ ] Confirmed component structure makes sense
 
-**Generation Date:** _____________________
+**Generation Date:** \***\*\*\*\*\***\_\***\*\*\*\*\***
 
 ---
 
@@ -180,7 +180,7 @@ interface ComponentNameProps {
 
 **Example:**
 
-```tsx
+````tsx
 /**
  * InvestmentDataTable Component
  *
@@ -194,7 +194,7 @@ interface ComponentNameProps {
  * />
  * ```
  */
-```
+````
 
 ---
 
@@ -220,7 +220,7 @@ interface ComponentNameProps {
 - [ ] Loading state test
 - [ ] Error state test
 
-**Tests Written:** _____ / 5
+**Tests Written:** **\_** / 5
 
 ---
 
@@ -249,7 +249,7 @@ For **Forms:**
 - [ ] Error handling tests
 - [ ] Multi-step navigation tests
 
-**Feature Tests Written:** _____ tests
+**Feature Tests Written:** **\_** tests
 
 ---
 
@@ -367,7 +367,7 @@ Memory Usage:   _____ MB
 - [ ] Screen reader tested (VoiceOver, NVDA, or JAWS)
 - [ ] Color contrast ratios meet WCAG AA standards
 
-**Lighthouse Score:** _____ / 100
+**Lighthouse Score:** **\_** / 100
 
 ---
 
@@ -420,7 +420,7 @@ For UI components:
 - [ ] Captured mobile view
 - [ ] Screenshots saved to `docs/[category]/screenshots/`
 
-**Screenshots:** _____ captured
+**Screenshots:** **\_** captured
 
 ---
 
@@ -450,7 +450,7 @@ For UI components:
 - [ ] All CI checks pass
 - [ ] No unrelated changes included
 
-**PR Link:** [#_____](URL)
+**PR Link:** [#**\_**](URL)
 
 ---
 
@@ -461,7 +461,7 @@ For UI components:
 - [ ] Re-requested review after changes
 - [ ] Obtained approval(s)
 
-**Reviewers:** _____________________
+**Reviewers:** \***\*\*\*\*\***\_\***\*\*\*\*\***
 
 ---
 
@@ -573,9 +573,9 @@ cp docs/architecture/magic-mcp-integration-checklist.md \
 
 ---
 
-**Completion Date:** _____________________
+**Completion Date:** \***\*\*\*\*\***\_\***\*\*\*\*\***
 
-**Total Time:** _____ hours
+**Total Time:** **\_** hours
 
 **Notes:**
 

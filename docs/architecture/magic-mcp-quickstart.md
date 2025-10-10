@@ -9,6 +9,7 @@ Last Updated: 2025-10-10
 Magic MCP is an AI-powered UI component generator that creates production-ready React/TypeScript components from natural language descriptions. It uses patterns from 21st.dev library and integrates seamlessly with our existing stack.
 
 **Benefits for Track Your Stack:**
+
 - ⚡ 40-60% faster development for complex UI components
 - ✅ Production-ready, accessible components out of the box
 - 🎨 Tailwind CSS styling matching our design system
@@ -17,6 +18,7 @@ Magic MCP is an AI-powered UI component generator that creates production-ready 
 ## Prerequisites
 
 Before using Magic MCP, ensure you have:
+
 - ✅ Claude Code CLI installed and configured
 - ✅ Track Your Stack project running locally (`pnpm dev`)
 - ✅ Familiarity with our component structure (`components/ui/`, `components/portfolio/`, `components/investment/`)
@@ -55,6 +57,7 @@ Let's create a simple searchable currency selector - a common need in financial 
 Magic MCP will generate TypeScript React component code. Review it before accepting.
 
 **Key things to check:**
+
 - ✅ TypeScript types are correct
 - ✅ Tailwind classes use our theme variables
 - ✅ Component name follows our conventions
@@ -115,10 +118,7 @@ export default function NewPortfolioPage() {
   return (
     <form>
       <Label>Base Currency</Label>
-      <CurrencySelector
-        value={selectedCurrency}
-        onSelect={setSelectedCurrency}
-      />
+      <CurrencySelector value={selectedCurrency} onSelect={setSelectedCurrency} />
     </form>
   )
 }
@@ -262,7 +262,7 @@ import { createInvestment } from '@/lib/actions/investment'
 
 export default function AddInvestmentPage({ params }: { params: { id: string } }) {
   return (
-    <div className="container max-w-2xl mx-auto py-8">
+    <div className="container mx-auto max-w-2xl py-8">
       <h1>Add Investment</h1>
       <AddInvestmentWizard
         portfolioId={params.id}
@@ -282,18 +282,21 @@ export default function AddInvestmentPage({ params }: { params: { id: string } }
 When adding a Magic-generated component to the project:
 
 ### Before Generation
+
 - [ ] Checked [UI Component Selection Guide](./ui-component-selection-guide.md) to confirm Magic MCP is right choice
 - [ ] Identified correct save location (`components/portfolio/`, `components/investment/`, etc.)
 - [ ] Reviewed similar components for naming consistency
 - [ ] Prepared clear, detailed description for Magic command
 
 ### During Generation
+
 - [ ] Reviewed generated TypeScript types
 - [ ] Checked Tailwind classes for theme compatibility
 - [ ] Verified component name follows PascalCase convention
 - [ ] Ensured props interface is well-defined
 
 ### After Generation
+
 - [ ] Saved to correct directory with kebab-case filename
 - [ ] Replaced hardcoded colors with theme variables
 - [ ] Added JSDoc comments for complex logic
@@ -305,6 +308,7 @@ When adding a Magic-generated component to the project:
 - [ ] Checked accessibility (keyboard nav, screen readers)
 
 ### Before Committing
+
 - [ ] Run linting: `pnpm lint`
 - [ ] Run type checking: `pnpm typecheck`
 - [ ] Run tests: `pnpm test`
@@ -337,13 +341,13 @@ components/
 
 ### Naming Conventions
 
-| Type | Convention | Example |
-|------|------------|---------|
-| Component File | kebab-case | `investment-data-table.tsx` |
-| Component Name | PascalCase | `InvestmentDataTable` |
-| Props Interface | PascalCase + Props | `InvestmentDataTableProps` |
-| Test File | component.test.tsx | `investment-data-table.test.tsx` |
-| Utility Function | camelCase | `formatCurrency` |
+| Type             | Convention         | Example                          |
+| ---------------- | ------------------ | -------------------------------- |
+| Component File   | kebab-case         | `investment-data-table.tsx`      |
+| Component Name   | PascalCase         | `InvestmentDataTable`            |
+| Props Interface  | PascalCase + Props | `InvestmentDataTableProps`       |
+| Test File        | component.test.tsx | `investment-data-table.test.tsx` |
+| Utility Function | camelCase          | `formatCurrency`                 |
 
 ### Import Order
 
@@ -403,7 +407,7 @@ interface InvestmentDataTableProps {
 export function InvestmentDataTable({
   investments,
   onRowClick,
-  isLoading = false
+  isLoading = false,
 }: InvestmentDataTableProps) {
   // TypeScript infers return type as JSX.Element
   return <div>...</div>
@@ -625,7 +629,7 @@ export default async function PortfolioDetailPage({ params }: { params: { id: st
         </CardContent>
       </Card>
 
-      <div className="grid md:grid-cols-2 gap-4">
+      <div className="grid gap-4 md:grid-cols-2">
         {/* Magic component #2 */}
         <Card>
           <CardHeader>
@@ -749,18 +753,21 @@ export function PortfolioChart({ investments }: Props) {
 ## Getting Help
 
 **Questions?**
+
 - Check [UI Component Selection Guide](./ui-component-selection-guide.md) first
 - Review [Magic MCP Command Library](./magic-commands.md) for examples
 - Ask in project Slack/Discord channel
 - Create an issue on GitHub repo
 
 **Issues with Magic MCP?**
+
 - Report bugs at https://github.com/anthropics/claude-code/issues
 - Tag with `mcp:magic` label
 
 ---
 
 **Quick Links:**
+
 - [UI Component Selection Guide](./ui-component-selection-guide.md)
 - [Magic Command Library](./magic-commands.md)
 - [Component Templates](../../components/__templates/)

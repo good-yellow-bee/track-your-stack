@@ -35,16 +35,16 @@ Need a UI component?
 
 **Base UI Primitives** - These are the building blocks for all UIs:
 
-| Component | When to Use | Example |
-|-----------|------------|---------|
-| `Button` | All clickable actions | Save Portfolio, Delete Investment |
-| `Input` | Simple text entry | Portfolio name, ticker symbol |
-| `Label` | Form field labels | "Portfolio Name", "Asset Type" |
-| `Card` | Simple containers | Wrapper for portfolio summary |
-| `Dialog` | Basic modals | Confirmation dialogs, alerts |
-| `Select` | Simple dropdowns | Currency selector (if < 10 options) |
-| `Dropdown Menu` | Context menus | Row actions in tables |
-| `Form` | Form structure | Wrapping form elements |
+| Component       | When to Use           | Example                             |
+| --------------- | --------------------- | ----------------------------------- |
+| `Button`        | All clickable actions | Save Portfolio, Delete Investment   |
+| `Input`         | Simple text entry     | Portfolio name, ticker symbol       |
+| `Label`         | Form field labels     | "Portfolio Name", "Asset Type"      |
+| `Card`          | Simple containers     | Wrapper for portfolio summary       |
+| `Dialog`        | Basic modals          | Confirmation dialogs, alerts        |
+| `Select`        | Simple dropdowns      | Currency selector (if < 10 options) |
+| `Dropdown Menu` | Context menus         | Row actions in tables               |
+| `Form`          | Form structure        | Wrapping form elements              |
 
 **Usage Pattern:**
 
@@ -77,14 +77,14 @@ export function CreatePortfolioForm() {
 
 **Complex Composed Components** - When you need production-ready interactive patterns:
 
-| Component | When to Use | Magic Command | Example |
-|-----------|------------|---------------|---------|
-| **Data Tables** | Sorting, filtering, pagination, selection | `/ui create data table with...` | Investment list with sort/filter |
-| **Charts** | Data visualization | `/ui create chart component...` | Portfolio performance line chart |
-| **Multi-Step Forms** | Wizards, onboarding flows | `/ui create multi-step form...` | Add Investment wizard |
-| **Advanced Selectors** | Searchable, multi-select with 50+ options | `/ui create searchable select...` | Stock ticker search |
-| **Dashboard Cards** | Interactive metrics with actions | `/ui create dashboard card...` | Portfolio summary with expand |
-| **Date Pickers** | Complex date selection | `/ui create date picker...` | Purchase date selector with range |
+| Component              | When to Use                               | Magic Command                     | Example                           |
+| ---------------------- | ----------------------------------------- | --------------------------------- | --------------------------------- |
+| **Data Tables**        | Sorting, filtering, pagination, selection | `/ui create data table with...`   | Investment list with sort/filter  |
+| **Charts**             | Data visualization                        | `/ui create chart component...`   | Portfolio performance line chart  |
+| **Multi-Step Forms**   | Wizards, onboarding flows                 | `/ui create multi-step form...`   | Add Investment wizard             |
+| **Advanced Selectors** | Searchable, multi-select with 50+ options | `/ui create searchable select...` | Stock ticker search               |
+| **Dashboard Cards**    | Interactive metrics with actions          | `/ui create dashboard card...`    | Portfolio summary with expand     |
+| **Date Pickers**       | Complex date selection                    | `/ui create date picker...`       | Purchase date selector with range |
 
 **Usage Pattern:**
 
@@ -122,12 +122,12 @@ export function PortfolioInvestmentsPage({ portfolioId }: { portfolioId: string 
 
 These are components specific to your business logic that compose shadcn/ui primitives.
 
-| Component | Approach | Why |
-|-----------|----------|-----|
-| `PortfolioCard` | Custom + shadcn/ui | Uses `Card`, `Button` from shadcn, adds business logic |
-| `InvestmentForm` | Custom + shadcn/ui | Uses `Input`, `Select` from shadcn, adds validation |
+| Component           | Approach           | Why                                                      |
+| ------------------- | ------------------ | -------------------------------------------------------- |
+| `PortfolioCard`     | Custom + shadcn/ui | Uses `Card`, `Button` from shadcn, adds business logic   |
+| `InvestmentForm`    | Custom + shadcn/ui | Uses `Input`, `Select` from shadcn, adds validation      |
 | `CurrencyConverter` | Custom + Magic MCP | Uses Magic's currency selector + custom conversion logic |
-| `GainLossIndicator` | Custom + shadcn/ui | Uses shadcn styling, adds color logic |
+| `GainLossIndicator` | Custom + shadcn/ui | Uses shadcn styling, adds color logic                    |
 
 **Usage Pattern:**
 
@@ -157,9 +157,7 @@ export function PortfolioCard({ portfolio, investments }: PortfolioCardProps) {
         <div className="space-y-2">
           <div className="flex justify-between">
             <span>Total Value:</span>
-            <span className="font-bold">
-              {formatCurrency(totalValue, portfolio.baseCurrency)}
-            </span>
+            <span className="font-bold">{formatCurrency(totalValue, portfolio.baseCurrency)}</span>
           </div>
           <div className="flex justify-between">
             <span>Gain/Loss:</span>
@@ -168,9 +166,7 @@ export function PortfolioCard({ portfolio, investments }: PortfolioCardProps) {
             </span>
           </div>
         </div>
-        <Button onClick={() => router.push(`/portfolios/${portfolio.id}`)}>
-          View Details
-        </Button>
+        <Button onClick={() => router.push(`/portfolios/${portfolio.id}`)}>View Details</Button>
       </CardContent>
     </Card>
   )
@@ -185,6 +181,7 @@ export function PortfolioCard({ portfolio, investments }: PortfolioCardProps) {
 **Recommended:** Magic MCP
 
 **Features Needed:**
+
 - Sorting by ticker, quantity, current value, gain/loss
 - Filtering by asset type (Stock, ETF, Crypto, etc.)
 - Pagination (if > 20 investments)
@@ -239,6 +236,7 @@ export default async function PortfolioDetailPage({ params }: { params: { id: st
 **Recommended:** Magic MCP
 
 **Features Needed:**
+
 - Line chart showing portfolio value over time
 - Multiple portfolios comparison
 - Date range selector
@@ -284,6 +282,7 @@ export default async function DashboardPage() {
 **Recommended:** Magic MCP
 
 **Features Needed:**
+
 - Step 1: Asset type selection
 - Step 2: Ticker search and validation
 - Step 3: Purchase details (quantity, cost, date)
@@ -430,7 +429,7 @@ import { DropdownMenu } from '@/components/ui/dropdown-menu' // shadcn/ui
 export function InvestmentsPage() {
   return (
     <div>
-      <div className="flex justify-between mb-4">
+      <div className="mb-4 flex justify-between">
         <h1>Investments</h1>
         <Button>Add Investment</Button>
       </div>
@@ -498,14 +497,14 @@ export default {
     extend: {
       colors: {
         // Use shadcn/ui color system
-        border: "hsl(var(--border))",
-        input: "hsl(var(--input))",
-        ring: "hsl(var(--ring))",
-        background: "hsl(var(--background))",
-        foreground: "hsl(var(--foreground))",
+        border: 'hsl(var(--border))',
+        input: 'hsl(var(--input))',
+        ring: 'hsl(var(--ring))',
+        background: 'hsl(var(--background))',
+        foreground: 'hsl(var(--foreground))',
         primary: {
-          DEFAULT: "hsl(var(--primary))",
-          foreground: "hsl(var(--primary-foreground))",
+          DEFAULT: 'hsl(var(--primary))',
+          foreground: 'hsl(var(--primary-foreground))',
         },
         // ... other shadcn/ui colors
       },
@@ -620,6 +619,7 @@ If you need to replace an existing component:
 ### Step 1: Identify Candidate
 
 Look for components with:
+
 - Complex logic (sorting, filtering, pagination)
 - Low test coverage
 - High maintenance burden
@@ -684,17 +684,17 @@ import { InvestmentDataTable } from '@/components/investment/investment-data-tab
 
 ## Summary: When to Use What
 
-| Scenario | Use shadcn/ui | Use Magic MCP | Use Custom |
-|----------|---------------|---------------|------------|
-| Button, Input, Label | ✅ | ❌ | ❌ |
-| Basic Card, Dialog | ✅ | ❌ | ❌ |
-| Simple Form (< 5 fields) | ✅ | ❌ | ❌ |
-| Data Table with sorting/filtering | ❌ | ✅ | ❌ |
-| Charts and Visualizations | ❌ | ✅ | ❌ |
-| Multi-Step Forms | ❌ | ✅ | ❌ |
-| Searchable Select (50+ options) | ❌ | ✅ | ❌ |
-| Business Logic Component | ❌ | ❌ | ✅ (use shadcn primitives) |
-| Component with Complex Calculations | ❌ | ❌ | ✅ (use shadcn primitives) |
+| Scenario                            | Use shadcn/ui | Use Magic MCP | Use Custom                 |
+| ----------------------------------- | ------------- | ------------- | -------------------------- |
+| Button, Input, Label                | ✅            | ❌            | ❌                         |
+| Basic Card, Dialog                  | ✅            | ❌            | ❌                         |
+| Simple Form (< 5 fields)            | ✅            | ❌            | ❌                         |
+| Data Table with sorting/filtering   | ❌            | ✅            | ❌                         |
+| Charts and Visualizations           | ❌            | ✅            | ❌                         |
+| Multi-Step Forms                    | ❌            | ✅            | ❌                         |
+| Searchable Select (50+ options)     | ❌            | ✅            | ❌                         |
+| Business Logic Component            | ❌            | ❌            | ✅ (use shadcn primitives) |
+| Component with Complex Calculations | ❌            | ❌            | ✅ (use shadcn primitives) |
 
 ## Quick Reference Commands
 
