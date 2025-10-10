@@ -1,0 +1,17 @@
+# Dependencies
+node_modules/
+.next/
+
+# Templates and examples (not production code)
+components/__templates__/
+__tests__/__examples__/
+test/fixtures/
+
+# Build output
+.next/
+out/
+build/
+dist/
+
+# Environment files
+.env*.local

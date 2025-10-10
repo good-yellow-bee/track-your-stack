@@ -43,6 +43,10 @@ System design, database schema, and calculation logic.
 
 - `database-schema.md` - Prisma schema with ERD diagrams
 - `calculation-logic.md` - Business logic formulas and implementations
+- `ui-component-selection-guide.md` - **Decision framework for Magic MCP vs shadcn/ui**
+- `magic-mcp-quickstart.md` - **Quick start guide for using Magic MCP in the project**
+- `magic-commands.md` - **Library of ready-to-use Magic MCP commands for common components**
+- `magic-mcp-integration-checklist.md` - **Complete workflow checklist for adding Magic components**
 - `diagrams/` - Architecture diagrams (ERD, sequence, flow)
 
 ### `/changelog.md`

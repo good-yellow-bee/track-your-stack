@@ -1,11 +1,11 @@
 # Track Your Stack - Master Implementation Plan (Enhanced)
 
 **Status:** 🚀 Ready to Start
-**Last Updated:** 2025-10-08
-**Version:** 2.0 (Enhanced with Operational Excellence)
-**Total Features:** 15 (11 MVP + 4 Phase 2)
-**Estimated Timeline:** 5-6 weeks (with 20% buffer)
-**Quality Score:** 9.2/10 ⭐
+**Last Updated:** 2025-10-09
+**Version:** 2.1 (Enhanced with Testing Framework)
+**Total Features:** 16 (12 MVP + 4 Phase 2)
+**Estimated Timeline:** 5-7 weeks (with 20% buffer)
+**Quality Score:** 9.4/10 ⭐
 
 ---
 
@@ -13,9 +13,9 @@
 
 | Phase                 | Features    | Status      | Progress  |
 | --------------------- | ----------- | ----------- | --------- |
-| **Phase 1: MVP**      | 11 features | Not Started | 0/11 (0%) |
+| **Phase 1: MVP**      | 12 features | Not Started | 0/12 (0%) |
 | **Phase 2: Advanced** | 4 features  | Not Started | 0/4 (0%)  |
-| **Total**             | 15 features | Not Started | 0/15 (0%) |
+| **Total**             | 16 features | Not Started | 0/16 (0%) |
 
 ---
 
@@ -24,6 +24,7 @@
 | ID                                               | Feature                             | Dependencies | Estimated Time | Status         |
 | ------------------------------------------------ | ----------------------------------- | ------------ | -------------- | -------------- |
 | [F01](features/F01_project_setup.md)             | Project Setup & Configuration       | None         | 1-2 days       | ⬜ Not Started |
+| [F01b](features/F01b_testing_framework_setup.md) | Testing Framework Setup             | F01          | 0.5-1 day      | ⬜ Not Started |
 | [F02](features/F02_database_schema.md)           | Database Schema & Prisma            | F01          | 1 day          | ⬜ Not Started |
 | [F03](features/F03_authentication.md)            | Authentication (Google OAuth)       | F01, F02     | 2 days         | ⬜ Not Started |
 | [F04](features/F04_portfolio_crud.md)            | Portfolio Management (CRUD)         | F02, F03     | 2-3 days       | ⬜ Not Started |
@@ -35,7 +36,7 @@
 | [F10](features/F10_portfolio_summary.md)         | Portfolio Summary & Metrics         | F08          | 1-2 days       | ⬜ Not Started |
 | [F11](features/F11_visualizations.md)            | Charts & Visualizations             | F10          | 2-3 days       | ⬜ Not Started |
 
-**MVP Total Estimated Time:** 19-24 days + 4-5 days buffer = **5-6 weeks**
+**MVP Total Estimated Time:** 19.5-25 days + 4-5 days buffer = **5-6 weeks** (with testing infrastructure)
 
 ---
 
@@ -56,7 +57,8 @@
 
 ```mermaid
 graph TD
-    F01[F01: Project Setup] --> F02[F02: Database Schema]
+    F01[F01: Project Setup] --> F01b[F01b: Testing Framework]
+    F01 --> F02[F02: Database Schema]
     F01 --> F03[F03: Authentication]
     F01 --> F05[F05: Alpha Vantage]
 
@@ -95,6 +97,7 @@ graph TD
     F11 -.->|Integration Test 3| INT3{Integration<br/>Checkpoint 3}
 
     style F01 fill:#e1f5e1
+    style F01b fill:#e1f5e1
     style F02 fill:#e1f5e1
     style F03 fill:#fff3cd
     style F04 fill:#fff3cd
