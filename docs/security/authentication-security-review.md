@@ -15,24 +15,29 @@ The authentication implementation follows security best practices with NextAuth.
 ### ✅ STRENGTHS
 
 #### 1. Session Management (HIGH PRIORITY)
+
 - ✅ **Database-backed sessions** - Sessions stored in PostgreSQL, not JWT
 - ✅ **HTTP-only cookies** - Automatic CSRF protection via NextAuth
 - ✅ **Session expiry** - 30-day maxAge configured
 - ✅ **Secure cookie settings** - NextAuth defaults include `secure`, `httpOnly`, `sameSite`
 
 #### 2. OAuth Implementation (HIGH PRIORITY)
+
 - ✅ **Minimal scopes** - Only requests `openid`, `email`, `profile`
 - ✅ **Environment variables** - Credentials not hardcoded
 - ✅ **Official provider** - Using NextAuth.js Google provider (maintained)
 
 #### 3. Protected Routes (HIGH PRIORITY)
+
 - ✅ **Middleware protection** - All dashboard/portfolio routes protected
 - ✅ **API route protection** - `/api/portfolios/*` and `/api/investments/*` protected
 - ✅ **Edge runtime** - Middleware runs on Edge for performance
 
 #### 4. Redirect Safety (MEDIUM PRIORITY)
+
 - ✅ **Redirect validation** - Checks `baseUrl` before redirecting
 - ✅ **Open redirect prevention** - Only allows same-origin redirects
+
 ```typescript
 if (url.startsWith('/')) return `${baseUrl}${url}`
 if (new URL(url).origin === baseUrl) return url
@@ -40,6 +45,7 @@ return `${baseUrl}/dashboard` // Safe default
 ```
 
 #### 5. Error Handling (MEDIUM PRIORITY)
+
 - ✅ **Custom error page** - `/auth/error` configured
 - ✅ **No sensitive data leakage** - Generic error messages
 
@@ -50,6 +56,7 @@ return `${baseUrl}/dashboard` // Safe default
 **Issue**: No runtime validation of required environment variables
 
 **Current Code**:
+
 ```typescript
 clientId: process.env.GOOGLE_CLIENT_ID!,
 clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
@@ -58,6 +65,7 @@ clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
 **Recommendation**: Add startup validation
 
 **Proposed Fix**:
+
 ```typescript
 // lib/env.ts
 const requiredEnvVars = [
@@ -70,11 +78,11 @@ const requiredEnvVars = [
 
 export function validateEnv() {
   const missing = requiredEnvVars.filter((key) => !process.env[key])
-  
+
   if (missing.length > 0) {
     throw new Error(
       `Missing required environment variables: ${missing.join(', ')}\n` +
-      `Please check your .env.local file.`
+        `Please check your .env.local file.`
     )
   }
 }
@@ -94,6 +102,7 @@ validateEnv()
 **Recommendation**: Add session token rotation for enhanced security
 
 **Proposed Enhancement**:
+
 ```typescript
 session: {
   strategy: 'database',
@@ -113,6 +122,7 @@ session: {
 **Recommendation**: Add rate limiting to prevent brute force
 
 **Future Enhancement**:
+
 ```typescript
 // lib/rate-limit.ts
 import { Ratelimit } from '@upstash/ratelimit'
@@ -137,6 +147,7 @@ const ratelimit = new Ratelimit({
 **Recommendation**: Add CSP headers for defense-in-depth
 
 **Proposed Enhancement**:
+
 ```typescript
 // next.config.ts
 const nextConfig = {
@@ -172,6 +183,7 @@ const nextConfig = {
 **Recommendation**: Log authentication events for security monitoring
 
 **Future Enhancement**:
+
 ```typescript
 callbacks: {
   async signIn({ user, account }) {
@@ -223,29 +235,31 @@ callbacks: {
 
 ## OWASP Top 10 Compliance
 
-| Risk | Status | Notes |
-|------|--------|-------|
-| A01:2021 - Broken Access Control | ✅ Pass | Middleware protects all routes |
-| A02:2021 - Cryptographic Failures | ✅ Pass | Database sessions, HTTP-only cookies |
-| A03:2021 - Injection | ✅ Pass | Prisma ORM prevents SQL injection |
-| A04:2021 - Insecure Design | ✅ Pass | Follows NextAuth best practices |
-| A05:2021 - Security Misconfiguration | ⚠️ Partial | Missing CSP headers, env validation |
-| A06:2021 - Vulnerable Components | ✅ Pass | Using maintained NextAuth v5 |
-| A07:2021 - Authentication Failures | ✅ Pass | OAuth with database sessions |
-| A08:2021 - Software/Data Integrity | ✅ Pass | No external scripts, verified packages |
-| A09:2021 - Security Logging Failures | ⚠️ Partial | No audit logging yet |
-| A10:2021 - Server-Side Request Forgery | ✅ Pass | No SSRF vectors |
+| Risk                                   | Status     | Notes                                  |
+| -------------------------------------- | ---------- | -------------------------------------- |
+| A01:2021 - Broken Access Control       | ✅ Pass    | Middleware protects all routes         |
+| A02:2021 - Cryptographic Failures      | ✅ Pass    | Database sessions, HTTP-only cookies   |
+| A03:2021 - Injection                   | ✅ Pass    | Prisma ORM prevents SQL injection      |
+| A04:2021 - Insecure Design             | ✅ Pass    | Follows NextAuth best practices        |
+| A05:2021 - Security Misconfiguration   | ⚠️ Partial | Missing CSP headers, env validation    |
+| A06:2021 - Vulnerable Components       | ✅ Pass    | Using maintained NextAuth v5           |
+| A07:2021 - Authentication Failures     | ✅ Pass    | OAuth with database sessions           |
+| A08:2021 - Software/Data Integrity     | ✅ Pass    | No external scripts, verified packages |
+| A09:2021 - Security Logging Failures   | ⚠️ Partial | No audit logging yet                   |
+| A10:2021 - Server-Side Request Forgery | ✅ Pass    | No SSRF vectors                        |
 
 ## Critical Security Checklist
 
 **Before Production Deployment**:
 
 - [ ] **Generate strong `NEXTAUTH_SECRET`**
+
   ```bash
   openssl rand -base64 32
   ```
 
 - [ ] **Set production `NEXTAUTH_URL`**
+
   ```bash
   NEXTAUTH_URL=https://yourdomain.com
   ```
@@ -254,6 +268,7 @@ callbacks: {
   - Add: `https://yourdomain.com/api/auth/callback/google`
 
 - [ ] **Enable secure cookies** (automatic in production, verify)
+
   ```typescript
   cookies: {
     sessionToken: {
@@ -282,42 +297,50 @@ callbacks: {
 ### File-by-File Analysis
 
 #### ✅ lib/auth.ts
+
 - Environment variable usage: Appropriate (non-sensitive check)
 - No hardcoded secrets
 - Proper type safety
 - **Recommendation**: Add runtime env validation
 
 #### ✅ middleware.ts
+
 - Proper route protection
 - No authorization bypass vectors
 - Edge runtime compatible
 - **Recommendation**: None - secure as-is
 
 #### ✅ components/auth/SignInButton.tsx
+
 - No security concerns
 - Client-side only (no sensitive data)
 - Uses NextAuth `signIn` helper
 
 #### ✅ app/api/auth/[...nextauth]/route.ts
+
 - Exports handlers correctly
 - No security concerns
 
 #### ✅ types/next-auth.d.ts
+
 - Type extensions only
 - No security impact
 
 ## Recommendations Priority
 
 ### Immediate (Before Merge)
+
 - ✅ All critical issues resolved - **NONE FOUND**
 
 ### Short-term (Before Production)
+
 1. Add environment variable validation
 2. Implement rate limiting
 3. Configure CSP headers
 4. Review session token rotation
 
 ### Long-term (Post-Launch)
+
 1. Add authentication audit logging
 2. Implement 2FA (if required for compliance)
 3. Session management UI (view/revoke sessions)
@@ -330,6 +353,7 @@ callbacks: {
 The authentication implementation is secure and follows industry best practices. No critical vulnerabilities were identified. The recommendations provided are enhancements for defense-in-depth and should be addressed before production deployment.
 
 **Key Strengths**:
+
 - Database-backed sessions
 - Proper OAuth implementation
 - Protected routes with middleware
@@ -337,6 +361,7 @@ The authentication implementation is secure and follows industry best practices.
 - CSRF and XSS protections in place
 
 **Action Items**:
+
 1. Merge PR #11 ✅
 2. Create follow-up tickets for medium-priority recommendations
 3. Implement critical checklist items before production deployment
