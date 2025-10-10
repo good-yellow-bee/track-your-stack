@@ -126,7 +126,7 @@ expect(mockFn()).toBe(42)
 
 ```typescript
 vi.mock('@/lib/api/alphaVantage', () => ({
-  getStockPrice: vi.fn().mockResolvedValue(150.25)
+  getStockPrice: vi.fn().mockResolvedValue(150.25),
 }))
 ```
 

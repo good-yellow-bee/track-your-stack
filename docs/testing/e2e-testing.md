@@ -131,8 +131,8 @@ await expect(page).toHaveScreenshot('dashboard.png')
 await page.waitForSelector('.loading', { state: 'hidden' })
 
 // Wait for response
-await page.waitForResponse(response =>
-  response.url().includes('/api/portfolios') && response.status() === 200
+await page.waitForResponse(
+  (response) => response.url().includes('/api/portfolios') && response.status() === 200
 )
 ```
 
