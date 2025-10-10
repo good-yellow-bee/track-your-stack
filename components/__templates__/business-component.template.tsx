@@ -28,6 +28,8 @@ import { Badge } from '@/components/ui/badge'
 
 // Import utilities and calculations
 import { formatCurrency, formatPercent, cn } from '@/lib/utils'
+// TODO: Create these calculation functions when implementing investment logic:
+// TODO: Create @/lib/calculations/investment.ts with calculateGainLoss and calculateGainLossPercent
 import { calculateGainLoss, calculateGainLossPercent } from '@/lib/calculations/investment'
 
 // Import types

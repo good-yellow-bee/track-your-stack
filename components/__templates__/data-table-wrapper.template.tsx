@@ -20,7 +20,9 @@ import { useRouter } from 'next/navigation'
 import { YourDataTable } from './your-data-table' // Magic-generated
 
 // Import business logic hooks
-// TODO: Add your custom hooks
+// TODO: These hooks don't exist yet - create them when needed:
+// TODO: Create @/lib/hooks/use-currency-conversion.ts for currency conversion logic
+// TODO: Create @/lib/hooks/use-real-time-prices.ts for real-time price updates
 // import { useCurrencyConversion } from '@/lib/hooks/use-currency-conversion'
 // import { useRealTimePrices } from '@/lib/hooks/use-real-time-prices'
 

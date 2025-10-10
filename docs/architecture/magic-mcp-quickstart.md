@@ -491,6 +491,37 @@ it('should have no accessibility violations', async () => {
 
 ## Troubleshooting
 
+### Issue: Magic MCP `/ui` command not recognized
+
+**Symptom:** When you type `/ui --help`, you get "command not found" or no response.
+
+**Solution:**
+
+1. **Verify Magic MCP is installed in Claude Code:**
+   ```bash
+   # Check if Magic MCP server is available
+   # In Claude Code, you should see available MCP servers listed
+   ```
+
+2. **If not installed, install Magic MCP:**
+   - Visit the Magic MCP documentation
+   - Follow the installation instructions for Claude Code
+   - Restart Claude Code after installation
+
+3. **Verify installation:**
+   ```bash
+   # In Claude Code conversation
+   /ui --help
+   ```
+   You should see command options and usage information.
+
+4. **Alternative: Use Natural Language Instead**
+   If `/ui` commands aren't available, you can still describe components in natural language:
+   ```
+   Create a searchable data table with sorting and filtering for investment data
+   ```
+   Claude Code can generate components using other methods.
+
 ### Issue: Generated Component Doesn't Match Design System
 
 **Symptom:** Colors, spacing, or typography look different from rest of app.

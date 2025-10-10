@@ -13,7 +13,7 @@
 import { render, screen, fireEvent, waitFor, within } from '@testing-library/react'
 import { userEvent } from '@testing-library/user-event'
 import { YourDataTable } from '@/components/path/your-data-table' // TODO: Update path
-import { mockInvestments } from '@/test/fixtures/investments' // TODO: Create fixtures
+import { mockInvestments } from '@/test/fixtures/investments' // ✅ Fixture file created
 
 describe('YourDataTable', () => {
   // Default props for testing
