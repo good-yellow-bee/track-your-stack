@@ -204,6 +204,10 @@ jobs:
             echo "tests_exist=false" >> $GITHUB_OUTPUT
           fi
 
+      - name: Generate Prisma Client
+        if: steps.check-tests.outputs.tests_exist == 'true'
+        run: pnpm prisma generate
+
       - name: Run unit tests
         if: steps.check-tests.outputs.tests_exist == 'true'
         run: pnpm test
@@ -243,6 +247,10 @@ jobs:
           else
             echo "e2e_exists=false" >> $GITHUB_OUTPUT
           fi
+
+      - name: Generate Prisma Client
+        if: steps.check-e2e.outputs.e2e_exists == 'true'
+        run: pnpm prisma generate
 
       - name: Install Playwright browsers
         if: steps.check-e2e.outputs.e2e_exists == 'true'

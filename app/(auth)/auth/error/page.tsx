@@ -7,7 +7,11 @@ export const metadata: Metadata = {
   description: 'An error occurred during authentication',
 }
 
-export default function AuthError({ searchParams }: { searchParams: { error?: string } }) {
+export default async function AuthError({
+  searchParams,
+}: {
+  searchParams: Promise<{ error?: string }>
+}) {
   const errorMessages: Record<string, string> = {
     Configuration: 'There is a problem with the server configuration.',
     AccessDenied: 'You do not have permission to sign in.',
@@ -24,7 +28,8 @@ export default function AuthError({ searchParams }: { searchParams: { error?: st
     SessionRequired: 'Please sign in to access this page.',
   }
 
-  const error = searchParams.error
+  const params = await searchParams
+  const error = params.error
   const message = error
     ? errorMessages[error] || 'An unexpected error occurred'
     : 'An unexpected error occurred'

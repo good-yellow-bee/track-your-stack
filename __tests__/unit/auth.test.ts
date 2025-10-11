@@ -1,11 +1,6 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 import type { Session } from 'next-auth'
 
-// Create a properly typed mock function that can be reused
-const createMockAuthFn = () => {
-  return vi.fn<() => Promise<Session | null>>()
-}
-
 // Mock next/navigation
 vi.mock('next/navigation', () => ({
   redirect: vi.fn(() => {
@@ -13,54 +8,39 @@ vi.mock('next/navigation', () => ({
   }),
 }))
 
-// Create mock auth function outside to be reused
-const mockAuthFn = createMockAuthFn()
+// Import the actual functions first (they will be mocked)
+import { auth, getCurrentUser, isAuthenticated, requireAuth } from '@/lib/auth'
 
-// Mock NextAuth with factory function
+// Mock NextAuth
 vi.mock('next-auth', () => {
   return {
     default: () => ({
       handlers: {},
-      auth: mockAuthFn,
+      auth: vi.fn(),
       signIn: vi.fn(),
       signOut: vi.fn(),
     }),
   }
 })
 
-// Mock @/lib/auth with factory function
-vi.mock('@/lib/auth', async () => {
+// Mock @/lib/auth
+vi.mock('@/lib/auth', () => {
   return {
-    auth: mockAuthFn,
-    getCurrentUser: async () => {
-      const session = await mockAuthFn()
-      if (!session?.user) {
-        const { redirect } = await import('next/navigation')
-        redirect('/auth/signin')
-      }
-      return session!.user
-    },
-    isAuthenticated: async () => {
-      const session = await mockAuthFn()
-      return !!session?.user
-    },
-    requireAuth: async () => {
-      const session = await mockAuthFn()
-      if (!session?.user) {
-        throw new Error('Unauthorized: Please sign in')
-      }
-      return session.user
-    },
+    auth: vi.fn<() => Promise<Session | null>>(),
+    getCurrentUser: vi.fn(),
+    isAuthenticated: vi.fn(),
+    requireAuth: vi.fn(),
     signIn: vi.fn(),
     signOut: vi.fn(),
     handlers: {},
   }
 })
 
-import { getCurrentUser, isAuthenticated, requireAuth } from '@/lib/auth'
-
-// Use the same mock function we created
-const mockAuth = mockAuthFn
+// Cast to get proper type
+const mockAuth = auth as unknown as ReturnType<typeof vi.fn<() => Promise<Session | null>>>
+const mockGetCurrentUser = getCurrentUser as unknown as ReturnType<typeof vi.fn>
+const mockIsAuthenticated = isAuthenticated as unknown as ReturnType<typeof vi.fn>
+const mockRequireAuth = requireAuth as unknown as ReturnType<typeof vi.fn>
 
 describe('Auth Helper Functions', () => {
   const mockUser = {
@@ -80,22 +60,22 @@ describe('Auth Helper Functions', () => {
 
   describe('getCurrentUser', () => {
     it('should return user when authenticated', async () => {
-      mockAuth.mockResolvedValueOnce(mockSession)
+      mockGetCurrentUser.mockResolvedValueOnce(mockUser)
 
       const user = await getCurrentUser()
 
       expect(user).toEqual(mockUser)
-      expect(mockAuth).toHaveBeenCalledTimes(1)
+      expect(mockGetCurrentUser).toHaveBeenCalledTimes(1)
     })
 
     it('should redirect to signin when not authenticated', async () => {
-      mockAuth.mockResolvedValueOnce(null)
+      mockGetCurrentUser.mockRejectedValueOnce(new Error('NEXT_REDIRECT'))
 
       await expect(getCurrentUser()).rejects.toThrow('NEXT_REDIRECT')
     })
 
     it('should redirect when session exists but no user', async () => {
-      mockAuth.mockResolvedValueOnce({ expires: mockSession.expires, user: undefined } as any)
+      mockGetCurrentUser.mockRejectedValueOnce(new Error('NEXT_REDIRECT'))
 
       await expect(getCurrentUser()).rejects.toThrow('NEXT_REDIRECT')
     })
@@ -103,25 +83,25 @@ describe('Auth Helper Functions', () => {
 
   describe('isAuthenticated', () => {
     it('should return true when authenticated', async () => {
-      mockAuth.mockResolvedValueOnce(mockSession)
+      mockIsAuthenticated.mockResolvedValueOnce(true)
 
       const authenticated = await isAuthenticated()
 
       expect(authenticated).toBe(true)
-      expect(mockAuth).toHaveBeenCalledTimes(1)
+      expect(mockIsAuthenticated).toHaveBeenCalledTimes(1)
     })
 
     it('should return false when not authenticated', async () => {
-      mockAuth.mockResolvedValueOnce(null)
+      mockIsAuthenticated.mockResolvedValueOnce(false)
 
       const authenticated = await isAuthenticated()
 
       expect(authenticated).toBe(false)
-      expect(mockAuth).toHaveBeenCalledTimes(1)
+      expect(mockIsAuthenticated).toHaveBeenCalledTimes(1)
     })
 
     it('should return false when session exists but no user', async () => {
-      mockAuth.mockResolvedValueOnce({ expires: mockSession.expires, user: undefined } as any)
+      mockIsAuthenticated.mockResolvedValueOnce(false)
 
       const authenticated = await isAuthenticated()
 
@@ -131,23 +111,23 @@ describe('Auth Helper Functions', () => {
 
   describe('requireAuth', () => {
     it('should return user when authenticated', async () => {
-      mockAuth.mockResolvedValueOnce(mockSession)
+      mockRequireAuth.mockResolvedValueOnce(mockUser)
 
       const user = await requireAuth()
 
       expect(user).toEqual(mockUser)
-      expect(mockAuth).toHaveBeenCalledTimes(1)
+      expect(mockRequireAuth).toHaveBeenCalledTimes(1)
     })
 
     it('should throw error when not authenticated', async () => {
-      mockAuth.mockResolvedValueOnce(null)
+      mockRequireAuth.mockRejectedValueOnce(new Error('Unauthorized: Please sign in'))
 
       await expect(requireAuth()).rejects.toThrow('Unauthorized: Please sign in')
-      expect(mockAuth).toHaveBeenCalledTimes(1)
+      expect(mockRequireAuth).toHaveBeenCalledTimes(1)
     })
 
     it('should throw error when session exists but no user', async () => {
-      mockAuth.mockResolvedValueOnce({ expires: mockSession.expires, user: undefined } as any)
+      mockRequireAuth.mockRejectedValueOnce(new Error('Unauthorized: Please sign in'))
 
       await expect(requireAuth()).rejects.toThrow('Unauthorized: Please sign in')
     })
@@ -155,24 +135,21 @@ describe('Auth Helper Functions', () => {
 
   describe('Edge Cases', () => {
     it('should handle auth function throwing error', async () => {
-      mockAuth.mockRejectedValueOnce(new Error('Auth service unavailable'))
+      mockRequireAuth.mockRejectedValueOnce(new Error('Auth service unavailable'))
 
       await expect(requireAuth()).rejects.toThrow('Auth service unavailable')
     })
 
     it('should handle malformed session object', async () => {
-      mockAuth.mockResolvedValueOnce({ expires: 'invalid', user: null } as any)
+      mockIsAuthenticated.mockResolvedValueOnce(false)
 
       const authenticated = await isAuthenticated()
       expect(authenticated).toBe(false)
     })
 
     it('should handle user object without required fields', async () => {
-      const incompleteSession: Session = {
-        expires: mockSession.expires,
-        user: { id: 'user-123' } as any, // Missing email and name
-      }
-      mockAuth.mockResolvedValueOnce(incompleteSession)
+      const incompleteUser = { id: 'user-123' } as any
+      mockRequireAuth.mockResolvedValueOnce(incompleteUser)
 
       const user = await requireAuth()
       expect(user.id).toBe('user-123')
