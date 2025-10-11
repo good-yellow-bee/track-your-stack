@@ -112,6 +112,7 @@ This ensures TypeScript knows that `session.user.id` exists and is type-safe.
 #### Why Layout-Based Authentication?
 
 Next.js 15 middleware runs on edge runtime, which doesn't support Prisma Client without additional configuration. Layout-based authentication:
+
 - ✅ Runs in Node.js runtime (full Prisma support)
 - ✅ More granular control per route group
 - ✅ Better performance (no middleware overhead for public routes)

@@ -1,6 +1,11 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 import type { Session } from 'next-auth'
 
+// Create a properly typed mock function that can be reused
+const createMockAuthFn = () => {
+  return vi.fn<() => Promise<Session | null>>()
+}
+
 // Mock next/navigation
 vi.mock('next/navigation', () => ({
   redirect: vi.fn(() => {
@@ -8,9 +13,11 @@ vi.mock('next/navigation', () => ({
   }),
 }))
 
+// Create mock auth function outside to be reused
+const mockAuthFn = createMockAuthFn()
+
 // Mock NextAuth with factory function
 vi.mock('next-auth', () => {
-  const mockAuthFn = vi.fn()
   return {
     default: () => ({
       handlers: {},
@@ -23,7 +30,6 @@ vi.mock('next-auth', () => {
 
 // Mock @/lib/auth with factory function
 vi.mock('@/lib/auth', async () => {
-  const mockAuthFn = vi.fn()
   return {
     auth: mockAuthFn,
     getCurrentUser: async () => {
@@ -32,7 +38,7 @@ vi.mock('@/lib/auth', async () => {
         const { redirect } = await import('next/navigation')
         redirect('/auth/signin')
       }
-      return session.user
+      return session!.user
     },
     isAuthenticated: async () => {
       const session = await mockAuthFn()
@@ -51,10 +57,10 @@ vi.mock('@/lib/auth', async () => {
   }
 })
 
-import { auth, getCurrentUser, isAuthenticated, requireAuth } from '@/lib/auth'
+import { getCurrentUser, isAuthenticated, requireAuth } from '@/lib/auth'
 
-// Get reference to mock function after imports
-const mockAuth = vi.mocked(auth)
+// Use the same mock function we created
+const mockAuth = mockAuthFn
 
 describe('Auth Helper Functions', () => {
   const mockUser = {

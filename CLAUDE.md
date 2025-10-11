@@ -709,6 +709,7 @@ export default async function DashboardLayout({
 ```
 
 **Benefits of Layout-Based Authentication:**
+
 - ✅ Runs in Node.js runtime (full Prisma support)
 - ✅ More granular control over protected routes
 - ✅ Better performance (no middleware overhead for public routes)

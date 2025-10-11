@@ -7,6 +7,7 @@ This document describes the Server Actions API pattern used in Track Your Stack.
 ## Why Server Actions?
 
 **Advantages over API Routes:**
+
 - ✅ Type-safe by default (TypeScript end-to-end)
 - ✅ No need to define separate API endpoints
 - ✅ Automatic request handling (no manual parsing)
@@ -181,10 +182,7 @@ import { requireAuth } from '@/lib/auth'
 import { prisma } from '@/lib/prisma'
 import { revalidatePath } from 'next/cache'
 
-export async function updatePortfolio(
-  portfolioId: string,
-  formData: FormData
-) {
+export async function updatePortfolio(portfolioId: string, formData: FormData) {
   // 1. Require authentication
   const user = await requireAuth()
 
@@ -517,12 +515,16 @@ type ActionResponse<T> =
 
 // Validation errors
 'Invalid input'
-{ errors: { fieldName: ['error message'] } }
+{
+  errors: {
+    fieldName: ['error message']
+  }
+}
 
 // Database errors
-'Portfolio not found'
-'Investment not found'
-'Failed to create portfolio'
+;('Portfolio not found')
+;('Investment not found')
+;('Failed to create portfolio')
 ```
 
 ### Client-Side Error Handling

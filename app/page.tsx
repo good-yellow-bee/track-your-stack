@@ -9,9 +9,7 @@ export default async function Home() {
     <main className="flex min-h-screen flex-col items-center justify-center p-8 sm:p-24">
       <div className="z-10 w-full max-w-5xl space-y-8">
         <div className="text-center">
-          <h1 className="mb-4 text-4xl font-bold tracking-tight sm:text-6xl">
-            Track Your Stack
-          </h1>
+          <h1 className="mb-4 text-4xl font-bold tracking-tight sm:text-6xl">Track Your Stack</h1>
           <p className="text-lg text-muted-foreground sm:text-xl">
             Your personal investment portfolio tracker with real-time updates
           </p>
@@ -33,30 +31,22 @@ export default async function Home() {
           <div className="text-center">
             <div className="mb-2 text-3xl">📊</div>
             <h3 className="mb-1 font-semibold">Multiple Portfolios</h3>
-            <p className="text-sm text-muted-foreground">
-              Track different investment strategies
-            </p>
+            <p className="text-sm text-muted-foreground">Track different investment strategies</p>
           </div>
           <div className="text-center">
             <div className="mb-2 text-3xl">💰</div>
             <h3 className="mb-1 font-semibold">Real-time Prices</h3>
-            <p className="text-sm text-muted-foreground">
-              Live market data via Alpha Vantage
-            </p>
+            <p className="text-sm text-muted-foreground">Live market data via Alpha Vantage</p>
           </div>
           <div className="text-center">
             <div className="mb-2 text-3xl">🌍</div>
             <h3 className="mb-1 font-semibold">Multi-currency</h3>
-            <p className="text-sm text-muted-foreground">
-              Support for global investments
-            </p>
+            <p className="text-sm text-muted-foreground">Support for global investments</p>
           </div>
           <div className="text-center">
             <div className="mb-2 text-3xl">📈</div>
             <h3 className="mb-1 font-semibold">Gains & Losses</h3>
-            <p className="text-sm text-muted-foreground">
-              Track your portfolio performance
-            </p>
+            <p className="text-sm text-muted-foreground">Track your portfolio performance</p>
           </div>
         </div>
       </div>
