@@ -684,16 +684,35 @@ model Portfolio {
 
 NextAuth.js v5 with Google OAuth. Session management uses database adapter.
 
-**Protected Route Middleware:**
+**Important:** This project uses **layout-based authentication** instead of middleware. This is because Next.js 15 middleware runs on edge runtime, which doesn't support Prisma Client without additional configuration (Prisma Accelerate or Driver Adapters).
+
+**Protected Routes via Layout:**
 
 ```typescript
-// middleware.ts
-export { default } from 'next-auth/middleware'
+// app/(dashboard)/layout.tsx
+import { auth } from '@/lib/auth'
+import { redirect } from 'next/navigation'
 
-export const config = {
-  matcher: ['/dashboard/:path*', '/portfolios/:path*'],
+export default async function DashboardLayout({
+  children,
+}: {
+  children: React.ReactNode
+}) {
+  const session = await auth()
+
+  if (!session) {
+    redirect('/auth/signin')
+  }
+
+  return <>{children}</>
 }
 ```
+
+**Benefits of Layout-Based Authentication:**
+- ✅ Runs in Node.js runtime (full Prisma support)
+- ✅ More granular control over protected routes
+- ✅ Better performance (no middleware overhead for public routes)
+- ✅ Easier to debug and maintain
 
 **Getting Session in Server Components:**
 
