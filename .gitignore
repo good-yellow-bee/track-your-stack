@@ -68,6 +68,7 @@ logs/
 tmp/
 temp/
 *.tmp
+*.bak
 
 # Claude Code (keep user-specific configurations private)
 .claude/

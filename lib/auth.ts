@@ -38,13 +38,6 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
 })
 
 /**
- * Get current session on server
- */
-export async function getSession() {
-  return await auth()
-}
-
-/**
  * Get current user or redirect to sign in
  */
 export async function getCurrentUser() {
