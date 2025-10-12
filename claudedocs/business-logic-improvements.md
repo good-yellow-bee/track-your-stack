@@ -27,6 +27,380 @@ This report identifies **11 critical gaps** in the business logic and financial 
 
 ---
 
+## ⚠️ Tax Disclaimer Requirements
+
+**CRITICAL LEGAL REQUIREMENT**: All tax reporting features MUST include prominent disclaimers to limit liability.
+
+### Standard Tax Disclaimer Template
+
+This disclaimer MUST appear on:
+- Tax report pages
+- 1099-B export pages
+- Capital gains summary pages
+- Any page displaying tax-related calculations
+
+---
+
+#### **Primary Disclaimer (Required on All Tax Pages)**
+
+```typescript
+// components/tax/TaxDisclaimer.tsx
+export function TaxDisclaimer({ variant = 'full' }: { variant?: 'full' | 'compact' }) {
+  if (variant === 'compact') {
+    return (
+      <Alert variant="warning" className="my-4">
+        <AlertTriangle className="h-4 w-4" />
+        <AlertTitle>Not Tax Advice</AlertTitle>
+        <AlertDescription>
+          This report is for informational purposes only.{' '}
+          <Link href="/tax-disclaimer" className="underline">
+            See full disclaimer
+          </Link>
+        </AlertDescription>
+      </Alert>
+    )
+  }
+
+  return (
+    <Card className="border-yellow-500 bg-yellow-50 my-6">
+      <CardHeader>
+        <CardTitle className="flex items-center gap-2 text-yellow-900">
+          <AlertTriangle className="h-5 w-5" />
+          Important Tax Disclaimer
+        </CardTitle>
+      </CardHeader>
+      <CardContent className="space-y-4 text-sm text-yellow-900">
+        <p className="font-semibold">
+          ⚠️ This application provides investment tracking and tax reporting features for
+          <strong> informational purposes ONLY</strong>. It is <strong>NOT</strong>:
+        </p>
+        <ul className="list-disc pl-6 space-y-2">
+          <li>
+            <strong>Tax advice</strong> - We are not CPAs, enrolled agents, or tax professionals
+          </li>
+          <li>
+            <strong>Investment advice</strong> - We do not provide financial planning or investment recommendations
+          </li>
+          <li>
+            <strong>Guaranteed accuracy</strong> - Tax calculations may contain errors or be incomplete
+          </li>
+          <li>
+            <strong>IRS-compliant filing</strong> - Always verify with official tax forms and qualified professionals
+          </li>
+        </ul>
+
+        <div className="border-t border-yellow-300 pt-4">
+          <p className="font-semibold mb-2">
+            🚨 Critical Warnings:
+          </p>
+          <ul className="list-disc pl-6 space-y-1">
+            <li>
+              <strong>Verify all cost basis calculations</strong> with your broker's 1099-B
+            </li>
+            <li>
+              <strong>Consult a qualified CPA or tax advisor</strong> before filing taxes
+            </li>
+            <li>
+              <strong>We are not responsible</strong> for errors, omissions, or tax penalties
+            </li>
+            <li>
+              <strong>Tax laws change</strong> - Our calculations may not reflect current IRS rules
+            </li>
+          </ul>
+        </div>
+
+        <div className="border-t border-yellow-300 pt-4">
+          <p className="font-semibold mb-2">
+            ✅ How to Use This Responsibly:
+          </p>
+          <ol className="list-decimal pl-6 space-y-1">
+            <li>Compare our calculations with your broker's 1099-B statements</li>
+            <li>Reconcile any discrepancies before filing</li>
+            <li>Use as a <em>starting point</em> for tax preparation, not the final word</li>
+            <li>Share with your CPA for professional review and validation</li>
+            <li>Keep records of all transactions for IRS audit defense</li>
+          </ol>
+        </div>
+
+        <p className="text-xs pt-4 border-t border-yellow-300">
+          By using Track Your Stack's tax features, you agree to our{' '}
+          <Link href="/terms" className="underline">
+            Terms of Service
+          </Link>{' '}
+          and acknowledge that you have read and understood this disclaimer.
+        </p>
+      </CardContent>
+    </Card>
+  )
+}
+```
+
+---
+
+#### **Compact Inline Warning (Use for Specific Fields)**
+
+```typescript
+// Use for individual tax calculations
+<div className="flex items-center gap-2 text-sm text-yellow-700 bg-yellow-50 p-2 rounded">
+  <AlertTriangle className="h-4 w-4" />
+  <span>Tax calculation - verify with CPA before filing</span>
+</div>
+```
+
+---
+
+### Legal Text Requirements
+
+#### **Terms of Service - Tax Section**
+
+Add to `/app/(legal)/terms/page.tsx`:
+
+```markdown
+## Tax Reporting Disclaimer
+
+Track Your Stack provides tax lot tracking and capital gains calculations as a convenience feature
+for users. However:
+
+### Limitation of Liability
+
+- **No Guarantee of Accuracy**: We make no representations or warranties regarding the accuracy,
+  completeness, or reliability of tax calculations.
+
+- **User Responsibility**: You are solely responsible for the accuracy of your tax filings. You must
+  independently verify all calculations and data before submission to tax authorities.
+
+- **No Tax Advice**: Nothing in this application constitutes tax advice. We are not engaged in
+  providing professional tax, legal, or accounting services.
+
+- **No Liability for Errors**: Track Your Stack, its owners, employees, and contractors shall not be
+  liable for any errors, omissions, or inaccuracies in tax calculations, or for any losses, damages,
+  or penalties resulting from reliance on our calculations.
+
+### Professional Consultation Required
+
+Users MUST consult with qualified tax professionals (CPAs, enrolled agents, tax attorneys) before:
+- Filing tax returns based on our calculations
+- Making investment decisions with tax implications
+- Claiming deductions or credits
+- Responding to IRS inquiries or audits
+
+### Known Limitations
+
+Our tax reporting features have known limitations:
+- FIFO method only in MVP (LIFO and Specific ID coming later)
+- No wash sale rule detection initially
+- No state tax calculations (federal only)
+- No AMT (Alternative Minimum Tax) calculations
+- No cryptocurrency staking/mining tax treatment
+- No options/derivatives tax treatment
+
+### Indemnification
+
+You agree to indemnify and hold harmless Track Your Stack from any claims, losses, or damages
+arising from your use of tax reporting features, including but not limited to:
+- IRS audits or tax penalties
+- Incorrect tax filings
+- Lost tax benefits or overpayment
+- Legal fees related to tax disputes
+
+### Changes to Tax Calculations
+
+We reserve the right to modify, improve, or discontinue tax calculation features at any time without
+notice. Historical calculations may be updated to reflect IRS guidance changes, but we are not
+obligated to notify users of such changes.
+```
+
+---
+
+#### **Privacy Policy - Tax Data Section**
+
+```markdown
+## Tax Data Handling
+
+### Data We Collect
+- Purchase dates, quantities, and prices
+- Sale transactions and capital gains
+- Tax lot allocations and cost basis methods
+- User-selected tax filing preferences
+
+### How We Use Tax Data
+- To calculate capital gains and losses
+- To generate tax reports and exports
+- To improve our tax calculation algorithms
+- To comply with legal obligations (if subpoenaed)
+
+### Data Security
+Tax data is encrypted at rest and in transit. However, we cannot guarantee absolute security.
+Users are responsible for backing up tax-critical data.
+
+### Data Retention
+Tax data is retained for 7 years (standard IRS audit period) unless users request deletion.
+
+### Sharing with Tax Professionals
+Users may export tax data to share with CPAs. We do not directly share with third parties without consent.
+```
+
+---
+
+### Required User Consent Flow
+
+#### **Initial Setup Prompt**
+
+When user accesses tax features for the first time:
+
+```typescript
+// components/tax/TaxConsentDialog.tsx
+<Dialog open={!hasAcceptedTaxDisclaimer}>
+  <DialogContent className="max-w-2xl">
+    <DialogHeader>
+      <DialogTitle>Tax Reporting Acknowledgment Required</DialogTitle>
+    </DialogHeader>
+
+    <div className="space-y-4 max-h-[60vh] overflow-y-auto">
+      <TaxDisclaimer variant="full" />
+
+      <div className="bg-gray-50 p-4 rounded space-y-2">
+        <p className="font-semibold">Before proceeding, you must acknowledge:</p>
+        <label className="flex items-start gap-3">
+          <Checkbox checked={ack1} onCheckedChange={setAck1} />
+          <span className="text-sm">
+            I understand this is NOT tax advice and calculations may be incorrect
+          </span>
+        </label>
+        <label className="flex items-start gap-3">
+          <Checkbox checked={ack2} onCheckedChange={setAck2} />
+          <span className="text-sm">
+            I will verify all data with my broker's 1099-B before filing taxes
+          </span>
+        </label>
+        <label className="flex items-start gap-3">
+          <Checkbox checked={ack3} onCheckedChange={setAck3} />
+          <span className="text-sm">
+            I will consult a qualified CPA or tax professional for my tax filing
+          </span>
+        </label>
+        <label className="flex items-start gap-3">
+          <Checkbox checked={ack4} onCheckedChange={setAck4} />
+          <span className="text-sm">
+            I agree Track Your Stack is not liable for errors or tax penalties
+          </span>
+        </label>
+      </div>
+    </div>
+
+    <DialogFooter>
+      <Button
+        onClick={acceptTaxDisclaimer}
+        disabled={!ack1 || !ack2 || !ack3 || !ack4}
+      >
+        I Acknowledge and Accept
+      </Button>
+    </DialogFooter>
+  </DialogContent>
+</Dialog>
+```
+
+---
+
+### Annual Reminder System
+
+```typescript
+// lib/actions/tax-disclaimer.ts
+export async function checkTaxDisclaimerExpiry(userId: string) {
+  const user = await prisma.user.findUnique({
+    where: { id: userId },
+    select: { taxDisclaimerAcceptedAt: true },
+  })
+
+  if (!user?.taxDisclaimerAcceptedAt) return false
+
+  const oneYearAgo = new Date()
+  oneYearAgo.setFullYear(oneYearAgo.getFullYear() - 1)
+
+  // Require re-acceptance every tax season (annually)
+  return user.taxDisclaimerAcceptedAt > oneYearAgo
+}
+```
+
+---
+
+### CPA Validation Recommendation
+
+Include in tax report exports:
+
+```markdown
+## Recommended CPA Review Checklist
+
+Before filing your taxes, have your CPA verify:
+
+- [ ] All transaction dates and prices match broker statements
+- [ ] Cost basis calculations follow your selected method (FIFO/LIFO/Specific ID)
+- [ ] Wash sale rules have been correctly applied
+- [ ] Short-term vs long-term classification is accurate
+- [ ] All corporate actions (splits, mergers) are properly adjusted
+- [ ] Currency conversions use appropriate exchange rates
+- [ ] Form 1099-B reconciliation is complete
+- [ ] Any discrepancies are documented and explained
+
+**Questions for Your CPA:**
+1. Does my tax lot method (FIFO/LIFO) optimize my tax situation?
+2. Should I consider tax loss harvesting opportunities?
+3. Are there any wash sale violations I should address?
+4. Do I need to file Schedule D, Form 8949, or both?
+5. Are there state-specific tax implications I should know about?
+
+**Documents to Bring to Your CPA:**
+- This capital gains report
+- All broker 1099-B statements
+- Record of all purchases and sales
+- Receipts for transaction fees and commissions
+- Corporate action notices (splits, mergers, etc.)
+```
+
+---
+
+### MVP Implementation Priority
+
+For **Option B (MVP Path)**, implement minimum viable disclaimers:
+
+**Phase 0B (Tax Reporting MVP)**:
+- [ ] Primary disclaimer component (1 day)
+  - Create `TaxDisclaimer.tsx` component
+  - Add to all tax report pages
+
+- [ ] User consent flow (1 day)
+  - Add `taxDisclaimerAcceptedAt` field to User model
+  - Implement consent dialog on first tax feature access
+  - Store acceptance timestamp
+
+- [ ] Terms of Service update (0.5 days)
+  - Add tax disclaimer section to legal pages
+  - Link from tax disclaimer component
+
+**Total: 2.5 days** (included in Phase 0B budget)
+
+---
+
+### Future Enhancements (Post-MVP)
+
+**Phase 2 (Full Tax Reporting)**:
+- Annual re-acceptance reminder
+- CPA export format with built-in disclaimer
+- Email notification before tax season with disclaimer reminder
+- Comparison tool: "Our calculations vs Your 1099-B"
+
+---
+
+### Error & Omissions Insurance
+
+**Recommendation**: After beta launch, consider E&O insurance:
+- **Coverage**: $1-2 million professional liability
+- **Cost**: ~$2,000-5,000/year for startups
+- **Protects**: Legal fees if sued for tax calculation errors
+- **Required**: If targeting >10,000 users or enterprise customers
+
+---
+
 ## 🔴 CRITICAL: Tax Reporting Infrastructure Missing
 
 ### Problem Statement

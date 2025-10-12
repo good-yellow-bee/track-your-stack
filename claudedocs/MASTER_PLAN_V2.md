@@ -33,6 +33,184 @@ Track Your Stack is an investment portfolio tracking application built with Next
 
 ---
 
+## Implementation Priority Decision
+
+⚠️ **CRITICAL DECISION REQUIRED BEFORE STARTING IMPLEMENTATION**
+
+Before beginning any phase, the team must choose an implementation strategy based on resources, timeline, and business goals. The full 7.5-month roadmap (Phases 0-7) represents the comprehensive path to production-ready SaaS. However, alternative paths exist for faster value delivery.
+
+### Option A: Full Comprehensive Roadmap (7.5 months)
+**Target**: Production-ready SaaS with competitive parity
+
+**Timeline**: 152-155 days (~7.5 months)
+**Team Size**: 6-7 developers + 1 designer + 1 QA
+**Budget**: ~$400K-600K (assuming $100K/dev-year)
+
+**Phases**: All phases 0-7 as documented below
+
+**Delivers**:
+- ✅ Enterprise-grade security (MFA, audit logging, GDPR)
+- ✅ Comprehensive tax reporting (FIFO/LIFO, wash sales, 1099-B)
+- ✅ Professional UX (dashboard, mobile, accessibility)
+- ✅ 85%+ competitive feature parity (asset allocation, benchmarking, goals)
+- ✅ Production-ready infrastructure (CI/CD, monitoring, backups)
+
+**Best For**:
+- Well-funded teams seeking product-market fit at scale
+- SaaS business model with monetization strategy
+- Competitive positioning against established players
+
+---
+
+### Option B: Solo Developer MVP Path (6-10 weeks) ⭐ RECOMMENDED FOR QUICK LAUNCH
+
+**Target**: Beta launch to validate demand with core value proposition
+
+**Timeline**: 42-50 days (6-10 weeks)
+**Team Size**: 1-2 developers
+**Budget**: ~$25K-40K
+
+**Simplified Phases**:
+
+#### **Phase 0A: Security Essentials (2 weeks, 10 days)**
+- [ ] Multi-Factor Authentication (3 days)
+  - Add `mfaEnabled`, `mfaSecret` to User model
+  - Implement TOTP verification (authenticator app)
+  - MFA setup flow in user settings
+- [ ] Basic Audit Logging (4 days)
+  - Log authentication events (login, logout, MFA setup)
+  - Log critical mutations (portfolio/investment create/delete)
+  - Simple audit log viewer (admin only)
+- [ ] Enhanced Rate Limiting (2 days)
+  - Implement Redis-based rate limiting
+  - 100 requests/15min per user
+- [ ] Input Validation (1 day)
+  - Zod schemas for all forms
+  - Server-side validation enforcement
+
+#### **Phase 0B: Tax Reporting MVP (3-4 weeks, 15-20 days)**
+- [ ] Tax Lot Tracking (10 days)
+  - Add `TaxLot` model (purchase date, quantity, cost basis)
+  - FIFO allocation only (simplest method)
+  - Track remaining quantity per lot
+  - Associate sales with specific tax lots
+- [ ] Basic Capital Gains Report (5 days)
+  - Calculate short-term vs long-term gains
+  - Simple CSV export for TurboTax import
+  - Year-to-date gains summary
+- [ ] Tax Disclaimer (1 day)
+  - Prominent disclaimer on all tax pages
+  - "Not tax advice" messaging
+  - Recommend CPA verification
+
+#### **Phase 0C: UX Quick Wins (2 weeks, 10 days)**
+- [ ] Dashboard Overview (4 days)
+  - Total portfolio value card
+  - Today's gain/loss card
+  - Top performers/losers list
+  - Recent activity feed
+- [ ] Mobile Responsive (3 days)
+  - Tailwind responsive classes
+  - Mobile navigation menu
+  - Touch-friendly interactions
+- [ ] CSV Import (3 days)
+  - Upload CSV with format: ticker, quantity, purchase_price, purchase_date
+  - Bulk investment creation
+  - Error handling and validation
+
+**MVP Deliverables**:
+- ✅ Secure authentication with MFA
+- ✅ Basic tax lot tracking (FIFO only)
+- ✅ Simple capital gains report for tax filing
+- ✅ Mobile-friendly dashboard
+- ✅ CSV bulk import capability
+- ✅ Functional for US retail investors with tax needs
+
+**What's NOT Included** (can add post-launch):
+- ❌ Dividend tracking (add in iteration 1)
+- ❌ Corporate actions (add when users report issues)
+- ❌ GDPR compliance (not needed for US-only beta)
+- ❌ Advanced dashboards (iterate based on feedback)
+- ❌ Competitive features (asset allocation, benchmarking - add in iteration 2-3)
+
+**Beta Launch Checklist**:
+- [ ] Deploy to Vercel with production database
+- [ ] Set up basic error monitoring (Sentry free tier)
+- [ ] Create simple landing page explaining the MVP
+- [ ] Recruit 20-50 beta users (Reddit r/investing, ProductHunt)
+- [ ] Collect feedback via Typeform survey
+- [ ] Monitor usage with PostHog (free tier)
+- [ ] Iterate based on top 3 user requests
+
+**Success Metrics**:
+- 50 beta users signed up within 2 weeks
+- 20+ users add at least 5 investments
+- 10+ users generate tax report
+- NPS score >30 (for MVP)
+- <5 critical bugs reported
+
+**Post-MVP Roadmap** (Iterate based on feedback):
+1. **Iteration 1** (2-3 weeks): Dividend tracking + improved dashboard
+2. **Iteration 2** (3-4 weeks): Asset allocation visualization + benchmarking
+3. **Iteration 3** (2-3 weeks): Corporate actions + advanced tax features
+4. **Iteration 4** (3-4 weeks): Goal tracking + notifications
+5. **Iteration 5**: Full security hardening + GDPR (if expanding to EU)
+
+**Best For**:
+- Solo developers or small teams (1-2 people)
+- Validating product-market fit before major investment
+- Building in public and iterating with users
+- Bootstrapped funding model
+
+---
+
+### Option C: Tax-First Specialist Approach (3-4 months)
+
+**Target**: Niche market for tax-conscious US investors
+
+**Timeline**: 60-80 days (3-4 months)
+**Team Size**: 2-3 developers + 1 CPA consultant
+**Budget**: ~$100K-150K
+
+**Focus Areas**:
+- **Security**: MFA only (minimal compliance)
+- **Tax Reporting**: Comprehensive (all lot methods, wash sales, 1099-B, estimated taxes)
+- **UX**: Minimal (desktop-only, basic dashboard)
+- **Features**: Tax-centric (no dividend tracking unless tax-relevant)
+
+**Phases**:
+1. **Security Minimal** (1 week): MFA + basic audit logging
+2. **Tax Reporting Comprehensive** (6-8 weeks):
+   - All tax lot methods (FIFO, LIFO, Specific ID, Average Cost)
+   - Wash sale detection and adjustment
+   - Form 1099-B reconciliation
+   - Form 8949 generation
+   - Quarterly estimated tax calculator
+   - CPA-friendly export formats
+   - Professional tax disclaimer and documentation
+3. **Data Integrity** (2 weeks): Database constraints, optimistic locking
+4. **Basic UX** (1 week): Desktop-optimized interface, CSV import
+
+**Best For**:
+- Targeting active traders with complex tax situations
+- Competing with TurboTax/H&R Block add-ons
+- Positioning as "the tax expert's portfolio tracker"
+- Potential B2B2C model (partnerships with CPAs)
+
+---
+
+### Recommendation Matrix
+
+| Scenario | Recommended Option | Reasoning |
+|----------|-------------------|-----------|
+| Solo developer, bootstrapping | **Option B (MVP)** | Fastest validation, lowest risk |
+| Small team (2-3), seeking funding | **Option B** → **Option A** | MVP first, then full roadmap with funding |
+| Well-funded startup, competitive market | **Option A (Full)** | Comprehensive features needed to compete |
+| Niche positioning for tax experts | **Option C (Tax-First)** | Differentiation through specialization |
+| Open-source project | **Option B** → Community-driven | MVP to attract contributors |
+
+---
+
 ## Critical Findings Summary
 
 ### Security Audit (22-25 Days)
@@ -1140,6 +1318,323 @@ pnpm smoke-test
 - Keep previous version deployed in Vercel (instant rollback)
 - Database rollback: restore from backup + manual SQL if needed
 - Feature flags for gradual rollout of risky features
+
+---
+
+### Rollback Procedures
+
+⚠️ **CRITICAL**: Every deployment must have a tested rollback procedure ready before going to production.
+
+#### Immediate Rollback (Code-Only Changes)
+
+**Scenario**: New code deployed but causes errors, no database migration involved
+
+**Timeline**: <5 minutes
+
+**Procedure**:
+
+```bash
+# 1. Revert deployment in Vercel (instant)
+vercel rollback --production
+
+# Alternative: Re-deploy previous commit
+git revert HEAD
+git push origin main  # Triggers auto-deployment
+
+# 2. Verify rollback successful
+curl https://trackyourstack.com/api/health
+# Should return 200 OK
+
+# 3. Monitor error rates in Sentry
+# Verify errors have stopped
+
+# 4. Post-rollback analysis
+# - Document what went wrong
+# - Fix issue in feature branch
+# - Re-test on staging before redeploying
+```
+
+**Success Criteria**:
+- Application returns to previous stable state
+- Error rate drops to baseline
+- All critical user flows functional
+
+---
+
+#### Database Migration Rollback
+
+**Scenario**: Database migration causes issues or data corruption
+
+**Timeline**: 10-30 minutes (depending on database size)
+
+**Risk Level**: HIGH (potential data loss)
+
+##### Option 1: Prisma Migration Rollback (Preferred)
+
+```bash
+# 1. Mark migration as rolled back
+pnpm prisma migrate resolve --rolled-back <migration_name>
+
+# 2. Revert to previous migration state
+pnpm prisma migrate deploy
+
+# 3. Verify database schema
+pnpm prisma validate
+
+# 4. Restart application
+vercel --prod
+```
+
+**When to Use**: Migration completed but causing issues, no data modifications yet
+
+---
+
+##### Option 2: Point-in-Time Recovery (PITR)
+
+```bash
+# 1. Stop application (prevent new writes)
+vercel --prod --scale 0  # Scale down to 0 instances
+
+# 2. Restore database to point before migration
+# (Requires PostgreSQL PITR enabled - Neon/Supabase support this)
+pg_restore --before='2025-10-12 14:00:00' backup.dump
+
+# Alternative: Restore from latest backup
+psql $DATABASE_URL < backup_20251012_140000.sql
+
+# 3. Revert application code
+git revert HEAD
+git push origin main
+
+# 4. Scale application back up
+vercel --prod --scale 1
+
+# 5. Verify data integrity
+pnpm tsx scripts/verify-data-integrity.ts
+```
+
+**When to Use**: Migration caused data corruption, must restore to pre-migration state
+
+**Data Loss Risk**: All writes since migration will be lost
+
+---
+
+##### Option 3: Forward-Fix Migration
+
+```bash
+# 1. Create corrective migration
+pnpm prisma migrate dev --name fix_previous_migration
+
+# 2. Test on staging
+DATABASE_URL=$STAGING_URL pnpm prisma migrate deploy
+pnpm test:integration
+
+# 3. Apply to production
+DATABASE_URL=$PRODUCTION_URL pnpm prisma migrate deploy
+
+# 4. Verify fix
+pnpm tsx scripts/verify-fix.ts
+```
+
+**When to Use**: Cannot restore from backup (too much time passed), fix forward instead
+
+---
+
+#### Phase-Specific Rollback Procedures
+
+##### Phase 1: Security Foundation Rollback
+
+**MFA Rollback**:
+```sql
+-- Emergency disable MFA for all users (allows login if MFA broken)
+UPDATE "User" SET "mfaEnabled" = false WHERE "mfaEnabled" = true;
+
+-- Log affected users
+INSERT INTO "AuditLog" (action, entity, metadata)
+VALUES ('MFA_EMERGENCY_DISABLE', 'User', '{"reason": "rollback", "count": (SELECT COUNT(*) FROM "User")}');
+```
+
+**Audit Logging Rollback**:
+- Disable audit logging middleware
+- Keep existing audit log data (no deletion)
+- Revert application code to remove audit calls
+
+---
+
+##### Phase 2: Tax Reporting Rollback
+
+**Tax Lot Migration Rollback** (COMPLEX):
+
+```sql
+-- Step 1: Verify investment quantities match before rollback
+SELECT
+  i.id,
+  i."totalQuantity" as investment_qty,
+  SUM(t."remainingQuantity") as tax_lot_qty
+FROM "Investment" i
+LEFT JOIN "TaxLot" t ON t."investmentId" = i.id
+GROUP BY i.id
+HAVING i."totalQuantity" != COALESCE(SUM(t."remainingQuantity"), 0);
+
+-- Step 2: Archive tax lot data before deletion (for audit)
+CREATE TABLE "TaxLot_Archive" AS SELECT * FROM "TaxLot";
+CREATE TABLE "SaleTransaction_Archive" AS SELECT * FROM "SaleTransaction";
+
+-- Step 3: Remove tax lot relationships
+ALTER TABLE "Investment" DROP CONSTRAINT IF EXISTS "Investment_taxLots_fkey";
+
+-- Step 4: Revert application code
+git revert <tax_lot_commit>
+git push origin main
+
+-- Note: Cannot restore aggregated data - users must re-enter purchase details
+```
+
+**Data Loss Warning**:
+- All individual purchase history will be lost
+- Only aggregated quantities/cost basis preserved
+- Users must re-enter purchase details if needed
+
+**Prevention**:
+- Migrate users incrementally (not all at once)
+- Keep old schema during transition period
+- Dual-write to both old and new schema
+
+---
+
+##### Phase 3: UX Quick Wins Rollback
+
+**Dashboard/UI Rollback**:
+- Instant rollback (frontend-only changes)
+- No data migration involved
+- Low risk
+
+```bash
+# Revert React component changes
+git revert HEAD
+git push origin main
+# Auto-deploys previous version
+```
+
+---
+
+##### Phase 4-7: Feature Rollback
+
+**General Feature Rollback Pattern**:
+
+1. **Disable feature via feature flag** (instant):
+   ```typescript
+   // app/config/features.ts
+   export const FEATURES = {
+     BENCHMARKING: false,  // Disable feature
+     GOAL_TRACKING: false,
+     PRICE_ALERTS: false,
+   }
+   ```
+
+2. **Revert code** (if feature flag not enough):
+   ```bash
+   git revert <feature_commit>
+   git push origin main
+   ```
+
+3. **Database cleanup** (optional, if tables created):
+   ```sql
+   -- Mark as inactive instead of deleting
+   UPDATE "PriceAlert" SET "triggered" = true, "active" = false;
+   -- Keeps historical data for analysis
+   ```
+
+---
+
+#### Rollback Decision Matrix
+
+| Severity | Time Since Deploy | Data Modified | Recommended Action | Timeline |
+|----------|------------------|---------------|-------------------|----------|
+| 🟢 Low | Any | No | Code rollback via Vercel | <5 min |
+| 🟡 Medium | <1 hour | No | Code rollback + monitor | <10 min |
+| 🟡 Medium | <1 hour | Yes (minimal) | Forward fix | <30 min |
+| 🔴 High | <1 hour | Yes (significant) | PITR + code rollback | <30 min |
+| 🔴 High | >1 hour | Yes | Forward fix + manual correction | 1-2 hours |
+| 🔴 Critical | Any | Data corruption | PITR + incident response | <1 hour |
+
+---
+
+#### Rollback Communication Template
+
+**Internal Team (Slack/Discord)**:
+```
+🚨 ROLLBACK IN PROGRESS
+Deployment: [deployment_id]
+Reason: [brief description]
+Initiated by: [name]
+Estimated completion: [time]
+Status updates: [every 5 minutes]
+```
+
+**External Users (Status Page)**:
+```
+⚠️ Service Update - [timestamp]
+
+We're experiencing issues with today's deployment and are rolling back to the previous version.
+
+Expected resolution: [time]
+User impact: [describe impact]
+Data safety: All your data is safe and backed up.
+
+We apologize for any inconvenience.
+```
+
+---
+
+#### Post-Rollback Checklist
+
+After any rollback:
+
+- [ ] **Verify services restored**: All critical paths working
+- [ ] **Check error rates**: Sentry shows errors stopped
+- [ ] **Data integrity check**: Run verification scripts
+- [ ] **User communication**: Status page updated
+- [ ] **Incident report**: Document what went wrong
+- [ ] **Root cause analysis**: Within 24 hours
+- [ ] **Prevention plan**: How to avoid in future
+- [ ] **Fix and re-deploy**: Only after staging validation
+
+---
+
+#### Prevention: Pre-Deployment Risk Assessment
+
+**Before EVERY deployment, assess**:
+
+1. **Code changes**:
+   - [ ] Breaking API changes?
+   - [ ] Database schema changes?
+   - [ ] Third-party dependency updates?
+
+2. **Data risk**:
+   - [ ] Modifies existing data?
+   - [ ] Irreversible operations?
+   - [ ] Large data migrations?
+
+3. **Feature flags**:
+   - [ ] New features behind feature flags?
+   - [ ] Can be disabled instantly if issues?
+
+4. **Rollback plan**:
+   - [ ] Rollback procedure documented?
+   - [ ] Rollback tested on staging?
+   - [ ] Team trained on rollback process?
+
+**Risk Score Calculation**:
+- 0-2 factors: ✅ Low risk, standard deployment
+- 3-4 factors: ⚠️ Medium risk, deploy during low-traffic, monitor closely
+- 5+ factors: 🚨 High risk, incremental rollout, immediate rollback ready
+
+---
+
+**See Also**:
+- [MIGRATION_STRATEGY.md](./MIGRATION_STRATEGY.md) - Detailed database migration procedures
+- [security-audit-blind-spots.md](./security-audit-blind-spots.md) - Security incident response
 
 ---
 
