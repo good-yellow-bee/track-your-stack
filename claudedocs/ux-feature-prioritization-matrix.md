@@ -1310,18 +1310,397 @@ model WatchlistItem {
 
 ---
 
+---
+
+## Phase 4: Competitive Parity (NEW - Based on Competitive Analysis)
+
+### Competitive Feature Gaps Identified
+
+After comprehensive analysis of leading portfolio trackers (Empower, Sharesight, Seeking Alpha, Stock Rover, Wealthfront), **31 missing features** were identified across 7 categories. See `competitive-feature-analysis.md` for full details.
+
+**Critical Findings**:
+- **100% of competitors** have asset allocation visualization
+- **90%+ of competitors** have benchmarking and sector exposure
+- **70%+ of competitors** have goal tracking and retirement planning
+
+### High-Priority Competitive Features
+
+#### 24. Asset Allocation Pie Chart 🔴 CRITICAL
+**Impact**: 🔴 Critical | **Effort**: S (3 days) | **Found In**: 100% of competitors
+
+**Problem**: No visual breakdown of portfolio composition
+
+**Solution**:
+```typescript
+// components/portfolio/AssetAllocationChart.tsx
+'use client'
+
+import { PieChart, Pie, Cell, ResponsiveContainer, Legend, Tooltip } from 'recharts'
+
+export function AssetAllocationChart({ portfolioId }: { portfolioId: string }) {
+  const allocation = useAssetAllocation(portfolioId)
+
+  const COLORS = {
+    STOCK: 'hsl(var(--chart-1))',
+    ETF: 'hsl(var(--chart-2))',
+    CRYPTO: 'hsl(var(--chart-3))',
+    MUTUAL_FUND: 'hsl(var(--chart-4))',
+  }
+
+  return (
+    <Card>
+      <CardHeader>
+        <CardTitle>Asset Allocation</CardTitle>
+      </CardHeader>
+      <CardContent>
+        <ResponsiveContainer width="100%" height={300}>
+          <PieChart>
+            <Pie
+              data={allocation}
+              cx="50%"
+              cy="50%"
+              labelLine={false}
+              label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}
+              outerRadius={80}
+              fill="#8884d8"
+              dataKey="value"
+            >
+              {allocation.map((entry, index) => (
+                <Cell key={`cell-${index}`} fill={COLORS[entry.assetType]} />
+              ))}
+            </Pie>
+            <Tooltip />
+            <Legend />
+          </PieChart>
+        </ResponsiveContainer>
+      </CardContent>
+    </Card>
+  )
+}
+```
+
+**User Value**: Instant understanding of portfolio diversification
+**Competitive Gap**: Universal feature - must-have for parity
+
+---
+
+#### 25. Sector Exposure Breakdown 🔴 CRITICAL
+**Impact**: 🔴 Critical | **Effort**: S (5 days) | **Found In**: 90%+ of competitors
+
+**Problem**: No visibility into sector concentration risk
+
+**Solution**:
+- Add `sector` field to Investment model
+- Integrate Alpha Vantage `OVERVIEW` endpoint for sector data
+- Create sector breakdown bar chart
+- Implement GICS sector classification
+
+**User Value**: Identify concentration risk, diversification opportunities
+**Competitive Gap**: Critical for serious investors
+
+---
+
+#### 26. Benchmark Comparison (S&P 500, NASDAQ) 🔴 CRITICAL
+**Impact**: 🔴 Critical | **Effort**: M (6 days) | **Found In**: 90%+ of competitors
+
+**Problem**: Users can't answer "Am I beating the market?"
+
+**Solution**:
+```prisma
+model PortfolioBenchmark {
+  id          String
+  portfolioId String
+  portfolio   Portfolio @relation(fields: [portfolioId], references: [id], onDelete: Cascade)
+
+  benchmarkTicker String  // e.g., "SPY", "QQQ"
+  benchmarkName   String  // e.g., "S&P 500", "NASDAQ 100"
+  weight          Decimal @default(1.0)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([portfolioId, benchmarkTicker])
+}
+```
+
+**Implementation**:
+- Fetch benchmark historical prices (Alpha Vantage)
+- Calculate benchmark returns over same period
+- Comparison chart: Portfolio vs Benchmark(s)
+- Display alpha (excess return vs benchmark)
+
+**User Value**: Answer #1 investor question - "Am I beating the market?"
+**Competitive Gap**: Essential feature - 90%+ have it
+
+---
+
+#### 27. Retirement Planning Calculator 🟡 HIGH
+**Impact**: 🟡 High | **Effort**: L (10 days) | **Found In**: 70%+ of competitors
+
+**Problem**: No goal tracking or retirement planning
+
+**Solution**:
+```prisma
+enum GoalType {
+  RETIREMENT
+  HOME_PURCHASE
+  EDUCATION
+  EMERGENCY_FUND
+  FINANCIAL_INDEPENDENCE
+  CUSTOM
+}
+
+model Goal {
+  id          String
+  userId      String
+  user        User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  name        String
+  type        GoalType
+  targetAmount Decimal
+  targetDate   DateTime
+  currentAmount Decimal @default(0)
+
+  // Retirement-specific
+  monthlyContribution Decimal?
+  expectedReturnRate  Decimal?
+  inflationRate       Decimal @default(0.03)
+
+  linkedPortfolioId String?
+  linkedPortfolio   Portfolio? @relation(fields: [linkedPortfolioId], references: [id])
+
+  status       GoalStatus @default(ON_TRACK)
+  progressPercentage Decimal @default(0)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+enum GoalStatus {
+  ON_TRACK
+  OFF_TRACK
+  AT_RISK
+  ACHIEVED
+}
+```
+
+**User Value**: Retirement planning is the #1 use case for portfolio tracking
+**Competitive Gap**: Found in Empower, Betterment, Wealthfront, Schwab
+
+---
+
+#### 28. Portfolio Risk Score 🟡 HIGH
+**Impact**: 🟡 High | **Effort**: S (4 days) | **Found In**: 60%+ of competitors
+
+**Problem**: No simplified risk communication for mainstream users
+
+**Solution**:
+- Calculate based on: asset allocation, volatility, concentration, beta
+- Weighted scoring algorithm (1-10 scale or Conservative/Moderate/Aggressive)
+- Risk score gauge visualization
+- Educational content about risk levels
+
+**User Value**: Simplified risk understanding for non-technical users
+**Competitive Gap**: Standard in robo-advisors (Betterment, Wealthfront, Vanguard)
+
+---
+
+#### 29. Rebalancing Recommendations 🟡 HIGH
+**Impact**: 🟡 High | **Effort**: L (8 days) | **Found In**: 60%+ of competitors
+
+**Problem**: No guidance on maintaining target allocation
+
+**Solution**:
+```prisma
+model TargetAllocation {
+  id          String
+  portfolioId String
+  portfolio   Portfolio @relation(fields: [portfolioId], references: [id], onDelete: Cascade)
+
+  allocationType AllocationDimension
+  targetKey      String
+  targetPercent  Decimal
+
+  rebalanceThreshold Decimal @default(5.0)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([portfolioId, allocationType, targetKey])
+}
+
+enum AllocationDimension {
+  ASSET_TYPE
+  SECTOR
+  TICKER
+}
+
+model RebalancingRecommendation {
+  id          String
+  portfolioId String
+  portfolio   Portfolio @relation(fields: [portfolioId], references: [id], onDelete: Cascade)
+
+  ticker      String
+  action      RebalanceAction
+  shares      Decimal
+  currentPercent Decimal
+  targetPercent  Decimal
+  drift          Decimal
+
+  estimatedCost Decimal
+  taxImpact     Decimal?
+
+  createdAt DateTime @default(now())
+
+  @@index([portfolioId, createdAt])
+}
+
+enum RebalanceAction {
+  BUY
+  SELL
+  HOLD
+}
+```
+
+**User Value**: Maintain desired risk/return profile automatically
+**Competitive Gap**: Professional feature with broad appeal
+
+---
+
+#### 30. Automated Price Alerts 🟡 HIGH
+**Impact**: 🟡 High | **Effort**: M (6 days) | **Found In**: 50%+ of competitors
+
+**Problem**: No notifications when investments hit price targets
+
+**Solution**:
+```prisma
+model PriceAlert {
+  id           String
+  userId       String
+  user         User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  investmentId String?
+  investment   Investment? @relation(fields: [investmentId], references: [id], onDelete: Cascade)
+  ticker       String
+
+  alertType    PriceAlertType
+  targetPrice  Decimal?
+  percentChange Decimal?
+
+  triggered    Boolean @default(false)
+  triggeredAt  DateTime?
+
+  notificationEmail Boolean @default(true)
+  notificationInApp Boolean @default(true)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+enum PriceAlertType {
+  PRICE_ABOVE
+  PRICE_BELOW
+  PERCENT_GAIN
+  PERCENT_LOSS
+}
+```
+
+**Implementation**:
+- Background job checks prices against alerts
+- Trigger notifications (email + in-app) when hit
+- Mark alerts as triggered, allow reset
+
+**User Value**: Stay informed without constant monitoring
+**Competitive Gap**: Found in Seeking Alpha, Yahoo Finance, Robinhood
+
+---
+
+#### 31. Performance Attribution Analysis 🟢 MEDIUM
+**Impact**: 🟢 Medium | **Effort**: M (7 days) | **Found In**: 40%+ (premium features)
+
+**Problem**: Don't know which holdings drive returns
+
+**Solution**:
+- Calculate individual contribution: `(holding_return × holding_weight)`
+- Aggregate by: ticker, sector, asset type, country
+- Contribution waterfall chart
+- Highlight best/worst contributors
+
+**User Value**: Professional-grade portfolio analysis
+**Competitive Gap**: Found in Sharesight Expert, Stock Rover, Morningstar
+
+---
+
+### Phase 4 Roadmap: Competitive Parity (4-5 Weeks)
+
+**Week 1-2: Critical Visualizations (MUST-HAVE)**
+- [ ] Asset allocation pie chart (3 days)
+- [ ] Sector exposure breakdown (5 days)
+- [ ] Market cap breakdown (2 days)
+
+**Week 2-3: Benchmarking (CRITICAL)**
+- [ ] Benchmark comparison (S&P 500, NASDAQ) (6 days)
+- [ ] Portfolio risk score (4 days)
+
+**Week 3-4: Automation & Alerts (HIGH)**
+- [ ] Rebalancing recommendations (8 days)
+- [ ] Automated price alerts (6 days)
+
+**Week 4-5: Goal Setting (HIGH)**
+- [ ] Retirement planning calculator (10 days)
+- [ ] Goal tracking system (6 days)
+
+**Total Effort**: ~50 days (~2.5 months with 1-2 developers)
+
+### Success Metrics (Competitive Parity)
+
+**Feature Parity Score**: Percentage of "must-have" features vs top 3 competitors
+- **Target**: >85% feature parity with Empower, Sharesight, Seeking Alpha
+- **Current**: ~40% (basic tracking only)
+- **After Phase 4**: ~85% (competitive parity achieved)
+
+**User Satisfaction**:
+- **Goal**: Match or exceed competitor NPS scores
+- **Benchmark**: Empower NPS ~45, Sharesight NPS ~50
+- **Target**: NPS >45 after Phase 4
+
+**Competitive Positioning**:
+- **Unique Strengths**: Tax-first design, multi-currency, goal-driven
+- **Table Stakes Achieved**: Asset allocation, benchmarking, sector analysis, risk scores
+- **Premium Differentiators**: Tax-loss harvesting, rebalancing, performance attribution
+
+---
+
 ## Conclusion
 
-This prioritization matrix identifies **23 UX/feature opportunities** with **8 quick wins** that can be delivered in the first 4 weeks. Strategic focus on:
+This prioritization matrix now identifies **31 total UX/feature opportunities**:
+- **Original 23 features** (Phases 1-3)
+- **8 critical competitive features** (Phase 4)
+
+**Expanded Strategic Focus**:
 
 1. **Onboarding** - Get users to value fast
 2. **Mobile** - Match user behavior (60% mobile traffic)
 3. **Automation** - Reduce manual effort (bulk refresh, CSV import)
 4. **Visualization** - Help users understand performance
 5. **Accessibility** - Inclusive design for all users
+6. **🆕 Competitive Parity** - Asset allocation, benchmarking, goal tracking (CRITICAL)
+7. **🆕 Advanced Analytics** - Risk scores, rebalancing, performance attribution (DIFFERENTIATOR)
+
+**Revised Priority Order**:
+1. **Phase 1: Quick Wins** (Weeks 1-4) - Foundation UX
+2. **Phase 2: Strategic Initiatives** (Weeks 5-8) - Engagement features
+3. **🆕 Phase 4: Competitive Parity** (Weeks 9-13) - Asset allocation, benchmarking, goals
+4. **Phase 3: Polish** (Weeks 14-17) - Nice-to-haves
+
+**Total Timeline**: ~17 weeks (~4 months) for comprehensive competitive parity
 
 **Next Steps**:
-1. Approve prioritization matrix
+1. Approve updated prioritization with Phase 4
 2. Begin Phase 1 implementation (Quick Wins)
-3. Conduct user testing after each phase
-4. Iterate based on user feedback and analytics
+3. Run competitive analysis every 6 months
+4. Iterate based on user feedback and competitor feature releases
+5. Consider Phase 5 (Advanced Analytics) for premium tier differentiation
+
+**See Also**:
+- `competitive-feature-analysis.md` - Full 31-feature competitive analysis
+- `MASTER_PLAN_V2.md` - Integrated 6-phase roadmap including competitive features

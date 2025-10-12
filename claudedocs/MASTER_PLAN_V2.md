@@ -8,19 +8,28 @@
 
 ## Executive Summary
 
-Track Your Stack is an investment portfolio tracking application built with Next.js 15, TypeScript, PostgreSQL, and Prisma. After completing the MVP implementation (F01-F08), a comprehensive analysis has identified **critical gaps** across four domains:
+Track Your Stack is an investment portfolio tracking application built with Next.js 15, TypeScript, PostgreSQL, and Prisma. After completing the MVP implementation (F01-F08), a comprehensive analysis has identified **critical gaps** across five domains:
 
 1. **Security** - 15 critical gaps requiring 22-25 days
 2. **Business Logic** - 11 critical gaps requiring 33 days
 3. **Data Integrity** - Database constraints and validation requiring 12 days
 4. **User Experience** - 23 feature/UX improvements across 4 phases
+5. **🆕 Competitive Parity** - 31 missing features vs leading platforms (8 critical features prioritized)
 
-**Current State**: Functional MVP with basic portfolio tracking
-**Target State**: Production-ready platform with tax reporting, comprehensive security, and professional UX
+**Current State**: Functional MVP with basic portfolio tracking (~40% feature parity with competitors)
+**Target State**: Production-ready platform with tax reporting, comprehensive security, professional UX, and 85%+ competitive feature parity
 
-**Total Estimated Effort**: **67-70 days** for critical improvements + **35 days** for UX enhancements = **~102-105 days** (~5 months)
+**Total Estimated Effort**:
+- **Phases 1-6** (Core Platform): ~102-105 days (~5 months)
+- **🆕 Phase 7** (Competitive Parity): +50 days (~2.5 months)
+- **Total Timeline**: **~152-155 days** (~7.5 months)
 
-**Recommended Approach**: Phased rollout with parallel tracks for security, business logic, and UX
+**Recommended Approach**: Phased rollout with parallel tracks for security, business logic, UX, and competitive features
+
+**Critical Competitive Gaps**:
+- **100% of competitors** have asset allocation visualization (MISSING)
+- **90%+ of competitors** have benchmarking capabilities (MISSING)
+- **70%+ of competitors** have goal tracking/retirement planning (MISSING)
 
 ---
 
@@ -470,6 +479,314 @@ Track Your Stack is an investment portfolio tracking application built with Next
 - ✅ Critical bugs resolved
 - ✅ NPS >40
 - ✅ Ready for public launch
+
+---
+
+### Phase 7: Competitive Parity Features (Weeks 21-30, 50 days)
+
+**Objective**: Close critical feature gaps identified through comprehensive competitor analysis to achieve 85%+ feature parity with leading platforms (Empower, Sharesight, Seeking Alpha, Stock Rover).
+
+**Critical Finding**: 100% of analyzed competitors have asset allocation visualization and 90%+ have benchmarking capabilities - both currently missing from Track Your Stack.
+
+**Week 21-22: Asset Allocation & Visualization (CRITICAL)**
+
+**Why Critical**: Universal feature across ALL competitors, essential for portfolio understanding
+
+- [ ] Asset Allocation Pie/Donut Chart (3 days)
+  - Aggregate investments by `assetType` enum
+  - Interactive chart with drill-down capability
+  - Percentage labels and color coding
+  - Use Recharts/Chart.js for visualization
+
+- [ ] Sector Exposure Breakdown (5 days)
+  - Add `sector` field to Investment model
+  - Integrate Alpha Vantage `OVERVIEW` endpoint for sector data
+  - Implement GICS sector classification
+  - Sector breakdown bar chart with percentage
+  - Benchmark sector allocation comparison
+
+- [ ] Industry Exposure Analysis (3 days)
+  - Add `industry` field to Investment model
+  - Industry-level breakdown within sectors
+  - Drill-down from sector view to industry view
+
+- [ ] Geographic Allocation (2 days)
+  - Add `country` field to Investment model
+  - Map ticker symbols to countries (Alpha Vantage provides this)
+  - Geographic breakdown visualization
+
+**Database Schema Updates**:
+```prisma
+model Investment {
+  // Existing fields...
+  sector    String?  // Technology, Healthcare, Finance, etc.
+  industry  String?  // Software, Pharmaceuticals, Banks, etc.
+  country   String?  // US, GB, JP, etc.
+  marketCap Decimal? @db.Decimal(20, 2)
+}
+```
+
+---
+
+**Week 23-24: Benchmarking & Performance (CRITICAL)**
+
+**Why Critical**: 90%+ of competitors offer this - answers the #1 investor question: "Am I beating the market?"
+
+- [ ] Benchmark Comparison Infrastructure (6 days)
+  - Create `PortfolioBenchmark` model
+  - Fetch benchmark historical prices (Alpha Vantage TIME_SERIES_DAILY)
+  - Calculate benchmark returns over matching periods
+  - Portfolio vs benchmark comparison chart
+  - Display alpha (excess return vs benchmark)
+  - Support multiple benchmarks (S&P 500, NASDAQ, custom ETFs)
+
+- [ ] Portfolio Risk Score (4 days)
+  - Calculate based on: asset allocation, volatility, concentration, beta
+  - Weighted scoring algorithm (1-10 scale or Conservative/Moderate/Aggressive)
+  - Risk score gauge visualization
+  - Educational tooltips about risk levels
+
+- [ ] Volatility Metrics (5 days)
+  - Calculate daily/monthly returns from portfolio snapshots
+  - Standard deviation of returns = volatility
+  - Beta calculation vs market benchmark
+  - Volatility chart over time
+  - Sharpe ratio display (optional)
+
+**Database Schema Updates**:
+```prisma
+model PortfolioBenchmark {
+  id          String   @id @default(cuid())
+  portfolioId String
+  portfolio   Portfolio @relation(fields: [portfolioId], references: [id], onDelete: Cascade)
+
+  benchmarkTicker String  // e.g., "SPY", "QQQ", "VTI"
+  benchmarkName   String  // e.g., "S&P 500", "NASDAQ 100", "Total Market"
+  weight          Decimal @default(1.0) @db.Decimal(5, 4)  // For blended benchmarks
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([portfolioId, benchmarkTicker])
+  @@index([portfolioId])
+}
+
+model BenchmarkPrice {
+  id          String   @id @default(cuid())
+  ticker      String
+  date        DateTime @db.Date
+  closePrice  Decimal  @db.Decimal(20, 8)
+
+  createdAt DateTime @default(now())
+
+  @@unique([ticker, date])
+  @@index([ticker, date])
+}
+```
+
+---
+
+**Week 25-26: Automation & Intelligence (HIGH PRIORITY)**
+
+**Why Important**: 60%+ of competitors offer automated features - reduces manual effort and increases engagement
+
+- [ ] Rebalancing Recommendations (8 days)
+  - Create `TargetAllocation` model (portfolio → target % per dimension)
+  - Calculate drift from target allocation
+  - Generate recommended trades to minimize transactions
+  - Tax-aware rebalancing (prefer tax-advantaged accounts)
+  - Rebalancing wizard UI with preview
+
+- [ ] Automated Price Alerts (6 days)
+  - Create `PriceAlert` model
+  - Background job checks prices against alerts (cron every 5 minutes)
+  - Trigger notifications (email + in-app) when conditions met
+  - Alert types: price above/below, percent gain/loss
+  - Alert management UI with status tracking
+
+**Database Schema Updates**:
+```prisma
+model TargetAllocation {
+  id          String   @id @default(cuid())
+  portfolioId String
+  portfolio   Portfolio @relation(fields: [portfolioId], references: [id], onDelete: Cascade)
+
+  allocationType AllocationDimension
+  targetKey      String  // e.g., "STOCK", "Technology", "AAPL"
+  targetPercent  Decimal @db.Decimal(5, 2)
+
+  rebalanceThreshold Decimal @default(5.0) @db.Decimal(5, 2)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([portfolioId, allocationType, targetKey])
+  @@index([portfolioId])
+}
+
+enum AllocationDimension {
+  ASSET_TYPE
+  SECTOR
+  INDUSTRY
+  TICKER
+  COUNTRY
+}
+
+model RebalancingRecommendation {
+  id          String   @id @default(cuid())
+  portfolioId String
+  portfolio   Portfolio @relation(fields: [portfolioId], references: [id], onDelete: Cascade)
+
+  ticker      String
+  action      RebalanceAction
+  shares      Decimal  @db.Decimal(20, 8)
+  currentPercent Decimal @db.Decimal(5, 2)
+  targetPercent  Decimal @db.Decimal(5, 2)
+  drift          Decimal @db.Decimal(5, 2)
+
+  estimatedCost Decimal @db.Decimal(20, 2)
+  taxImpact     Decimal? @db.Decimal(20, 2)
+
+  createdAt DateTime @default(now())
+
+  @@index([portfolioId, createdAt])
+}
+
+enum RebalanceAction {
+  BUY
+  SELL
+  HOLD
+}
+
+model PriceAlert {
+  id           String   @id @default(cuid())
+  userId       String
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  investmentId String?
+  investment   Investment? @relation(fields: [investmentId], references: [id], onDelete: Cascade)
+  ticker       String
+
+  alertType    PriceAlertType
+  targetPrice  Decimal?  @db.Decimal(20, 8)
+  percentChange Decimal? @db.Decimal(5, 2)
+
+  triggered    Boolean  @default(false)
+  triggeredAt  DateTime?
+
+  notificationEmail Boolean @default(true)
+  notificationInApp Boolean @default(true)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([userId, triggered])
+  @@index([ticker, triggered])
+}
+
+enum PriceAlertType {
+  PRICE_ABOVE
+  PRICE_BELOW
+  PERCENT_GAIN
+  PERCENT_LOSS
+}
+```
+
+---
+
+**Week 27-29: Goal Setting & Planning (HIGH PRIORITY)**
+
+**Why Important**: 70%+ of competitors offer retirement planning - top use case for portfolio tracking
+
+- [ ] Retirement Planning Calculator (10 days)
+  - Create `Goal` model (retirement, home purchase, education, FIRE, custom)
+  - Calculator inputs: current age, retirement age, current savings, monthly contribution, expected return
+  - Projection algorithm with inflation adjustment
+  - Success probability based on Monte Carlo simulation (simplified)
+  - Visualization: projected vs required savings over time
+  - Goal progress tracking linked to portfolios
+
+- [ ] Goal Tracking System (6 days)
+  - Progress tracking: `currentAmount / targetAmount`
+  - Status calculation: on track, off track, at risk (based on time remaining and growth rate)
+  - Linked portfolio tracking (auto-update from portfolio value)
+  - Goal dashboard with progress bars
+  - Milestone notifications
+
+**Database Schema Updates**:
+```prisma
+enum GoalType {
+  RETIREMENT
+  HOME_PURCHASE
+  EDUCATION
+  EMERGENCY_FUND
+  FINANCIAL_INDEPENDENCE
+  CUSTOM
+}
+
+model Goal {
+  id          String   @id @default(cuid())
+  userId      String
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  name        String
+  type        GoalType
+  targetAmount Decimal @db.Decimal(20, 2)
+  targetDate   DateTime
+  currentAmount Decimal @default(0) @db.Decimal(20, 2)
+
+  // Retirement-specific fields
+  monthlyContribution Decimal? @db.Decimal(20, 2)
+  expectedReturnRate  Decimal? @db.Decimal(5, 2)  // e.g., 7.5 for 7.5%
+  inflationRate       Decimal  @default(3.0) @db.Decimal(5, 2)  // e.g., 3.0 for 3%
+
+  linkedPortfolioId String?
+  linkedPortfolio   Portfolio? @relation(fields: [linkedPortfolioId], references: [id])
+
+  status       GoalStatus @default(ON_TRACK)
+  progressPercentage Decimal @default(0) @db.Decimal(5, 2)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([userId, status])
+  @@index([userId, targetDate])
+}
+
+enum GoalStatus {
+  ON_TRACK
+  OFF_TRACK
+  AT_RISK
+  ACHIEVED
+}
+```
+
+---
+
+**Week 30: Performance Attribution & Polish**
+
+- [ ] Performance Attribution Analysis (7 days)
+  - Calculate individual contribution: `(holding_return × holding_weight)`
+  - Aggregate by: ticker, sector, asset type, country
+  - Contribution waterfall chart
+  - Highlight best/worst contributors (top 5 and bottom 5)
+  - Time-period selection (1M, 3M, 1Y, YTD, All)
+
+**Deliverables**:
+- ✅ Asset allocation visualization (pie chart, sector breakdown, geographic breakdown)
+- ✅ Benchmark comparison (S&P 500, NASDAQ, custom benchmarks)
+- ✅ Portfolio risk score and volatility metrics
+- ✅ Rebalancing recommendations engine
+- ✅ Automated price alerts system
+- ✅ Retirement planning calculator
+- ✅ Goal tracking system
+- ✅ Performance attribution analysis
+- ✅ 85%+ feature parity with top 3 competitors
+
+**Success Metrics**:
+- **Feature Parity Score**: >85% vs Empower, Sharesight, Seeking Alpha
+- **User Engagement**: +50% increase in daily active users (DAU)
+- **Feature Adoption**: >70% of users view asset allocation chart
+- **Competitive NPS**: Match or exceed competitor NPS scores (target: >45)
 
 ---
 
