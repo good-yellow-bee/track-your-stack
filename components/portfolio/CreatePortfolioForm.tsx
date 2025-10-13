@@ -84,7 +84,6 @@ export function CreatePortfolioForm() {
           <div className="space-y-2">
             <Label htmlFor="baseCurrency">Base Currency</Label>
             <Select
-              name="baseCurrency"
               value={currency}
               onValueChange={setCurrency}
               disabled={isPending}
@@ -100,6 +99,7 @@ export function CreatePortfolioForm() {
                 ))}
               </SelectContent>
             </Select>
+            <input type="hidden" name="baseCurrency" value={currency} />
           </div>
           <Button type="submit" disabled={isPending} className="w-full">
             {isPending ? 'Creating...' : 'Create Portfolio'}

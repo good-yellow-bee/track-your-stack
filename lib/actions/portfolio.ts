@@ -3,6 +3,7 @@
 import { revalidatePath } from 'next/cache'
 import { auth } from '@/lib/auth'
 import { prisma } from '@/lib/prisma'
+import { z } from 'zod'
 
 type ActionResult<T = void> = {
   success: boolean
@@ -10,6 +11,17 @@ type ActionResult<T = void> = {
   error?: string
   message?: string
 }
+
+// Validation schemas
+const CreatePortfolioSchema = z.object({
+  name: z.string().trim().min(1, 'Portfolio name is required').max(100),
+  baseCurrency: z.string().length(3, 'Invalid currency code'),
+})
+
+const UpdatePortfolioSchema = z.object({
+  name: z.string().trim().min(1, 'Portfolio name is required').max(100),
+  baseCurrency: z.string().length(3, 'Invalid currency code').optional(),
+})
 
 /**
  * Create a new portfolio for the authenticated user
@@ -23,17 +35,36 @@ export async function createPortfolio(
     return { success: false, error: 'Unauthorized' }
   }
 
-  const name = formData.get('name') as string
-  const baseCurrency = (formData.get('baseCurrency') as string) || 'USD'
+  // Extract and validate form data
+  const nameRaw = formData.get('name')
+  const baseCurrencyRaw = formData.get('baseCurrency')
 
-  if (!name || name.trim().length === 0) {
+  if (typeof nameRaw !== 'string' || !nameRaw.trim()) {
     return { success: false, error: 'Portfolio name is required' }
   }
+
+  if (typeof baseCurrencyRaw !== 'string' || !baseCurrencyRaw) {
+    return { success: false, error: 'Base currency is required' }
+  }
+
+  const validated = CreatePortfolioSchema.safeParse({
+    name: nameRaw,
+    baseCurrency: baseCurrencyRaw,
+  })
+
+  if (!validated.success) {
+    return {
+      success: false,
+      error: validated.error.issues[0]?.message || 'Invalid input',
+    }
+  }
+
+  const { name, baseCurrency } = validated.data
 
   try {
     const portfolio = await prisma.portfolio.create({
       data: {
-        name: name.trim(),
+        name,
         baseCurrency,
         userId: session.user.id,
       },
@@ -78,18 +109,34 @@ export async function updatePortfolio(
     return { success: false, error: 'Forbidden' }
   }
 
-  const name = formData.get('name') as string
-  const baseCurrency = formData.get('baseCurrency') as string
+  // Extract and validate form data
+  const nameRaw = formData.get('name')
+  const baseCurrencyRaw = formData.get('baseCurrency')
 
-  if (!name || name.trim().length === 0) {
+  if (typeof nameRaw !== 'string' || !nameRaw.trim()) {
     return { success: false, error: 'Portfolio name is required' }
   }
+
+  const validated = UpdatePortfolioSchema.safeParse({
+    name: nameRaw,
+    baseCurrency:
+      typeof baseCurrencyRaw === 'string' ? baseCurrencyRaw : undefined,
+  })
+
+  if (!validated.success) {
+    return {
+      success: false,
+      error: validated.error.issues[0]?.message || 'Invalid input',
+    }
+  }
+
+  const { name, baseCurrency } = validated.data
 
   try {
     await prisma.portfolio.update({
       where: { id: portfolioId },
       data: {
-        name: name.trim(),
+        name,
         ...(baseCurrency && { baseCurrency }),
       },
     })

@@ -108,7 +108,6 @@ export function AddInvestmentForm({ portfolioId }: AddInvestmentFormProps) {
             <div className="space-y-2">
               <Label htmlFor="assetType">Asset Type</Label>
               <Select
-                name="assetType"
                 value={assetType}
                 onValueChange={setAssetType}
                 disabled={isPending}
@@ -124,6 +123,7 @@ export function AddInvestmentForm({ portfolioId }: AddInvestmentFormProps) {
                   ))}
                 </SelectContent>
               </Select>
+              <input type="hidden" name="assetType" value={assetType} />
             </div>
           </div>
 
@@ -171,7 +171,6 @@ export function AddInvestmentForm({ portfolioId }: AddInvestmentFormProps) {
             <div className="space-y-2">
               <Label htmlFor="currency">Currency</Label>
               <Select
-                name="currency"
                 value={currency}
                 onValueChange={setCurrency}
                 disabled={isPending}
@@ -187,6 +186,7 @@ export function AddInvestmentForm({ portfolioId }: AddInvestmentFormProps) {
                   ))}
                 </SelectContent>
               </Select>
+              <input type="hidden" name="currency" value={currency} />
             </div>
             <div className="space-y-2">
               <Label htmlFor="purchaseDate">Purchase Date</Label>

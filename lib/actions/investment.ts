@@ -5,6 +5,7 @@ import { auth } from '@/lib/auth'
 import { prisma } from '@/lib/prisma'
 import { AssetType } from '@prisma/client'
 import { Decimal } from '@prisma/client/runtime/library'
+import { z } from 'zod'
 
 type ActionResult<T = void> = {
   success: boolean
@@ -12,6 +13,23 @@ type ActionResult<T = void> = {
   error?: string
   message?: string
 }
+
+// Validation schemas
+const AddInvestmentSchema = z.object({
+  ticker: z
+    .string()
+    .trim()
+    .min(1, 'Ticker is required')
+    .max(20)
+    .transform((val) => val.toUpperCase()),
+  assetName: z.string().trim().min(1, 'Asset name is required').max(200),
+  assetType: z.nativeEnum(AssetType),
+  quantity: z.number().positive('Quantity must be a positive number'),
+  pricePerUnit: z.number().positive('Price per unit must be a positive number'),
+  currency: z.string().length(3, 'Invalid currency code'),
+  purchaseDate: z.string().optional(),
+  notes: z.string().max(500).optional(),
+})
 
 /**
  * Add a new investment to a portfolio
@@ -41,31 +59,67 @@ export async function addInvestment(
     return { success: false, error: 'Forbidden' }
   }
 
-  // Extract form data
-  const ticker = (formData.get('ticker') as string)?.toUpperCase().trim()
-  const assetName = formData.get('assetName') as string
-  const assetType = formData.get('assetType') as AssetType
-  const quantity = parseFloat(formData.get('quantity') as string)
-  const pricePerUnit = parseFloat(formData.get('pricePerUnit') as string)
-  const currency = (formData.get('currency') as string) || 'USD'
-  const purchaseDate = formData.get('purchaseDate') as string
-  const notes = formData.get('notes') as string
+  // Extract and validate form data with proper type checking
+  const tickerRaw = formData.get('ticker')
+  const assetNameRaw = formData.get('assetName')
+  const assetTypeRaw = formData.get('assetType')
+  const quantityRaw = formData.get('quantity')
+  const pricePerUnitRaw = formData.get('pricePerUnit')
+  const currencyRaw = formData.get('currency')
+  const purchaseDateRaw = formData.get('purchaseDate')
+  const notesRaw = formData.get('notes')
 
-  // Validation
-  if (!ticker || !assetName || !assetType) {
-    return { success: false, error: 'Missing required fields' }
+  if (typeof tickerRaw !== 'string' || !tickerRaw.trim()) {
+    return { success: false, error: 'Ticker is required' }
   }
 
-  if (isNaN(quantity) || quantity <= 0) {
-    return { success: false, error: 'Quantity must be a positive number' }
+  if (typeof assetNameRaw !== 'string' || !assetNameRaw.trim()) {
+    return { success: false, error: 'Asset name is required' }
   }
 
-  if (isNaN(pricePerUnit) || pricePerUnit <= 0) {
+  if (typeof assetTypeRaw !== 'string') {
+    return { success: false, error: 'Asset type is required' }
+  }
+
+  if (typeof quantityRaw !== 'string') {
+    return { success: false, error: 'Quantity is required' }
+  }
+
+  if (typeof pricePerUnitRaw !== 'string') {
+    return { success: false, error: 'Price per unit is required' }
+  }
+
+  const quantity = parseFloat(quantityRaw)
+  const pricePerUnit = parseFloat(pricePerUnitRaw)
+
+  if (isNaN(quantity)) {
+    return { success: false, error: 'Quantity must be a number' }
+  }
+
+  if (isNaN(pricePerUnit)) {
+    return { success: false, error: 'Price per unit must be a number' }
+  }
+
+  const validated = AddInvestmentSchema.safeParse({
+    ticker: tickerRaw,
+    assetName: assetNameRaw,
+    assetType: assetTypeRaw,
+    quantity,
+    pricePerUnit,
+    currency: typeof currencyRaw === 'string' ? currencyRaw : 'USD',
+    purchaseDate:
+      typeof purchaseDateRaw === 'string' ? purchaseDateRaw : undefined,
+    notes: typeof notesRaw === 'string' ? notesRaw : undefined,
+  })
+
+  if (!validated.success) {
     return {
       success: false,
-      error: 'Price per unit must be a positive number',
+      error: validated.error.issues[0]?.message || 'Invalid input',
     }
   }
+
+  const { ticker, assetName, assetType, quantity: validatedQuantity, pricePerUnit: validatedPrice, currency, purchaseDate, notes } = validated.data
 
   try {
     // Check if investment already exists for this ticker
@@ -83,8 +137,8 @@ export async function addInvestment(
       // Aggregate with weighted average cost basis
       const existingQty = existingInvestment.totalQuantity.toNumber()
       const existingAvg = existingInvestment.averageCostBasis.toNumber()
-      const newQty = quantity
-      const newPrice = pricePerUnit
+      const newQty = validatedQuantity
+      const newPrice = validatedPrice
 
       const totalQty = existingQty + newQty
       const totalCost = existingQty * existingAvg + newQty * newPrice
@@ -108,8 +162,8 @@ export async function addInvestment(
           ticker,
           assetName,
           assetType,
-          totalQuantity: new Decimal(quantity),
-          averageCostBasis: new Decimal(pricePerUnit),
+          totalQuantity: new Decimal(validatedQuantity),
+          averageCostBasis: new Decimal(validatedPrice),
           purchaseCurrency: currency,
         },
       })
@@ -121,11 +175,14 @@ export async function addInvestment(
     await prisma.purchaseTransaction.create({
       data: {
         investmentId,
-        quantity: new Decimal(quantity),
-        pricePerUnit: new Decimal(pricePerUnit),
+        quantity: new Decimal(validatedQuantity),
+        pricePerUnit: new Decimal(validatedPrice),
         currency,
-        purchaseDate: new Date(purchaseDate || Date.now()),
-        notes,
+        purchaseDate:
+          purchaseDate && purchaseDate.trim()
+            ? new Date(purchaseDate)
+            : new Date(),
+        notes: notes || null,
       },
     })
 
@@ -136,7 +193,7 @@ export async function addInvestment(
       success: true,
       data: { id: investmentId, aggregated },
       message: aggregated
-        ? `${ticker}: ${quantity} shares aggregated`
+        ? `${ticker}: ${validatedQuantity} shares aggregated`
         : `${ticker} added to portfolio`,
     }
   } catch (error) {

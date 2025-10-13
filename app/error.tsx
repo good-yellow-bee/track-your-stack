@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect } from 'react'
+import { useEffect, useRef } from 'react'
 import { toasts } from '@/lib/utils/toast'
 import { Button } from '@/components/ui/button'
 
@@ -11,12 +11,18 @@ export default function Error({
   error: Error & { digest?: string }
   reset: () => void
 }) {
-  useEffect(() => {
-    // Log error to console for debugging
-    console.error('Application error:', error)
+  const hasShownToast = useRef(false)
 
-    // Show user-friendly error toast
-    toasts.error('Something went wrong. Please try again.')
+  useEffect(() => {
+    // Only show toast once to prevent race conditions
+    if (!hasShownToast.current) {
+      // Log error to console for debugging
+      console.error('Application error:', error)
+
+      // Show user-friendly error toast
+      toasts.error('Something went wrong. Please try again.')
+      hasShownToast.current = true
+    }
   }, [error])
 
   return (
