@@ -495,7 +495,75 @@ export async function refreshInvestmentPrice(investmentId: string) {
 
 ## Error Handling
 
-### Standard Error Response
+### ActionResult Pattern (Recommended)
+
+**Current Implementation:** As of v1.0.0, Server Actions use the `ActionResult<T>` pattern for consistent, type-safe responses with built-in toast notification support.
+
+```typescript
+type ActionResult<T = void> = {
+  success: boolean
+  data?: T
+  error?: string
+  message?: string
+}
+```
+
+**Benefits:**
+- ✅ Type-safe responses with TypeScript
+- ✅ Consistent error handling across all actions
+- ✅ Built-in toast notification integration
+- ✅ Easy to extend with additional metadata
+- ✅ Clear success/failure distinction
+
+**Example Implementation:**
+
+```typescript
+// lib/actions/portfolio.ts
+'use server'
+
+import { auth } from '@/lib/auth'
+import { prisma } from '@/lib/prisma'
+import { revalidatePath } from 'next/cache'
+
+export async function createPortfolio(
+  formData: FormData
+): Promise<ActionResult<{ id: string }>> {
+  const session = await auth()
+
+  if (!session?.user?.id) {
+    return { success: false, error: 'Unauthorized' }
+  }
+
+  const name = formData.get('name') as string
+
+  if (!name || name.trim().length === 0) {
+    return { success: false, error: 'Portfolio name is required' }
+  }
+
+  try {
+    const portfolio = await prisma.portfolio.create({
+      data: {
+        name: name.trim(),
+        userId: session.user.id,
+      },
+    })
+
+    revalidatePath('/dashboard')
+    return {
+      success: true,
+      data: { id: portfolio.id },
+      message: 'Portfolio created successfully',
+    }
+  } catch (error) {
+    console.error('Failed to create portfolio:', error)
+    return { success: false, error: 'Failed to create portfolio' }
+  }
+}
+```
+
+### Legacy Error Response (Deprecated)
+
+**Note:** This pattern is deprecated in favor of `ActionResult<T>`. Existing code may still use this pattern but should be migrated.
 
 ```typescript
 type ActionResponse<T> =
@@ -527,7 +595,37 @@ type ActionResponse<T> =
 ;('Failed to create portfolio')
 ```
 
-### Client-Side Error Handling
+### Client-Side Error Handling with Toast Notifications
+
+**Modern Pattern:** Use centralized toast utilities for consistent user feedback.
+
+```typescript
+'use client'
+
+import { toasts } from '@/lib/utils/toast'
+import { createPortfolio } from '@/lib/actions/portfolio'
+
+async function handleSubmit(formData: FormData) {
+  const result = await createPortfolio(formData)
+
+  if (result.success) {
+    // Success toast
+    toasts.portfolio.created()
+    router.refresh()
+  } else {
+    // Error-specific toasts
+    if (result.error === 'Unauthorized') {
+      toasts.authError()
+    } else if (result.error === 'Portfolio name is required') {
+      toasts.validation.required('Portfolio name')
+    } else {
+      toasts.portfolio.createError()
+    }
+  }
+}
+```
+
+**Legacy Pattern (Deprecated):**
 
 ```typescript
 'use client'
@@ -552,6 +650,8 @@ async function handleAction() {
   }
 }
 ```
+
+**See Also:** [Toast Notifications API](./toast-notifications.md) for comprehensive toast integration patterns
 
 ## Input Validation
 

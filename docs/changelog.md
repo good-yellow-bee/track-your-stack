@@ -9,6 +9,21 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- **Toast Notification System** ([Documentation](./api/toast-notifications.md))
+  - Sonner integration via shadcn/ui for accessible user feedback
+  - Type-safe toast utility helpers (`lib/utils/toast.ts`)
+  - Domain-specific notification methods (portfolio, investment, prices, currency)
+  - Server Actions with structured `ActionResult<T>` responses
+  - Client component integration with automatic toast handling
+  - Error boundary integration for uncaught errors
+  - Form validation feedback with field-specific messages
+  - Loading states for async operations (price refresh, currency conversion)
+  - Theme-integrated styling with Tailwind CSS
+  - Accessibility built-in (ARIA labels, keyboard navigation, screen reader support)
+  - Comprehensive documentation with architecture diagrams and examples
+  - Example components: `CreatePortfolioForm`, `AddInvestmentForm`
+  - Server Actions: Portfolio CRUD, Investment CRUD with aggregation
+
 - **F03: Authentication System** ([#PR-TBD](../docs/features/authentication.md))
   - NextAuth.js v5 (Auth.js) integration with database sessions
   - Google OAuth provider for one-click sign-in
