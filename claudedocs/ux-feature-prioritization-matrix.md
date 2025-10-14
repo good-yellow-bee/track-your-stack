@@ -9,12 +9,14 @@
 This document prioritizes user experience improvements and feature enhancements for Track Your Stack based on user impact, implementation effort, and strategic value. It identifies **23 UX/feature gaps** across 6 categories.
 
 **Impact Assessment**:
+
 - 🔴 **Critical**: Blocks core use cases or causes user confusion
 - 🟡 **High**: Significantly improves experience but has workarounds
 - 🟢 **Medium**: Nice-to-have improvements
 - ⚪ **Low**: Future enhancements
 
 **Effort Scale**:
+
 - **XS**: <2 days
 - **S**: 2-5 days
 - **M**: 1-2 weeks
@@ -45,15 +47,19 @@ This document prioritizes user experience improvements and feature enhancements 
 ```
 
 ### Quadrant 1: Quick Wins (Do First)
+
 High impact, low effort - implement immediately
 
 ### Quadrant 2: Strategic Initiatives (Plan Carefully)
+
 High impact, high effort - plan and execute systematically
 
 ### Quadrant 3: Low Priority (Schedule Later)
+
 Low impact, low effort - fill in gaps during slow periods
 
 ### Quadrant 4: Avoid for Now
+
 Low impact, high effort - defer indefinitely
 
 ---
@@ -61,16 +67,19 @@ Low impact, high effort - defer indefinitely
 ## Q1: Quick Wins (Priority: IMMEDIATE)
 
 ### 1. Dashboard Overview with Key Metrics
+
 **Impact**: 🔴 Critical | **Effort**: S (3 days)
 
 **Current State**: Users land on empty dashboard with no portfolio summary.
 
 **Problem**:
+
 - No total portfolio value displayed
 - No aggregate gain/loss across all portfolios
 - User must click into each portfolio to see performance
 
 **Proposed Solution**:
+
 ```typescript
 // components/dashboard/PortfolioSummaryCards.tsx
 export function PortfolioSummaryCards({ userId }: { userId: string }) {
@@ -128,11 +137,13 @@ export function PortfolioSummaryCards({ userId }: { userId: string }) {
 ```
 
 **User Value**:
+
 - ✅ Instant understanding of total wealth
 - ✅ Performance at-a-glance
 - ✅ Motivation to engage with the app
 
 **Implementation Tasks**:
+
 - [ ] Create aggregate query function
 - [ ] Build summary card components
 - [ ] Add performance comparison logic
@@ -142,16 +153,19 @@ export function PortfolioSummaryCards({ userId }: { userId: string }) {
 ---
 
 ### 2. Price Refresh Button with Visual Feedback
+
 **Impact**: 🔴 Critical | **Effort**: XS (1 day)
 
 **Current State**: No way to manually refresh prices; users unsure if data is current.
 
 **Problem**:
+
 - Stale prices displayed without indication
 - No manual refresh option
 - Users don't know when last updated
 
 **Proposed Solution**:
+
 ```typescript
 // components/investment/PriceRefreshButton.tsx
 'use client'
@@ -196,6 +210,7 @@ export function PriceRefreshButton({ investmentId }: { investmentId: string }) {
 ```
 
 **User Value**:
+
 - ✅ Control over data freshness
 - ✅ Confidence in displayed values
 - ✅ Visual feedback during refresh
@@ -203,15 +218,18 @@ export function PriceRefreshButton({ investmentId }: { investmentId: string }) {
 ---
 
 ### 3. Bulk Price Refresh for All Holdings
+
 **Impact**: 🟡 High | **Effort**: S (2 days)
 
 **Current State**: Must refresh each investment individually.
 
 **Problem**:
+
 - Tedious for users with 10+ holdings
 - No "refresh all" option
 
 **Proposed Solution**:
+
 ```typescript
 // components/portfolio/RefreshAllPricesButton.tsx
 'use client'
@@ -265,6 +283,7 @@ export function RefreshAllPricesButton({ portfolioId }: { portfolioId: string })
 ```
 
 **User Value**:
+
 - ✅ Saves time for large portfolios
 - ✅ Progress visibility
 - ✅ Better user experience
@@ -272,11 +291,13 @@ export function RefreshAllPricesButton({ portfolioId }: { portfolioId: string })
 ---
 
 ### 4. Import from CSV/Brokerage
+
 **Impact**: 🔴 Critical | **Effort**: M (1 week)
 
 **Current State**: Manual entry only, no import functionality.
 
 **Problem**:
+
 - Tedious onboarding for users with existing portfolios
 - High friction to adoption
 - Error-prone manual data entry
@@ -284,6 +305,7 @@ export function RefreshAllPricesButton({ portfolioId }: { portfolioId: string })
 **Proposed Solution**:
 
 **Step 1: CSV Import**
+
 ```typescript
 // lib/import/csv-parser.ts
 
@@ -367,10 +389,12 @@ export function ImportCSVDialog({ portfolioId }: { portfolioId: string }) {
 ```
 
 **Step 2: Brokerage Integration** (Future)
+
 - Plaid API for automated brokerage sync
 - Support major brokers: Fidelity, Schwab, Vanguard, Robinhood
 
 **User Value**:
+
 - ✅ Fast onboarding (minutes vs hours)
 - ✅ Accurate data import
 - ✅ Competitive with existing tools
@@ -378,16 +402,19 @@ export function ImportCSVDialog({ portfolioId }: { portfolioId: string }) {
 ---
 
 ### 5. Portfolio Performance Charts
+
 **Impact**: 🟡 High | **Effort**: S (4 days)
 
 **Current State**: No visualization of portfolio performance over time.
 
 **Problem**:
+
 - Users can't see historical trends
 - No visual comparison of portfolios
 - Hard to understand performance
 
 **Proposed Solution**:
+
 ```typescript
 // components/portfolio/PerformanceChart.tsx
 'use client'
@@ -434,6 +461,7 @@ export function PerformanceChart({ portfolioId }: { portfolioId: string }) {
 ```
 
 **Data Storage Strategy**:
+
 ```prisma
 model PortfolioSnapshot {
   id          String   @id @default(cuid())
@@ -451,11 +479,13 @@ model PortfolioSnapshot {
 ```
 
 **Snapshot Generation**:
+
 - Daily cron job captures portfolio value
 - Historical reconstruction for existing data
 - Efficient querying for chart rendering
 
 **User Value**:
+
 - ✅ Visual performance tracking
 - ✅ Trend identification
 - ✅ Comparison with cost basis
@@ -463,16 +493,19 @@ model PortfolioSnapshot {
 ---
 
 ### 6. Search/Filter Investments
+
 **Impact**: 🟡 High | **Effort**: XS (2 days)
 
 **Current State**: No search or filter on investment lists.
 
 **Problem**:
+
 - Hard to find specific holdings in large portfolios
 - No sorting options
 - No filtering by asset type or performance
 
 **Proposed Solution**:
+
 ```typescript
 // components/portfolio/InvestmentFilters.tsx
 'use client'
@@ -524,6 +557,7 @@ export function InvestmentFilters() {
 ```
 
 **User Value**:
+
 - ✅ Quick access to specific holdings
 - ✅ Identify best/worst performers
 - ✅ Better organization
@@ -531,16 +565,19 @@ export function InvestmentFilters() {
 ---
 
 ### 7. Mobile Responsive Design
+
 **Impact**: 🔴 Critical | **Effort**: S (4 days)
 
 **Current State**: Desktop-first design, poor mobile experience.
 
 **Problem**:
+
 - Tables don't fit mobile screens
 - Small touch targets
 - Hard to navigate on phone
 
 **Proposed Solution**:
+
 ```typescript
 // components/portfolio/InvestmentListMobile.tsx
 'use client'
@@ -589,12 +626,14 @@ export function InvestmentListMobile({ investments }: { investments: Investment[
 ```
 
 **Responsive Patterns**:
+
 - Table → Card list on mobile
 - Hamburger menu for navigation
 - Bottom navigation bar
 - Swipe gestures for actions
 
 **User Value**:
+
 - ✅ Check portfolio on-the-go
 - ✅ Better touch interactions
 - ✅ Competitive with mobile apps
@@ -602,11 +641,13 @@ export function InvestmentListMobile({ investments }: { investments: Investment[
 ---
 
 ### 8. Accessibility Improvements (WCAG 2.1 AA)
+
 **Impact**: 🟡 High | **Effort**: S (3 days)
 
 **Current State**: Limited accessibility testing, no ARIA labels.
 
 **Problem**:
+
 - Screen reader users can't navigate effectively
 - Keyboard navigation incomplete
 - Color contrast issues
@@ -615,6 +656,7 @@ export function InvestmentListMobile({ investments }: { investments: Investment[
 **Proposed Solution**:
 
 **1. Semantic HTML & ARIA**:
+
 ```typescript
 // components/portfolio/PortfolioCard.tsx
 export function PortfolioCard({ portfolio }: { portfolio: Portfolio }) {
@@ -641,6 +683,7 @@ export function PortfolioCard({ portfolio }: { portfolio: Portfolio }) {
 ```
 
 **2. Keyboard Navigation**:
+
 ```typescript
 // components/investment/InvestmentTable.tsx
 'use client'
@@ -671,11 +714,13 @@ export function InvestmentTable({ investments }: { investments: Investment[] }) 
 ```
 
 **3. Color Contrast Audit**:
+
 - Use shadcn/ui color variables (already WCAG AA compliant)
 - Test with axe DevTools
 - Fix any failing contrast ratios
 
 **4. Skip Navigation**:
+
 ```typescript
 // app/layout.tsx
 export default function RootLayout({ children }: { children: ReactNode }) {
@@ -697,6 +742,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
 ```
 
 **User Value**:
+
 - ✅ Inclusive for users with disabilities
 - ✅ Better SEO
 - ✅ Legal compliance
@@ -706,11 +752,13 @@ export default function RootLayout({ children }: { children: ReactNode }) {
 ## Q2: Strategic Initiatives (Priority: HIGH)
 
 ### 9. Onboarding Flow & Interactive Tutorial
+
 **Impact**: 🔴 Critical | **Effort**: M (2 weeks)
 
 **Current State**: No onboarding, users dropped into empty app.
 
 **Problem**:
+
 - High abandonment rate for new users
 - Unclear how to get started
 - No guidance on features
@@ -718,6 +766,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
 **Proposed Solution**:
 
 **Step 1: Welcome Screen**
+
 ```typescript
 // app/(dashboard)/welcome/page.tsx
 export default async function WelcomePage() {
@@ -770,6 +819,7 @@ export default async function WelcomePage() {
 ```
 
 **Step 2: Interactive Tour**
+
 ```typescript
 // Use react-joyride for interactive product tour
 import Joyride from 'react-joyride'
@@ -795,6 +845,7 @@ export function ProductTour() {
 ```
 
 **Step 3: Quick Start Checklist**
+
 ```typescript
 // components/onboarding/QuickStartChecklist.tsx
 export function QuickStartChecklist() {
@@ -828,6 +879,7 @@ export function QuickStartChecklist() {
 ```
 
 **User Value**:
+
 - ✅ Reduces time-to-value
 - ✅ Lower abandonment rate
 - ✅ Better user activation
@@ -835,11 +887,13 @@ export function QuickStartChecklist() {
 ---
 
 ### 10. Notification System (Email & In-App)
+
 **Impact**: 🟡 High | **Effort**: M (2 weeks)
 
 **Current State**: No notifications or alerts.
 
 **Problem**:
+
 - Users don't know when prices update
 - No alerts for significant changes
 - No reminders for portfolio review
@@ -847,6 +901,7 @@ export function QuickStartChecklist() {
 **Proposed Solution**:
 
 **Email Notifications (Resend + React Email)**:
+
 ```typescript
 // emails/PriceAlertEmail.tsx
 import { Html, Body, Container, Heading, Text } from '@react-email/components'
@@ -886,6 +941,7 @@ export async function sendPriceAlert(userId: string, investment: Investment) {
 ```
 
 **In-App Notifications**:
+
 ```prisma
 model Notification {
   id        String             @id @default(cuid())
@@ -911,6 +967,7 @@ enum NotificationType {
 ```
 
 **User Preferences**:
+
 ```prisma
 model NotificationPreferences {
   userId              String  @id
@@ -924,6 +981,7 @@ model NotificationPreferences {
 ```
 
 **User Value**:
+
 - ✅ Stay informed of portfolio changes
 - ✅ Timely alerts for action
 - ✅ Customizable preferences
@@ -931,11 +989,13 @@ model NotificationPreferences {
 ---
 
 ### 11. Advanced Reporting & Export
+
 **Impact**: 🟡 High | **Effort**: L (3 weeks)
 
 **Current State**: No reporting or export functionality.
 
 **Problem**:
+
 - Can't export data for tax preparation
 - No year-end summaries
 - Hard to analyze performance
@@ -943,6 +1003,7 @@ model NotificationPreferences {
 **Proposed Solution**:
 
 **Export Formats**:
+
 1. CSV (holdings list)
 2. PDF (portfolio report)
 3. JSON (raw data)
@@ -998,13 +1059,11 @@ export async function exportHoldingsCSV(portfolioId: string): Promise<string> {
 ```
 
 **Year-End Tax Report**:
+
 ```typescript
 // lib/reporting/tax-report.ts
 
-export async function generateYearEndTaxReport(
-  userId: string,
-  year: number
-): Promise<TaxReport> {
+export async function generateYearEndTaxReport(userId: string, year: number): Promise<TaxReport> {
   // Get all realized gains/losses (when tax lot tracking implemented)
   const sales = await prisma.saleTransaction.findMany({
     where: {
@@ -1051,6 +1110,7 @@ export async function generateYearEndTaxReport(
 ```
 
 **User Value**:
+
 - ✅ Easy tax preparation
 - ✅ Professional reports
 - ✅ Data portability
@@ -1058,16 +1118,19 @@ export async function generateYearEndTaxReport(
 ---
 
 ### 12. Portfolio Comparison View
+
 **Impact**: 🟡 High | **Effort**: S (5 days)
 
 **Current State**: Can't compare portfolios side-by-side.
 
 **Problem**:
+
 - Hard to evaluate portfolio performance
 - No visual comparison
 - Can't identify best strategies
 
 **Proposed Solution**:
+
 ```typescript
 // app/(dashboard)/compare/page.tsx
 export default async function ComparePage() {
@@ -1098,6 +1161,7 @@ export default async function ComparePage() {
 ```
 
 **User Value**:
+
 - ✅ Identify best performers
 - ✅ Rebalancing insights
 - ✅ Strategy evaluation
@@ -1105,16 +1169,19 @@ export default async function ComparePage() {
 ---
 
 ### 13. Watchlist Feature
+
 **Impact**: 🟢 Medium | **Effort**: S (3 days)
 
 **Current State**: No way to track investments you don't own.
 
 **Problem**:
+
 - Can't monitor potential investments
 - No price alerts for watchlist
 - Missing competitive feature
 
 **Proposed Solution**:
+
 ```prisma
 model Watchlist {
   id        String          @id @default(cuid())
@@ -1145,6 +1212,7 @@ model WatchlistItem {
 ```
 
 **User Value**:
+
 - ✅ Research potential investments
 - ✅ Price tracking without purchasing
 - ✅ Better investment decisions
@@ -1152,16 +1220,19 @@ model WatchlistItem {
 ---
 
 ### 14. Social Features (Optional)
+
 **Impact**: 🟢 Medium | **Effort**: XL (2 months)
 
 **Current State**: Private, single-user experience.
 
 **Problem**:
+
 - No community or collaboration
 - Can't share insights
 - Missing viral growth potential
 
 **Proposed Features** (Optional):
+
 - Public portfolio profiles (opt-in)
 - Follow other investors
 - Portfolio leaderboards
@@ -1169,6 +1240,7 @@ model WatchlistItem {
 - Investment discussions/comments
 
 **User Value**:
+
 - ✅ Community engagement
 - ✅ Learn from others
 - ✅ Viral growth mechanism
@@ -1180,6 +1252,7 @@ model WatchlistItem {
 ## Q3: Low Priority (Schedule Later)
 
 ### 15. Dark Mode
+
 **Impact**: 🟢 Medium | **Effort**: XS (1 day)
 
 **Solution**: shadcn/ui already supports dark mode, just need toggle.
@@ -1187,6 +1260,7 @@ model WatchlistItem {
 ---
 
 ### 16. Currency Management Settings
+
 **Impact**: 🟢 Medium | **Effort**: XS (2 days)
 
 **Solution**: User preferences for default currency, currency display format.
@@ -1194,6 +1268,7 @@ model WatchlistItem {
 ---
 
 ### 17. Portfolio Notes & Annotations
+
 **Impact**: 🟢 Medium | **Effort**: XS (2 days)
 
 **Solution**: Rich text editor for portfolio/investment notes.
@@ -1201,6 +1276,7 @@ model WatchlistItem {
 ---
 
 ### 18. Investment News Feed
+
 **Impact**: 🟢 Medium | **Effort**: M (1 week)
 
 **Solution**: Integrate News API to show relevant news per ticker.
@@ -1208,6 +1284,7 @@ model WatchlistItem {
 ---
 
 ### 19. Portfolio Rebalancing Calculator
+
 **Impact**: 🟢 Medium | **Effort**: M (1 week)
 
 **Solution**: Suggest trades to achieve target allocation percentages.
@@ -1215,6 +1292,7 @@ model WatchlistItem {
 ---
 
 ### 20. Multi-Language Support (i18n)
+
 **Impact**: ⚪ Low | **Effort**: L (3 weeks)
 
 **Solution**: next-intl for internationalization.
@@ -1224,6 +1302,7 @@ model WatchlistItem {
 ## Q4: Avoid for Now
 
 ### 21. Native Mobile Apps
+
 **Impact**: ⚪ Low | **Effort**: XL (3 months)
 
 **Rationale**: PWA with responsive design sufficient for MVP.
@@ -1231,6 +1310,7 @@ model WatchlistItem {
 ---
 
 ### 22. Options & Derivatives Tracking
+
 **Impact**: ⚪ Low | **Effort**: XL (2 months)
 
 **Rationale**: Complex feature, small user segment.
@@ -1238,6 +1318,7 @@ model WatchlistItem {
 ---
 
 ### 23. AI Portfolio Recommendations
+
 **Impact**: ⚪ Low | **Effort**: XL (2+ months)
 
 **Rationale**: Regulatory risk, high complexity, requires significant data.
@@ -1247,6 +1328,7 @@ model WatchlistItem {
 ## Implementation Roadmap
 
 ### Phase 1: Foundation (Weeks 1-4)
+
 **Quick Wins + Critical UX**
 
 - ✅ Week 1: Dashboard overview, price refresh, mobile responsive
@@ -1259,6 +1341,7 @@ model WatchlistItem {
 ---
 
 ### Phase 2: Engagement (Weeks 5-8)
+
 **Strategic Features**
 
 - ✅ Week 5-6: Notification system (email + in-app)
@@ -1270,6 +1353,7 @@ model WatchlistItem {
 ---
 
 ### Phase 3: Polish (Weeks 9-12)
+
 **Low Priority & Nice-to-Haves**
 
 - ✅ Week 9: Dark mode, currency settings, notes
@@ -1284,16 +1368,19 @@ model WatchlistItem {
 ## Success Metrics
 
 ### User Activation
+
 - **Goal**: 80% of signups create first portfolio within 24 hours
 - **Metric**: Onboarding completion rate
 - **Target**: >75% complete onboarding checklist
 
 ### User Engagement
+
 - **Goal**: Users check portfolio 3x per week
 - **Metric**: Weekly active users (WAU) / Monthly active users (MAU)
 - **Target**: WAU/MAU > 60%
 
 ### Feature Adoption
+
 - **Goal**: Users leverage key features
 - **Metrics**:
   - CSV import usage: >40% of users
@@ -1302,6 +1389,7 @@ model WatchlistItem {
   - Notifications enabled: >50% of users
 
 ### User Satisfaction
+
 - **Goal**: High NPS and low abandonment
 - **Metrics**:
   - Net Promoter Score (NPS): >40
@@ -1319,6 +1407,7 @@ model WatchlistItem {
 After comprehensive analysis of leading portfolio trackers (Empower, Sharesight, Seeking Alpha, Stock Rover, Wealthfront), **31 missing features** were identified across 7 categories. See `competitive-feature-analysis.md` for full details.
 
 **Critical Findings**:
+
 - **100% of competitors** have asset allocation visualization
 - **90%+ of competitors** have benchmarking and sector exposure
 - **70%+ of competitors** have goal tracking and retirement planning
@@ -1326,11 +1415,13 @@ After comprehensive analysis of leading portfolio trackers (Empower, Sharesight,
 ### High-Priority Competitive Features
 
 #### 24. Asset Allocation Pie Chart 🔴 CRITICAL
+
 **Impact**: 🔴 Critical | **Effort**: S (3 days) | **Found In**: 100% of competitors
 
 **Problem**: No visual breakdown of portfolio composition
 
 **Solution**:
+
 ```typescript
 // components/portfolio/AssetAllocationChart.tsx
 'use client'
@@ -1385,11 +1476,13 @@ export function AssetAllocationChart({ portfolioId }: { portfolioId: string }) {
 ---
 
 #### 25. Sector Exposure Breakdown 🔴 CRITICAL
+
 **Impact**: 🔴 Critical | **Effort**: S (5 days) | **Found In**: 90%+ of competitors
 
 **Problem**: No visibility into sector concentration risk
 
 **Solution**:
+
 - Add `sector` field to Investment model
 - Integrate Alpha Vantage `OVERVIEW` endpoint for sector data
 - Create sector breakdown bar chart
@@ -1401,11 +1494,13 @@ export function AssetAllocationChart({ portfolioId }: { portfolioId: string }) {
 ---
 
 #### 26. Benchmark Comparison (S&P 500, NASDAQ) 🔴 CRITICAL
+
 **Impact**: 🔴 Critical | **Effort**: M (6 days) | **Found In**: 90%+ of competitors
 
 **Problem**: Users can't answer "Am I beating the market?"
 
 **Solution**:
+
 ```prisma
 model PortfolioBenchmark {
   id          String
@@ -1424,6 +1519,7 @@ model PortfolioBenchmark {
 ```
 
 **Implementation**:
+
 - Fetch benchmark historical prices (Alpha Vantage)
 - Calculate benchmark returns over same period
 - Comparison chart: Portfolio vs Benchmark(s)
@@ -1435,11 +1531,13 @@ model PortfolioBenchmark {
 ---
 
 #### 27. Retirement Planning Calculator 🟡 HIGH
+
 **Impact**: 🟡 High | **Effort**: L (10 days) | **Found In**: 70%+ of competitors
 
 **Problem**: No goal tracking or retirement planning
 
 **Solution**:
+
 ```prisma
 enum GoalType {
   RETIREMENT
@@ -1490,11 +1588,13 @@ enum GoalStatus {
 ---
 
 #### 28. Portfolio Risk Score 🟡 HIGH
+
 **Impact**: 🟡 High | **Effort**: S (4 days) | **Found In**: 60%+ of competitors
 
 **Problem**: No simplified risk communication for mainstream users
 
 **Solution**:
+
 - Calculate based on: asset allocation, volatility, concentration, beta
 - Weighted scoring algorithm (1-10 scale or Conservative/Moderate/Aggressive)
 - Risk score gauge visualization
@@ -1506,11 +1606,13 @@ enum GoalStatus {
 ---
 
 #### 29. Rebalancing Recommendations 🟡 HIGH
+
 **Impact**: 🟡 High | **Effort**: L (8 days) | **Found In**: 60%+ of competitors
 
 **Problem**: No guidance on maintaining target allocation
 
 **Solution**:
+
 ```prisma
 model TargetAllocation {
   id          String
@@ -1568,11 +1670,13 @@ enum RebalanceAction {
 ---
 
 #### 30. Automated Price Alerts 🟡 HIGH
+
 **Impact**: 🟡 High | **Effort**: M (6 days) | **Found In**: 50%+ of competitors
 
 **Problem**: No notifications when investments hit price targets
 
 **Solution**:
+
 ```prisma
 model PriceAlert {
   id           String
@@ -1605,6 +1709,7 @@ enum PriceAlertType {
 ```
 
 **Implementation**:
+
 - Background job checks prices against alerts
 - Trigger notifications (email + in-app) when hit
 - Mark alerts as triggered, allow reset
@@ -1615,11 +1720,13 @@ enum PriceAlertType {
 ---
 
 #### 31. Performance Attribution Analysis 🟢 MEDIUM
+
 **Impact**: 🟢 Medium | **Effort**: M (7 days) | **Found In**: 40%+ (premium features)
 
 **Problem**: Don't know which holdings drive returns
 
 **Solution**:
+
 - Calculate individual contribution: `(holding_return × holding_weight)`
 - Aggregate by: ticker, sector, asset type, country
 - Contribution waterfall chart
@@ -1633,19 +1740,23 @@ enum PriceAlertType {
 ### Phase 4 Roadmap: Competitive Parity (4-5 Weeks)
 
 **Week 1-2: Critical Visualizations (MUST-HAVE)**
+
 - [ ] Asset allocation pie chart (3 days)
 - [ ] Sector exposure breakdown (5 days)
 - [ ] Market cap breakdown (2 days)
 
 **Week 2-3: Benchmarking (CRITICAL)**
+
 - [ ] Benchmark comparison (S&P 500, NASDAQ) (6 days)
 - [ ] Portfolio risk score (4 days)
 
 **Week 3-4: Automation & Alerts (HIGH)**
+
 - [ ] Rebalancing recommendations (8 days)
 - [ ] Automated price alerts (6 days)
 
 **Week 4-5: Goal Setting (HIGH)**
+
 - [ ] Retirement planning calculator (10 days)
 - [ ] Goal tracking system (6 days)
 
@@ -1654,16 +1765,19 @@ enum PriceAlertType {
 ### Success Metrics (Competitive Parity)
 
 **Feature Parity Score**: Percentage of "must-have" features vs top 3 competitors
+
 - **Target**: >85% feature parity with Empower, Sharesight, Seeking Alpha
 - **Current**: ~40% (basic tracking only)
 - **After Phase 4**: ~85% (competitive parity achieved)
 
 **User Satisfaction**:
+
 - **Goal**: Match or exceed competitor NPS scores
 - **Benchmark**: Empower NPS ~45, Sharesight NPS ~50
 - **Target**: NPS >45 after Phase 4
 
 **Competitive Positioning**:
+
 - **Unique Strengths**: Tax-first design, multi-currency, goal-driven
 - **Table Stakes Achieved**: Asset allocation, benchmarking, sector analysis, risk scores
 - **Premium Differentiators**: Tax-loss harvesting, rebalancing, performance attribution
@@ -1673,6 +1787,7 @@ enum PriceAlertType {
 ## Conclusion
 
 This prioritization matrix now identifies **31 total UX/feature opportunities**:
+
 - **Original 23 features** (Phases 1-3)
 - **8 critical competitive features** (Phase 4)
 
@@ -1687,6 +1802,7 @@ This prioritization matrix now identifies **31 total UX/feature opportunities**:
 7. **🆕 Advanced Analytics** - Risk scores, rebalancing, performance attribution (DIFFERENTIATOR)
 
 **Revised Priority Order**:
+
 1. **Phase 1: Quick Wins** (Weeks 1-4) - Foundation UX
 2. **Phase 2: Strategic Initiatives** (Weeks 5-8) - Engagement features
 3. **🆕 Phase 4: Competitive Parity** (Weeks 9-13) - Asset allocation, benchmarking, goals
@@ -1695,6 +1811,7 @@ This prioritization matrix now identifies **31 total UX/feature opportunities**:
 **Total Timeline**: ~17 weeks (~4 months) for comprehensive competitive parity
 
 **Next Steps**:
+
 1. Approve updated prioritization with Phase 4
 2. Begin Phase 1 implementation (Quick Wins)
 3. Run competitive analysis every 6 months
@@ -1702,5 +1819,6 @@ This prioritization matrix now identifies **31 total UX/feature opportunities**:
 5. Consider Phase 5 (Advanced Analytics) for premium tier differentiation
 
 **See Also**:
+
 - `competitive-feature-analysis.md` - Full 31-feature competitive analysis
 - `MASTER_PLAN_V2.md` - Integrated 6-phase roadmap including competitive features
