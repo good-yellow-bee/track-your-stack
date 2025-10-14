@@ -26,9 +26,7 @@ const UpdatePortfolioSchema = z.object({
 /**
  * Create a new portfolio for the authenticated user
  */
-export async function createPortfolio(
-  formData: FormData
-): Promise<ActionResult<{ id: string }>> {
+export async function createPortfolio(formData: FormData): Promise<ActionResult<{ id: string }>> {
   const session = await auth()
 
   if (!session?.user?.id) {
@@ -119,8 +117,7 @@ export async function updatePortfolio(
 
   const validated = UpdatePortfolioSchema.safeParse({
     name: nameRaw,
-    baseCurrency:
-      typeof baseCurrencyRaw === 'string' ? baseCurrencyRaw : undefined,
+    baseCurrency: typeof baseCurrencyRaw === 'string' ? baseCurrencyRaw : undefined,
   })
 
   if (!validated.success) {
@@ -153,9 +150,7 @@ export async function updatePortfolio(
 /**
  * Delete a portfolio and all associated investments
  */
-export async function deletePortfolio(
-  portfolioId: string
-): Promise<ActionResult> {
+export async function deletePortfolio(portfolioId: string): Promise<ActionResult> {
   const session = await auth()
 
   if (!session?.user?.id) {

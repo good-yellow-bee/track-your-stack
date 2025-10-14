@@ -745,20 +745,20 @@ All notifications use the centralized `toasts` object from `lib/utils/toast.ts`:
 import { toasts } from '@/lib/utils/toast'
 
 // Portfolio operations
-toasts.portfolio.created()       // "Portfolio created successfully"
-toasts.portfolio.updated()       // "Portfolio updated"
-toasts.portfolio.deleted()       // "Portfolio deleted"
-toasts.portfolio.createError()   // "Failed to create portfolio"
+toasts.portfolio.created() // "Portfolio created successfully"
+toasts.portfolio.updated() // "Portfolio updated"
+toasts.portfolio.deleted() // "Portfolio deleted"
+toasts.portfolio.createError() // "Failed to create portfolio"
 
 // Investment operations
-toasts.investment.added('AAPL')              // "AAPL added to portfolio"
-toasts.investment.aggregated('AAPL', 10)     // "AAPL: 10 shares aggregated"
-toasts.investment.removed('AAPL')            // "AAPL removed from portfolio"
+toasts.investment.added('AAPL') // "AAPL added to portfolio"
+toasts.investment.aggregated('AAPL', 10) // "AAPL: 10 shares aggregated"
+toasts.investment.removed('AAPL') // "AAPL removed from portfolio"
 
 // Price refresh with loading state
-toasts.prices.refreshing()                   // Loading toast with ID
-toasts.prices.refreshed(5)                   // "5 prices updated"
-toasts.prices.failed()                       // Error toast
+toasts.prices.refreshing() // Loading toast with ID
+toasts.prices.refreshed(5) // "5 prices updated"
+toasts.prices.failed() // Error toast
 
 // Generic operations
 toasts.success('Custom success message')
@@ -766,9 +766,9 @@ toasts.error('Custom error message')
 toasts.loading('Processing...')
 
 // Common errors
-toasts.authError()         // "Authentication required"
-toasts.forbidden()         // "You don't have permission..."
-toasts.rateLimitError()    // "API rate limit exceeded..."
+toasts.authError() // "Authentication required"
+toasts.forbidden() // "You don't have permission..."
+toasts.rateLimitError() // "API rate limit exceeded..."
 
 // Form validation
 toasts.validation.required('Portfolio name')
@@ -790,9 +790,7 @@ type ActionResult<T = void> = {
   message?: string
 }
 
-export async function createPortfolio(
-  formData: FormData
-): Promise<ActionResult<{ id: string }>> {
+export async function createPortfolio(formData: FormData): Promise<ActionResult<{ id: string }>> {
   const session = await auth()
 
   if (!session?.user?.id) {
@@ -800,12 +798,14 @@ export async function createPortfolio(
   }
 
   try {
-    const portfolio = await prisma.portfolio.create({ /* ... */ })
+    const portfolio = await prisma.portfolio.create({
+      /* ... */
+    })
     revalidatePath('/dashboard')
     return {
       success: true,
       data: { id: portfolio.id },
-      message: 'Portfolio created successfully'
+      message: 'Portfolio created successfully',
     }
   } catch (error) {
     return { success: false, error: 'Failed to create portfolio' }
@@ -860,14 +860,11 @@ For long-running operations, use `toast.promise()` for automatic state managemen
 import { toast } from 'sonner'
 
 async function refreshAllPrices() {
-  toast.promise(
-    updateAllPrices(),
-    {
-      loading: 'Refreshing prices...',
-      success: (data) => `${data.count} prices updated`,
-      error: 'Price refresh failed',
-    }
-  )
+  toast.promise(updateAllPrices(), {
+    loading: 'Refreshing prices...',
+    success: (data) => `${data.count} prices updated`,
+    error: 'Price refresh failed',
+  })
 }
 ```
 
@@ -921,13 +918,13 @@ export default function Error({ error }: { error: Error }) {
 
 ### Notification Placement Guidelines
 
-| Location | Notification Type | Example |
-|----------|------------------|---------|
-| `lib/actions/portfolio.ts` | Success/Error returns | Portfolio CRUD operations |
+| Location                    | Notification Type     | Example                       |
+| --------------------------- | --------------------- | ----------------------------- |
+| `lib/actions/portfolio.ts`  | Success/Error returns | Portfolio CRUD operations     |
 | `lib/actions/investment.ts` | Success/Error returns | Investment CRUD + aggregation |
-| `components/*/Form.tsx` | Client-side handling | Form submission feedback |
-| `lib/api/alphaVantage.ts` | Error handling | API failures, rate limits |
-| `app/error.tsx` | Error boundary | Uncaught errors |
+| `components/*/Form.tsx`     | Client-side handling  | Form submission feedback      |
+| `lib/api/alphaVantage.ts`   | Error handling        | API failures, rate limits     |
+| `app/error.tsx`             | Error boundary        | Uncaught errors               |
 
 ### Benefits of This Pattern
 

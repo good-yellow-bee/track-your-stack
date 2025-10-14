@@ -107,8 +107,7 @@ export async function addInvestment(
     quantity,
     pricePerUnit,
     currency: typeof currencyRaw === 'string' ? currencyRaw : 'USD',
-    purchaseDate:
-      typeof purchaseDateRaw === 'string' ? purchaseDateRaw : undefined,
+    purchaseDate: typeof purchaseDateRaw === 'string' ? purchaseDateRaw : undefined,
     notes: typeof notesRaw === 'string' ? notesRaw : undefined,
   })
 
@@ -119,7 +118,16 @@ export async function addInvestment(
     }
   }
 
-  const { ticker, assetName, assetType, quantity: validatedQuantity, pricePerUnit: validatedPrice, currency, purchaseDate, notes } = validated.data
+  const {
+    ticker,
+    assetName,
+    assetType,
+    quantity: validatedQuantity,
+    pricePerUnit: validatedPrice,
+    currency,
+    purchaseDate,
+    notes,
+  } = validated.data
 
   try {
     // Check if investment already exists for this ticker
@@ -184,10 +192,7 @@ export async function addInvestment(
         quantity: new Decimal(validatedQuantity),
         pricePerUnit: new Decimal(validatedPrice),
         currency,
-        purchaseDate:
-          purchaseDate && purchaseDate.trim()
-            ? new Date(purchaseDate)
-            : new Date(),
+        purchaseDate: purchaseDate && purchaseDate.trim() ? new Date(purchaseDate) : new Date(),
         notes: notes || null,
       },
     })

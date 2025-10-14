@@ -18,34 +18,21 @@ export const toasts = {
 
   // Investment operations
   investment: {
-    added: (ticker: string) =>
-      toast.success(`${ticker} added to portfolio`),
+    added: (ticker: string) => toast.success(`${ticker} added to portfolio`),
     updated: (ticker: string) => toast.success(`${ticker} updated`),
-    removed: (ticker: string) =>
-      toast.success(`${ticker} removed from portfolio`),
+    removed: (ticker: string) => toast.success(`${ticker} removed from portfolio`),
     aggregated: (ticker: string, qty: number) =>
-      toast.success(
-        `${ticker}: ${qty} ${qty === 1 ? 'share' : 'shares'} aggregated`
-      ),
+      toast.success(`${ticker}: ${qty} ${qty === 1 ? 'share' : 'shares'} aggregated`),
     addError: (ticker?: string) =>
-      toast.error(
-        ticker
-          ? `Failed to add ${ticker} to portfolio`
-          : 'Failed to add investment'
-      ),
+      toast.error(ticker ? `Failed to add ${ticker} to portfolio` : 'Failed to add investment'),
     updateError: (ticker?: string) =>
-      toast.error(
-        ticker ? `Failed to update ${ticker}` : 'Failed to update investment'
-      ),
+      toast.error(ticker ? `Failed to update ${ticker}` : 'Failed to update investment'),
     removeError: (ticker?: string) =>
       toast.error(
-        ticker
-          ? `Failed to remove ${ticker} from portfolio`
-          : 'Failed to remove investment'
+        ticker ? `Failed to remove ${ticker} from portfolio` : 'Failed to remove investment'
       ),
     notFound: () => toast.error('Investment not found'),
-    invalidTicker: () =>
-      toast.error('Invalid ticker symbol. Please check and try again.'),
+    invalidTicker: () => toast.error('Invalid ticker symbol. Please check and try again.'),
   },
 
   // Price refresh operations
@@ -63,34 +50,24 @@ export const toasts = {
         id: portfolioId ? `price-refresh-${portfolioId}` : 'price-refresh',
       }),
     partialSuccess: (success: number, total: number, portfolioId?: string) =>
-      toast.warning(
-        `${success} of ${total} prices updated. Some prices may be stale.`,
-        { id: portfolioId ? `price-refresh-${portfolioId}` : 'price-refresh' }
-      ),
+      toast.warning(`${success} of ${total} prices updated. Some prices may be stale.`, {
+        id: portfolioId ? `price-refresh-${portfolioId}` : 'price-refresh',
+      }),
   },
 
   // Currency conversion
   currency: {
     converting: (from: string, to: string, investmentId?: string) =>
       toast.loading(`Converting ${from} to ${to}...`, {
-        id: investmentId
-          ? `currency-conversion-${investmentId}`
-          : 'currency-conversion',
+        id: investmentId ? `currency-conversion-${investmentId}` : 'currency-conversion',
       }),
     converted: (from: string, to: string, rate: number, investmentId?: string) =>
-      toast.success(
-        `Converted at rate: 1 ${from} = ${rate.toFixed(4)} ${to}`,
-        {
-          id: investmentId
-            ? `currency-conversion-${investmentId}`
-            : 'currency-conversion',
-        }
-      ),
+      toast.success(`Converted at rate: 1 ${from} = ${rate.toFixed(4)} ${to}`, {
+        id: investmentId ? `currency-conversion-${investmentId}` : 'currency-conversion',
+      }),
     conversionError: (investmentId?: string) =>
       toast.error('Currency conversion failed', {
-        id: investmentId
-          ? `currency-conversion-${investmentId}`
-          : 'currency-conversion',
+        id: investmentId ? `currency-conversion-${investmentId}` : 'currency-conversion',
       }),
   },
 
@@ -104,14 +81,9 @@ export const toasts = {
   // API/Auth errors
   apiError: () => toast.error('API request failed. Please try again.'),
   authError: () => toast.error('Authentication required. Please sign in.'),
-  forbidden: () =>
-    toast.error("You don't have permission to perform this action."),
-  rateLimitError: () =>
-    toast.error(
-      'API rate limit exceeded. Please wait a moment and try again.'
-    ),
-  networkError: () =>
-    toast.error('Network error. Please check your connection.'),
+  forbidden: () => toast.error("You don't have permission to perform this action."),
+  rateLimitError: () => toast.error('API rate limit exceeded. Please wait a moment and try again.'),
+  networkError: () => toast.error('Network error. Please check your connection.'),
 
   // Form validation
   validation: {
@@ -121,12 +93,11 @@ export const toasts = {
       toast.error(`${field} must be at least ${min} characters`),
     tooLong: (field: string, max: number) =>
       toast.error(`${field} must be no more than ${max} characters`),
-    mustBePositive: (field: string) =>
-      toast.error(`${field} must be a positive number`),
+    mustBePositive: (field: string) => toast.error(`${field} must be a positive number`),
   },
 
   // Async operations with promise
-  promise: <T,>(
+  promise: <T>(
     promise: Promise<T>,
     messages: {
       loading: string

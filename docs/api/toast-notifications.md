@@ -33,6 +33,7 @@ pnpx shadcn@latest add sonner
 ```
 
 This creates:
+
 - `components/ui/sonner.tsx` - Toaster component with theme integration
 - Adds `sonner` package to dependencies
 
@@ -77,61 +78,61 @@ import { toasts } from '@/lib/utils/toast'
 
 ```typescript
 // Success notifications
-toasts.portfolio.created()       // "Portfolio created successfully"
-toasts.portfolio.updated()       // "Portfolio updated"
-toasts.portfolio.deleted()       // "Portfolio deleted"
+toasts.portfolio.created() // "Portfolio created successfully"
+toasts.portfolio.updated() // "Portfolio updated"
+toasts.portfolio.deleted() // "Portfolio deleted"
 
 // Error notifications
-toasts.portfolio.createError()   // "Failed to create portfolio"
-toasts.portfolio.updateError()   // "Failed to update portfolio"
-toasts.portfolio.deleteError()   // "Failed to delete portfolio"
-toasts.portfolio.notFound()      // "Portfolio not found"
+toasts.portfolio.createError() // "Failed to create portfolio"
+toasts.portfolio.updateError() // "Failed to update portfolio"
+toasts.portfolio.deleteError() // "Failed to delete portfolio"
+toasts.portfolio.notFound() // "Portfolio not found"
 ```
 
 ### Investment Operations
 
 ```typescript
 // Success notifications with parameters
-toasts.investment.added('AAPL')                // "AAPL added to portfolio"
-toasts.investment.updated('AAPL')              // "AAPL updated"
-toasts.investment.removed('AAPL')              // "AAPL removed from portfolio"
-toasts.investment.aggregated('AAPL', 10)       // "AAPL: 10 shares aggregated"
+toasts.investment.added('AAPL') // "AAPL added to portfolio"
+toasts.investment.updated('AAPL') // "AAPL updated"
+toasts.investment.removed('AAPL') // "AAPL removed from portfolio"
+toasts.investment.aggregated('AAPL', 10) // "AAPL: 10 shares aggregated"
 
 // Error notifications
-toasts.investment.addError('AAPL')             // "Failed to add AAPL to portfolio"
-toasts.investment.updateError('AAPL')          // "Failed to update AAPL"
-toasts.investment.removeError('AAPL')          // "Failed to remove AAPL from portfolio"
-toasts.investment.notFound()                   // "Investment not found"
-toasts.investment.invalidTicker()              // "Invalid ticker symbol..."
+toasts.investment.addError('AAPL') // "Failed to add AAPL to portfolio"
+toasts.investment.updateError('AAPL') // "Failed to update AAPL"
+toasts.investment.removeError('AAPL') // "Failed to remove AAPL from portfolio"
+toasts.investment.notFound() // "Investment not found"
+toasts.investment.invalidTicker() // "Invalid ticker symbol..."
 ```
 
 ### Price Refresh Operations
 
 ```typescript
 // Loading state
-toasts.prices.refreshing()                     // "Refreshing prices..."
+toasts.prices.refreshing() // "Refreshing prices..."
 
 // Success (updates loading toast)
-toasts.prices.refreshed(5)                     // "5 prices updated"
+toasts.prices.refreshed(5) // "5 prices updated"
 
 // Error (updates loading toast)
-toasts.prices.failed()                         // "Price refresh failed"
+toasts.prices.failed() // "Price refresh failed"
 
 // Partial success
-toasts.prices.partialSuccess(3, 5)            // "3 of 5 prices updated..."
+toasts.prices.partialSuccess(3, 5) // "3 of 5 prices updated..."
 ```
 
 ### Currency Conversion
 
 ```typescript
 // Loading state
-toasts.currency.converting('EUR', 'USD')       // "Converting EUR to USD..."
+toasts.currency.converting('EUR', 'USD') // "Converting EUR to USD..."
 
 // Success with rate
-toasts.currency.converted('EUR', 'USD', 1.08)  // "Converted at rate: 1 EUR = 1.0800 USD"
+toasts.currency.converted('EUR', 'USD', 1.08) // "Converted at rate: 1 EUR = 1.0800 USD"
 
 // Error
-toasts.currency.conversionError()              // "Currency conversion failed"
+toasts.currency.conversionError() // "Currency conversion failed"
 ```
 
 ### Generic Operations
@@ -147,21 +148,21 @@ toasts.loading('Processing...')
 ### Common Errors
 
 ```typescript
-toasts.apiError()          // "API request failed. Please try again."
-toasts.authError()         // "Authentication required. Please sign in."
-toasts.forbidden()         // "You don't have permission to perform this action."
-toasts.rateLimitError()    // "API rate limit exceeded. Please wait a moment..."
-toasts.networkError()      // "Network error. Please check your connection."
+toasts.apiError() // "API request failed. Please try again."
+toasts.authError() // "Authentication required. Please sign in."
+toasts.forbidden() // "You don't have permission to perform this action."
+toasts.rateLimitError() // "API rate limit exceeded. Please wait a moment..."
+toasts.networkError() // "Network error. Please check your connection."
 ```
 
 ### Form Validation
 
 ```typescript
-toasts.validation.required('Portfolio name')     // "Portfolio name is required"
-toasts.validation.invalid('Email')               // "Email is invalid"
-toasts.validation.tooShort('Name', 3)            // "Name must be at least 3 characters"
-toasts.validation.tooLong('Description', 500)    // "Description must be no more than 500 characters"
-toasts.validation.mustBePositive('Quantity')     // "Quantity must be a positive number"
+toasts.validation.required('Portfolio name') // "Portfolio name is required"
+toasts.validation.invalid('Email') // "Email is invalid"
+toasts.validation.tooShort('Name', 3) // "Name must be at least 3 characters"
+toasts.validation.tooLong('Description', 500) // "Description must be no more than 500 characters"
+toasts.validation.mustBePositive('Quantity') // "Quantity must be a positive number"
 ```
 
 ## Server Action Integration
@@ -189,9 +190,7 @@ import { auth } from '@/lib/auth'
 import { prisma } from '@/lib/prisma'
 import { revalidatePath } from 'next/cache'
 
-export async function createPortfolio(
-  formData: FormData
-): Promise<ActionResult<{ id: string }>> {
+export async function createPortfolio(formData: FormData): Promise<ActionResult<{ id: string }>> {
   const session = await auth()
 
   if (!session?.user?.id) {
@@ -281,14 +280,11 @@ For long-running async operations, use `toast.promise()` for automatic state man
 import { toast } from 'sonner'
 
 async function refreshAllPrices() {
-  toast.promise(
-    updateAllPrices(),
-    {
-      loading: 'Refreshing prices...',
-      success: (data) => `${data.count} prices updated`,
-      error: 'Price refresh failed',
-    }
-  )
+  toast.promise(updateAllPrices(), {
+    loading: 'Refreshing prices...',
+    success: (data) => `${data.count} prices updated`,
+    error: 'Price refresh failed',
+  })
 }
 ```
 
@@ -313,14 +309,11 @@ The toast utilities include a promise helper for complex operations:
 
 ```typescript
 async function complexOperation() {
-  await toasts.promise(
-    performOperation(),
-    {
-      loading: 'Processing...',
-      success: (data) => `Processed ${data.count} items`,
-      error: (err) => `Failed: ${err.message}`,
-    }
-  )
+  await toasts.promise(performOperation(), {
+    loading: 'Processing...',
+    success: (data) => `Processed ${data.count} items`,
+    error: (err) => `Failed: ${err.message}`,
+  })
 }
 ```
 
@@ -490,13 +483,13 @@ test('shows toast on portfolio creation', async ({ page }) => {
 
 ## Notification Placement Guidelines
 
-| Location | Notification Type | When to Use |
-|----------|------------------|-------------|
-| `lib/actions/portfolio.ts` | Return errors in ActionResult | All Server Action error states |
-| `lib/actions/investment.ts` | Return errors in ActionResult | All Server Action error states |
-| `components/*/Form.tsx` | Call toast helpers | Handle ActionResult responses |
-| `lib/api/alphaVantage.ts` | Throw errors | API client errors (caught by caller) |
-| `app/error.tsx` | Automatic toast | Uncaught runtime errors |
+| Location                    | Notification Type             | When to Use                          |
+| --------------------------- | ----------------------------- | ------------------------------------ |
+| `lib/actions/portfolio.ts`  | Return errors in ActionResult | All Server Action error states       |
+| `lib/actions/investment.ts` | Return errors in ActionResult | All Server Action error states       |
+| `components/*/Form.tsx`     | Call toast helpers            | Handle ActionResult responses        |
+| `lib/api/alphaVantage.ts`   | Throw errors                  | API client errors (caught by caller) |
+| `app/error.tsx`             | Automatic toast               | Uncaught runtime errors              |
 
 ## Performance Considerations
 

@@ -4,10 +4,7 @@ import { useState, useTransition, useRef } from 'react'
 import { useRouter } from 'next/navigation'
 import { addInvestment } from '@/lib/actions/investment'
 import { toasts } from '@/lib/utils/toast'
-import {
-  ALL_CURRENCIES,
-  DEFAULT_CURRENCY,
-} from '@/lib/constants/currencies'
+import { ALL_CURRENCIES, DEFAULT_CURRENCY } from '@/lib/constants/currencies'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
@@ -95,8 +92,8 @@ export function AddInvestmentForm({ portfolioId }: AddInvestmentFormProps) {
         <DialogHeader>
           <DialogTitle>Add Investment</DialogTitle>
           <DialogDescription>
-            Add a new investment to your portfolio. If the ticker already
-            exists, it will be aggregated with weighted average cost.
+            Add a new investment to your portfolio. If the ticker already exists, it will be
+            aggregated with weighted average cost.
           </DialogDescription>
         </DialogHeader>
         <form ref={formRef} action={handleSubmit} className="space-y-4">
@@ -114,11 +111,7 @@ export function AddInvestmentForm({ portfolioId }: AddInvestmentFormProps) {
             </div>
             <div className="space-y-2">
               <Label htmlFor="assetType">Asset Type</Label>
-              <Select
-                value={assetType}
-                onValueChange={setAssetType}
-                disabled={isPending}
-              >
+              <Select value={assetType} onValueChange={setAssetType} disabled={isPending}>
                 <SelectTrigger>
                   <SelectValue />
                 </SelectTrigger>
@@ -177,11 +170,7 @@ export function AddInvestmentForm({ portfolioId }: AddInvestmentFormProps) {
           <div className="grid grid-cols-2 gap-4">
             <div className="space-y-2">
               <Label htmlFor="currency">Currency</Label>
-              <Select
-                value={currency}
-                onValueChange={setCurrency}
-                disabled={isPending}
-              >
+              <Select value={currency} onValueChange={setCurrency} disabled={isPending}>
                 <SelectTrigger>
                   <SelectValue />
                 </SelectTrigger>
@@ -209,12 +198,7 @@ export function AddInvestmentForm({ portfolioId }: AddInvestmentFormProps) {
 
           <div className="space-y-2">
             <Label htmlFor="notes">Notes (optional)</Label>
-            <Input
-              id="notes"
-              name="notes"
-              placeholder="Additional notes..."
-              disabled={isPending}
-            />
+            <Input id="notes" name="notes" placeholder="Additional notes..." disabled={isPending} />
           </div>
 
           <Button type="submit" disabled={isPending} className="w-full">

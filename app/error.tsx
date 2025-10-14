@@ -32,9 +32,7 @@ export default function Error({
         <p className="text-muted-foreground">
           We encountered an unexpected error. Please try again.
         </p>
-        {error.digest && (
-          <p className="text-sm text-muted-foreground">Error ID: {error.digest}</p>
-        )}
+        {error.digest && <p className="text-sm text-muted-foreground">Error ID: {error.digest}</p>}
       </div>
       <Button onClick={reset}>Try again</Button>
     </div>

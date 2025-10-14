@@ -98,6 +98,7 @@ The notification system in Track Your Stack provides user feedback for all inter
 **Purpose:** Centralized, type-safe notification helpers
 
 **Key Features:**
+
 - Domain-specific methods (portfolio, investment, prices, currency)
 - Generic fallbacks (success, error, warning)
 - Error categorization (auth, validation, API)
@@ -120,6 +121,7 @@ export const toasts = {
 **Purpose:** Type-safe server-side mutations with structured responses
 
 **Key Features:**
+
 - Authentication verification
 - Input validation (Zod schemas)
 - Business logic execution
@@ -141,6 +143,7 @@ type ActionResult<T = void> = {
 **Purpose:** Handle user interactions and show appropriate feedback
 
 **Key Features:**
+
 - useTransition for pending states
 - ActionResult handling
 - Toast trigger based on results
@@ -153,6 +156,7 @@ type ActionResult<T = void> = {
 **Purpose:** Single mount point for all toasts
 
 **Key Features:**
+
 - Theme integration (next-themes)
 - Position configuration
 - Custom styling (Tailwind)
@@ -165,6 +169,7 @@ type ActionResult<T = void> = {
 **Purpose:** Catch uncaught errors and show user-friendly toasts
 
 **Key Features:**
+
 - Automatic error detection
 - User-friendly messaging
 - Console logging for debugging
@@ -276,6 +281,7 @@ try {
 **Managed By:** Sonner library
 
 **Behavior:**
+
 - Max 3 visible toasts
 - FIFO queue for overflow
 - Auto-dismiss after 4 seconds (configurable)
@@ -465,17 +471,20 @@ toast.success('Action completed', {
 ## Migration Path
 
 ### Phase 1: Foundation (✅ Complete)
+
 - Install Sonner
 - Create toast utilities
 - Add global Toaster
 - Document patterns
 
 ### Phase 2: Server Actions (✅ Complete)
+
 - Implement ActionResult pattern
 - Create portfolio/investment actions
 - Integrate with client components
 
 ### Phase 3: Expansion (Future)
+
 - Add more toast categories
 - Implement promise-based helpers
 - Create toast templates for common patterns

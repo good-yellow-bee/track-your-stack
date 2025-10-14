@@ -509,6 +509,7 @@ type ActionResult<T = void> = {
 ```
 
 **Benefits:**
+
 - ✅ Type-safe responses with TypeScript
 - ✅ Consistent error handling across all actions
 - ✅ Built-in toast notification integration
@@ -525,9 +526,7 @@ import { auth } from '@/lib/auth'
 import { prisma } from '@/lib/prisma'
 import { revalidatePath } from 'next/cache'
 
-export async function createPortfolio(
-  formData: FormData
-): Promise<ActionResult<{ id: string }>> {
+export async function createPortfolio(formData: FormData): Promise<ActionResult<{ id: string }>> {
   const session = await auth()
 
   if (!session?.user?.id) {

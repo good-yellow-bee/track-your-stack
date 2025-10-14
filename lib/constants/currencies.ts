@@ -37,10 +37,7 @@ export const CRYPTO_CURRENCIES: Currency[] = [
 /**
  * All supported currencies (fiat + crypto)
  */
-export const ALL_CURRENCIES: Currency[] = [
-  ...FIAT_CURRENCIES,
-  ...CRYPTO_CURRENCIES,
-]
+export const ALL_CURRENCIES: Currency[] = [...FIAT_CURRENCIES, ...CRYPTO_CURRENCIES]
 
 /**
  * Currency codes only (for simple dropdowns)

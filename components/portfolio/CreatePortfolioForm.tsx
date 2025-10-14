@@ -62,9 +62,7 @@ export function CreatePortfolioForm() {
       <DialogContent>
         <DialogHeader>
           <DialogTitle>Create New Portfolio</DialogTitle>
-          <DialogDescription>
-            Add a new portfolio to track your investments.
-          </DialogDescription>
+          <DialogDescription>Add a new portfolio to track your investments.</DialogDescription>
         </DialogHeader>
         <form ref={formRef} action={handleSubmit} className="space-y-4">
           <div className="space-y-2">
@@ -79,11 +77,7 @@ export function CreatePortfolioForm() {
           </div>
           <div className="space-y-2">
             <Label htmlFor="baseCurrency">Base Currency</Label>
-            <Select
-              value={currency}
-              onValueChange={setCurrency}
-              disabled={isPending}
-            >
+            <Select value={currency} onValueChange={setCurrency} disabled={isPending}>
               <SelectTrigger>
                 <SelectValue placeholder="Select currency" />
               </SelectTrigger>
