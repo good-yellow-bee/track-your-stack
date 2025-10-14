@@ -33,6 +33,7 @@ Technical documentation for developers working with the codebase.
 
 - `authentication.md` - NextAuth.js implementation details
 - `server-actions.md` - All Server Actions with signatures and examples
+- `toast-notifications.md` - **Toast notification system with Sonner integration**
 - `alpha-vantage-integration.md` - External API integration
 
 ### `/architecture`
@@ -43,6 +44,7 @@ System design, database schema, and calculation logic.
 
 - `database-schema.md` - Prisma schema with ERD diagrams
 - `calculation-logic.md` - Business logic formulas and implementations
+- `notification-system.md` - **Toast notification architecture with Sonner and Server Actions**
 - `ui-component-selection-guide.md` - **Decision framework for Magic MCP vs shadcn/ui**
 - `magic-mcp-quickstart.md` - **Quick start guide for using Magic MCP in the project**
 - `magic-commands.md` - **Library of ready-to-use Magic MCP commands for common components**

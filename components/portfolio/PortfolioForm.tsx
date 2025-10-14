@@ -4,7 +4,7 @@ import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useRouter } from 'next/navigation'
-import { toast } from 'sonner'
+import { toasts } from '@/lib/utils/toast'
 import { createPortfolio, updatePortfolio } from '@/lib/actions/portfolio'
 import { createPortfolioSchema, CreatePortfolioInput } from '@/lib/validations/portfolio'
 import { CURRENCIES } from '@/lib/constants'
@@ -59,19 +59,32 @@ export default function PortfolioForm({ mode, defaultValues, onSuccess }: Portfo
           : await updatePortfolio({ ...data, id: defaultValues!.id! })
 
       if (result.success) {
-        toast.success(
-          mode === 'create' ? 'Portfolio created successfully' : 'Portfolio updated successfully'
-        )
+        if (mode === 'create') {
+          toasts.portfolio.created()
+        } else {
+          toasts.portfolio.updated()
+        }
         form.reset()
         onSuccess?.()
         if (mode === 'create') {
           router.push('/portfolios')
         }
       } else {
-        toast.error(result.error || 'Something went wrong')
+        // Handle specific error types
+        if (result.error?.includes('Unauthorized') || result.error?.includes('Authentication')) {
+          toasts.authError()
+        } else if (mode === 'create') {
+          toasts.portfolio.createError()
+        } else {
+          toasts.portfolio.updateError()
+        }
       }
     } catch {
-      toast.error('An unexpected error occurred')
+      if (mode === 'create') {
+        toasts.portfolio.createError()
+      } else {
+        toasts.portfolio.updateError()
+      }
     } finally {
       setIsSubmitting(false)
     }

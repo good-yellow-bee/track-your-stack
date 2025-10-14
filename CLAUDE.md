@@ -725,6 +725,216 @@ const session = await getServerSession(authOptions)
 if (!session?.user?.id) redirect('/auth/signin')
 ```
 
+## Toast Notification Patterns
+
+This project uses **Sonner** via shadcn/ui for user feedback notifications. All toast notifications are managed through centralized utility helpers for consistency.
+
+### Architecture
+
+- **Global Setup:** Toaster component in `app/layout.tsx` (top-right position)
+- **Utility Helpers:** `lib/utils/toast.ts` - Type-safe notification functions
+- **Server Actions:** Return `ActionResult<T>` with success/error messages
+- **Client Components:** Call toast helpers based on Server Action results
+- **Error Boundaries:** Automatic toast on uncaught errors
+
+### Toast Utility API
+
+All notifications use the centralized `toasts` object from `lib/utils/toast.ts`:
+
+```typescript
+import { toasts } from '@/lib/utils/toast'
+
+// Portfolio operations
+toasts.portfolio.created() // "Portfolio created successfully"
+toasts.portfolio.updated() // "Portfolio updated"
+toasts.portfolio.deleted() // "Portfolio deleted"
+toasts.portfolio.createError() // "Failed to create portfolio"
+
+// Investment operations
+toasts.investment.added('AAPL') // "AAPL added to portfolio"
+toasts.investment.aggregated('AAPL', 10) // "AAPL: 10 shares aggregated"
+toasts.investment.removed('AAPL') // "AAPL removed from portfolio"
+
+// Price refresh with loading state
+toasts.prices.refreshing() // Loading toast with ID
+toasts.prices.refreshed(5) // "5 prices updated"
+toasts.prices.failed() // Error toast
+
+// Generic operations
+toasts.success('Custom success message')
+toasts.error('Custom error message')
+toasts.loading('Processing...')
+
+// Common errors
+toasts.authError() // "Authentication required"
+toasts.forbidden() // "You don't have permission..."
+toasts.rateLimitError() // "API rate limit exceeded..."
+
+// Form validation
+toasts.validation.required('Portfolio name')
+toasts.validation.mustBePositive('Quantity')
+```
+
+### Server Action Pattern
+
+Server Actions return structured results for consistent client-side handling:
+
+```typescript
+// lib/actions/portfolio.ts
+'use server'
+
+type ActionResult<T = void> = {
+  success: boolean
+  data?: T
+  error?: string
+  message?: string
+}
+
+export async function createPortfolio(formData: FormData): Promise<ActionResult<{ id: string }>> {
+  const session = await auth()
+
+  if (!session?.user?.id) {
+    return { success: false, error: 'Unauthorized' }
+  }
+
+  try {
+    const portfolio = await prisma.portfolio.create({
+      /* ... */
+    })
+    revalidatePath('/dashboard')
+    return {
+      success: true,
+      data: { id: portfolio.id },
+      message: 'Portfolio created successfully',
+    }
+  } catch (error) {
+    return { success: false, error: 'Failed to create portfolio' }
+  }
+}
+```
+
+### Client Component Integration
+
+Client components handle Server Action results and trigger appropriate toasts:
+
+```typescript
+// components/portfolio/CreatePortfolioForm.tsx
+'use client'
+
+import { createPortfolio } from '@/lib/actions/portfolio'
+import { toasts } from '@/lib/utils/toast'
+
+export function CreatePortfolioForm() {
+  const [isPending, startTransition] = useTransition()
+
+  async function handleSubmit(formData: FormData) {
+    startTransition(async () => {
+      const result = await createPortfolio(formData)
+
+      if (result.success) {
+        toasts.portfolio.created()
+        router.refresh()
+      } else {
+        if (result.error === 'Unauthorized') {
+          toasts.authError()
+        } else if (result.error === 'Portfolio name is required') {
+          toasts.validation.required('Portfolio name')
+        } else {
+          toasts.portfolio.createError()
+        }
+      }
+    })
+  }
+
+  return <form action={handleSubmit}>...</form>
+}
+```
+
+### Advanced Patterns
+
+#### Promise-Based Loading States
+
+For long-running operations, use `toast.promise()` for automatic state management:
+
+```typescript
+import { toast } from 'sonner'
+
+async function refreshAllPrices() {
+  toast.promise(updateAllPrices(), {
+    loading: 'Refreshing prices...',
+    success: (data) => `${data.count} prices updated`,
+    error: 'Price refresh failed',
+  })
+}
+```
+
+#### Multi-Currency Conversion Feedback
+
+```typescript
+async function addInvestment(data: InvestmentData) {
+  const needsConversion = data.currency !== portfolio.baseCurrency
+
+  if (needsConversion) {
+    toasts.currency.converting(data.currency, portfolio.baseCurrency)
+    const rate = await getExchangeRate(data.currency, portfolio.baseCurrency)
+    toasts.currency.converted(data.currency, portfolio.baseCurrency, rate)
+  }
+
+  toasts.investment.added(data.ticker)
+}
+```
+
+#### Toast IDs for Updates
+
+Use toast IDs to update loading states into success/error states:
+
+```typescript
+// Start loading
+toast.loading('Refreshing prices...', { id: 'price-refresh' })
+
+// Update to success (replaces loading toast)
+toast.success('5 prices updated', { id: 'price-refresh' })
+
+// Or update to error
+toast.error('Price refresh failed', { id: 'price-refresh' })
+```
+
+### Error Boundary Integration
+
+The global error boundary (`app/error.tsx`) automatically shows toast on uncaught errors:
+
+```typescript
+// app/error.tsx
+'use client'
+
+export default function Error({ error }: { error: Error }) {
+  useEffect(() => {
+    toasts.error('Something went wrong. Please try again.')
+  }, [error])
+
+  return <div>Error UI</div>
+}
+```
+
+### Notification Placement Guidelines
+
+| Location                    | Notification Type     | Example                       |
+| --------------------------- | --------------------- | ----------------------------- |
+| `lib/actions/portfolio.ts`  | Success/Error returns | Portfolio CRUD operations     |
+| `lib/actions/investment.ts` | Success/Error returns | Investment CRUD + aggregation |
+| `components/*/Form.tsx`     | Client-side handling  | Form submission feedback      |
+| `lib/api/alphaVantage.ts`   | Error handling        | API failures, rate limits     |
+| `app/error.tsx`             | Error boundary        | Uncaught errors               |
+
+### Benefits of This Pattern
+
+✅ **Type Safety:** Autocomplete for all toast methods
+✅ **Consistency:** Uniform messaging across the app
+✅ **Maintainability:** Update messages in one place
+✅ **Accessibility:** Sonner includes ARIA labels and keyboard navigation
+✅ **Zero Prop Drilling:** Global toast state, call from anywhere
+✅ **Theme Integration:** Automatically uses Tailwind theme colors
+
 ## API Integration
 
 ### Alpha Vantage Client

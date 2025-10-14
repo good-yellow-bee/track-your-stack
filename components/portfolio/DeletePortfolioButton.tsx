@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
-import { toast } from 'sonner'
+import { toasts } from '@/lib/utils/toast'
 import { deletePortfolio } from '@/lib/actions/portfolio'
 import { Button } from '@/components/ui/button'
 import {
@@ -39,13 +39,20 @@ export default function DeletePortfolioButton({
       const result = await deletePortfolio({ id: portfolioId })
 
       if (result.success) {
-        toast.success('Portfolio deleted successfully')
+        toasts.portfolio.deleted()
         router.push('/portfolios')
       } else {
-        toast.error(result.error || 'Failed to delete portfolio')
+        // Handle specific error types
+        if (result.error?.includes('Unauthorized') || result.error?.includes('Authentication')) {
+          toasts.authError()
+        } else if (result.error?.includes('Forbidden') || result.error?.includes('permission')) {
+          toasts.forbidden()
+        } else {
+          toasts.portfolio.deleteError()
+        }
       }
     } catch {
-      toast.error('An unexpected error occurred')
+      toasts.portfolio.deleteError()
     } finally {
       setIsDeleting(false)
     }
