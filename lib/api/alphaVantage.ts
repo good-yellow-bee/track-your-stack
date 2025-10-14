@@ -78,12 +78,7 @@ export class AlphaVantageClient {
     const quote = data['Global Quote']
 
     // Runtime validation of required fields
-    if (
-      !quote ||
-      typeof quote !== 'object' ||
-      !quote['05. price'] ||
-      !quote['01. symbol']
-    ) {
+    if (!quote || typeof quote !== 'object' || !quote['05. price'] || !quote['01. symbol']) {
       throw new Error(`No data found for symbol: ${symbol}`)
     }
 

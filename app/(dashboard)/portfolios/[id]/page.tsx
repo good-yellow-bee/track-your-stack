@@ -51,9 +51,7 @@ export default async function PortfolioPage({ params }: PortfolioPageProps) {
             Back to Portfolios
           </Link>
           <h1 className="text-3xl font-bold tracking-tight">{portfolio.name}</h1>
-          <p className="text-muted-foreground">
-            Base Currency: {portfolio.baseCurrency}
-          </p>
+          <p className="text-muted-foreground">Base Currency: {portfolio.baseCurrency}</p>
         </div>
 
         <div className="flex gap-2">

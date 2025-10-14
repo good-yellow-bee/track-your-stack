@@ -10,9 +10,7 @@ interface EditPortfolioPageProps {
   }>
 }
 
-export async function generateMetadata({
-  params,
-}: EditPortfolioPageProps): Promise<Metadata> {
+export async function generateMetadata({ params }: EditPortfolioPageProps): Promise<Metadata> {
   const { id } = await params
   const result = await getPortfolio(id)
 

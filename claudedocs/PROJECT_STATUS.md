@@ -11,6 +11,7 @@
 Comprehensive analysis of Track Your Stack has been completed, identifying **61 critical improvements** across security, business logic, data integrity, and user experience domains. All findings have been documented with detailed specifications, code examples, effort estimates, and implementation timelines.
 
 **Key Metrics**:
+
 - **Security Gaps Identified**: 15 (22-25 days to address)
 - **Business Logic Gaps**: 11 (33 days to address)
 - **Data Integrity Requirements**: 12 (12 days to address)
@@ -24,11 +25,13 @@ Comprehensive analysis of Track Your Stack has been completed, identifying **61 
 ## 📚 Completed Documentation
 
 ### 1. Security Audit & Blind Spots Report
+
 **File**: `claudedocs/security-audit-blind-spots.md`
 **Status**: ✅ Complete
 **Effort**: 22-25 days
 
 **Key Findings**:
+
 - ❌ No Multi-Factor Authentication (MFA)
 - ❌ No audit logging for financial transactions
 - ❌ Missing rate limiting on sensitive endpoints
@@ -39,6 +42,7 @@ Comprehensive analysis of Track Your Stack has been completed, identifying **61 
 - ❌ No anomaly detection for suspicious activity
 
 **Critical Implementations Required**:
+
 ```typescript
 // MFA with TOTP
 model User {
@@ -76,11 +80,13 @@ const ratelimit = new Ratelimit({
 ---
 
 ### 2. Business Logic Improvements
+
 **File**: `claudedocs/business-logic-improvements.md`
 **Status**: ✅ Complete
 **Effort**: 33 days
 
 **Key Findings**:
+
 - ❌ No tax lot tracking (FIFO, LIFO, Specific ID)
 - ❌ No tax calculation (short-term vs long-term gains)
 - ❌ Purchase fees not included in cost basis
@@ -92,6 +98,7 @@ const ratelimit = new Ratelimit({
 - ❌ Missing currency conversion fees
 
 **Critical Implementations Required**:
+
 ```typescript
 // Tax Lot Tracking
 model TaxLot {
@@ -167,11 +174,13 @@ model CorporateAction {
 ---
 
 ### 3. Data Integrity Requirements Checklist
+
 **File**: `claudedocs/data-integrity-requirements.md`
 **Status**: ✅ Complete
 **Effort**: 12 days
 
 **Key Findings**:
+
 - ❌ No database CHECK constraints for positive values
 - ❌ Missing UNIQUE constraints on critical fields
 - ❌ No optimistic locking for concurrent updates
@@ -182,6 +191,7 @@ model CorporateAction {
 - ❌ No data quality monitoring
 
 **Critical Implementations Required**:
+
 ```sql
 -- Database CHECK Constraints
 ALTER TABLE "investments" ADD CONSTRAINT "investment_quantity_positive"
@@ -301,6 +311,7 @@ export function formatDateForUser(
 ---
 
 ### 4. UX/Feature Prioritization Matrix
+
 **File**: `claudedocs/ux-feature-prioritization-matrix.md`
 **Status**: ✅ Complete
 **Effort**: 35 days
@@ -308,6 +319,7 @@ export function formatDateForUser(
 **Key Findings**: 23 UX/feature improvements organized into 4 priority quadrants:
 
 **Q1: Quick Wins (High Impact, Low Effort) - 8 features, 17 days**
+
 1. Dashboard Overview Cards (3 days)
 2. Price Refresh Button (1 day)
 3. Investment Search/Filter (2 days)
@@ -318,6 +330,7 @@ export function formatDateForUser(
 8. Mobile-Responsive Tables (2 days)
 
 **Q2: Strategic Initiatives (High Impact, High Effort) - 6 features, 14 days**
+
 1. Goals & Target Allocation (3 days)
 2. Multi-Portfolio Dashboard (2 days)
 3. Transaction History (2 days)
@@ -326,6 +339,7 @@ export function formatDateForUser(
 6. Recurring Investment Tracking (2 days)
 
 **Q3: Low Priority (Low Impact, Low Effort) - 6 features, 4 days**
+
 1. Custom Portfolio Icons (0.5 days)
 2. Investment Notes/Tags (1 day)
 3. Favorite Portfolios (0.5 day)
@@ -334,11 +348,13 @@ export function formatDateForUser(
 6. Keyboard Shortcuts (0.5 day)
 
 **Q4: Avoid for Now (Low Impact, High Effort) - 3 features**
+
 - Social features
 - Advanced charting
 - Portfolio templates
 
 **Critical Implementations Required**:
+
 ```typescript
 // Dashboard Overview Cards
 export async function getPortfolioSummary(userId: string) {
@@ -349,28 +365,31 @@ export async function getPortfolioSummary(userId: string) {
         include: {
           priceHistory: {
             orderBy: { date: 'desc' },
-            take: 1
-          }
-        }
-      }
-    }
+            take: 1,
+          },
+        },
+      },
+    },
   })
 
-  const summary = portfolios.reduce((acc, portfolio) => {
-    const value = calculatePortfolioValue(portfolio)
-    const cost = calculatePortfolioCost(portfolio)
+  const summary = portfolios.reduce(
+    (acc, portfolio) => {
+      const value = calculatePortfolioValue(portfolio)
+      const cost = calculatePortfolioCost(portfolio)
 
-    return {
-      totalValue: acc.totalValue + value,
-      totalCost: acc.totalCost + cost,
-      portfolioCount: acc.portfolioCount + 1
-    }
-  }, { totalValue: 0, totalCost: 0, portfolioCount: 0 })
+      return {
+        totalValue: acc.totalValue + value,
+        totalCost: acc.totalCost + cost,
+        portfolioCount: acc.portfolioCount + 1,
+      }
+    },
+    { totalValue: 0, totalCost: 0, portfolioCount: 0 }
+  )
 
   return {
     ...summary,
     totalGainLoss: summary.totalValue - summary.totalCost,
-    totalGainLossPercent: ((summary.totalValue - summary.totalCost) / summary.totalCost) * 100
+    totalGainLossPercent: ((summary.totalValue - summary.totalCost) / summary.totalCost) * 100,
   }
 }
 
@@ -383,7 +402,7 @@ export async function importInvestmentsFromCSV(params: {
   const results: ImportResult = {
     successful: [],
     failed: [],
-    totalRows: rows.length
+    totalRows: rows.length,
   }
 
   for (const row of rows) {
@@ -393,7 +412,7 @@ export async function importInvestmentsFromCSV(params: {
       if (!quote) {
         results.failed.push({
           row,
-          error: `Invalid ticker: ${row.ticker}`
+          error: `Invalid ticker: ${row.ticker}`,
         })
         continue
       }
@@ -406,7 +425,7 @@ export async function importInvestmentsFromCSV(params: {
         totalQuantity: row.quantity,
         averageCostBasis: row.purchasePrice,
         purchaseCurrency: row.currency || 'USD',
-        purchaseDate: new Date(row.purchaseDate)
+        purchaseDate: new Date(row.purchaseDate),
       })
 
       results.successful.push(row)
@@ -432,7 +451,7 @@ export async function sendPriceAlert(params: {
 }) {
   const user = await prisma.user.findUnique({
     where: { id: params.userId },
-    select: { email: true, name: true }
+    select: { email: true, name: true },
   })
 
   await resend.emails.send({
@@ -443,8 +462,8 @@ export async function sendPriceAlert(params: {
       userName: user.name,
       ticker: params.investment.ticker,
       currentPrice: params.currentPrice,
-      threshold: params.threshold
-    })
+      threshold: params.threshold,
+    }),
   })
 }
 ```
@@ -454,6 +473,7 @@ export async function sendPriceAlert(params: {
 ---
 
 ### 5. Master Plan V2 - Comprehensive Implementation Roadmap
+
 **File**: `claudedocs/MASTER_PLAN_V2.md`
 **Status**: ✅ Complete
 **Effort**: 102-105 days (20 weeks with parallel execution)
@@ -463,6 +483,7 @@ export async function sendPriceAlert(params: {
 **Timeline Breakdown**:
 
 **Phase 0: Foundation & Planning (Weeks 1-2, 10 days)**
+
 - Environment setup (Vercel, Upstash Redis, Resend)
 - CI/CD pipeline configuration
 - Testing framework installation (Vitest, Playwright)
@@ -470,6 +491,7 @@ export async function sendPriceAlert(params: {
 - Sprint planning and team onboarding
 
 **Phase 1: Security First (Weeks 3-6, 22-25 days)**
+
 - Week 3: MFA Implementation (5 days)
 - Week 4: Audit Logging (5 days)
 - Week 5: GDPR Compliance (5 days)
@@ -477,40 +499,47 @@ export async function sendPriceAlert(params: {
 
 **Phase 2: Business Logic + Data Integrity (Weeks 3-10, 45 days parallel)**
 
-*Track A: Business Logic (33 days)*
+_Track A: Business Logic (33 days)_
+
 - Weeks 3-4: Tax Lot Tracking (8 days)
 - Weeks 5-6: Tax Calculations (7 days)
 - Weeks 7-8: Dividend Tracking (6 days)
 - Weeks 9-10: Corporate Actions (12 days)
 
-*Track B: Data Integrity (12 days)*
+_Track B: Data Integrity (12 days)_
+
 - Week 3-4: Database Constraints (4 days)
 - Week 5-6: Validation Layer (4 days)
 - Week 7-8: Quality Monitoring (4 days)
 
 **Phase 3: UX Quick Wins (Weeks 7-10, 17 days)**
+
 - Week 7: Dashboard Cards + Price Refresh (4 days)
 - Week 8: Search/Filter + Sorting (3 days)
 - Week 9: CSV Import/Export (7 days)
 - Week 10: Mobile Responsive (3 days)
 
 **Phase 4: Strategic Features (Weeks 11-14, 14 days)**
+
 - Week 11: Goals & Target Allocation (3 days)
 - Week 12: Multi-Portfolio Dashboard (2 days)
 - Week 13: Transaction History (2 days)
 - Week 14: Email Notifications + Dark Mode (5 days)
 
 **Phase 5: Testing & QA (Weeks 15-17, 15 days)**
+
 - Week 15: Unit Testing (80%+ coverage)
 - Week 16: Integration Testing (70%+ coverage)
 - Week 17: E2E Testing (100% critical paths)
 
 **Phase 6: Beta Launch (Weeks 18-20, 15 days)**
+
 - Week 18: Performance optimization
 - Week 19: Security audit & penetration testing
 - Week 20: Beta deployment & monitoring
 
 **Parallel Execution Strategy**:
+
 ```
 Week 3-6: Security (Track A)
 Week 3-10: Business Logic (Track B) + Data Integrity (Track C)
@@ -521,6 +550,7 @@ Week 18-20: Launch Prep (All Tracks)
 ```
 
 **Resource Allocation**:
+
 - 1 Tech Lead / Architect (full-time, all phases)
 - 2 Backend Engineers (Tracks A, B, C)
 - 2 Frontend Engineers (Tracks D, E)
@@ -528,11 +558,13 @@ Week 18-20: Launch Prep (All Tracks)
 - 1 QA Engineer (Weeks 15-20)
 
 **Cost Estimation**:
+
 - Infrastructure: $150-180/month
 - Development (5 months): ~$681,000
 - Alternative MVP+ (3 months, reduced scope): ~$350,000
 
 **Database Schema V2** (Major Updates):
+
 ```prisma
 // Security additions
 model User {
@@ -699,11 +731,13 @@ model Portfolio {
 ---
 
 ### 6. Enhanced Testing Requirements
+
 **File**: `claudedocs/enhanced-testing-requirements.md`
 **Status**: ✅ Complete
 **Effort**: 25 days (distributed across implementation phases)
 
 **Coverage Targets**:
+
 - Unit Tests: **80%+** (95%+ for calculations)
 - Integration Tests: **70%+** (90%+ for auth & CRUD)
 - E2E Tests: **100%** of critical user journeys
@@ -714,6 +748,7 @@ model Portfolio {
 **Testing Strategy Overview**:
 
 **1. Unit Testing (Vitest)**
+
 ```typescript
 // Test: Tax Lot FIFO Allocation
 describe('Tax Lot Allocation - FIFO', () => {
@@ -721,25 +756,25 @@ describe('Tax Lot Allocation - FIFO', () => {
     const taxLots = [
       { id: '1', purchaseDate: new Date('2020-01-01'), quantity: 10, costBasisPerUnit: 100 },
       { id: '2', purchaseDate: new Date('2021-01-01'), quantity: 5, costBasisPerUnit: 150 },
-      { id: '3', purchaseDate: new Date('2022-01-01'), quantity: 8, costBasisPerUnit: 120 }
+      { id: '3', purchaseDate: new Date('2022-01-01'), quantity: 8, costBasisPerUnit: 120 },
     ]
 
     const result = allocateSaleToTaxLots({
       quantity: 12,
       taxLots,
-      method: 'FIFO'
+      method: 'FIFO',
     })
 
     expect(result.allocations).toHaveLength(2)
     expect(result.allocations[0]).toEqual({
       taxLotId: '1',
       quantity: 10,
-      costBasisPerUnit: 100
+      costBasisPerUnit: 100,
     })
     expect(result.allocations[1]).toEqual({
       taxLotId: '2',
       quantity: 2,
-      costBasisPerUnit: 150
+      costBasisPerUnit: 150,
     })
   })
 })
@@ -753,8 +788,8 @@ describe('Wash Sale Detection', () => {
       saleLoss: -500,
       purchaseHistory: [
         { date: new Date('2024-01-20'), quantity: 10 }, // 5 days after
-        { date: new Date('2024-01-01'), quantity: 5 }   // 14 days before
-      ]
+        { date: new Date('2024-01-01'), quantity: 5 }, // 14 days before
+      ],
     })
 
     expect(result.isWashSale).toBe(true)
@@ -769,8 +804,8 @@ describe('Wash Sale Detection', () => {
       saleLoss: -500,
       purchaseHistory: [
         { date: new Date('2024-02-20'), quantity: 10 }, // 36 days after
-        { date: new Date('2023-12-10'), quantity: 5 }   // 36 days before
-      ]
+        { date: new Date('2023-12-10'), quantity: 5 }, // 36 days before
+      ],
     })
 
     expect(result.isWashSale).toBe(false)
@@ -789,15 +824,15 @@ describe('Capital Gains Tax Calculation', () => {
           id: '1',
           purchaseDate: new Date('2023-01-01'), // 518 days = long-term
           quantity: 10,
-          costBasisPerUnit: 100
+          costBasisPerUnit: 100,
         },
         {
           id: '2',
           purchaseDate: new Date('2024-03-01'), // 92 days = short-term
           quantity: 5,
-          costBasisPerUnit: 150
-        }
-      ]
+          costBasisPerUnit: 150,
+        },
+      ],
     })
 
     expect(result.shortTermGain).toBe(250) // (200 - 150) * 5
@@ -808,6 +843,7 @@ describe('Capital Gains Tax Calculation', () => {
 ```
 
 **2. Integration Testing (Vitest + Prisma Mock)**
+
 ```typescript
 // Test: Complete Investment CRUD Flow
 describe('Investment Server Actions', () => {
@@ -821,7 +857,7 @@ describe('Investment Server Actions', () => {
       totalQuantity: 10,
       averageCostBasis: 150,
       purchaseCurrency: 'USD',
-      purchaseDate: new Date('2024-01-01')
+      purchaseDate: new Date('2024-01-01'),
     })
 
     expect(result.success).toBe(true)
@@ -841,7 +877,7 @@ describe('Investment Server Actions', () => {
       assetType: 'STOCK',
       totalQuantity: 10,
       averageCostBasis: 150,
-      purchaseCurrency: 'USD'
+      purchaseCurrency: 'USD',
     })
 
     // Try to create again
@@ -851,7 +887,7 @@ describe('Investment Server Actions', () => {
       assetType: 'STOCK',
       totalQuantity: 5,
       averageCostBasis: 160,
-      purchaseCurrency: 'USD'
+      purchaseCurrency: 'USD',
     })
 
     expect(result.success).toBe(false)
@@ -861,7 +897,7 @@ describe('Investment Server Actions', () => {
 
 // Test: Authentication Authorization
 describe('Portfolio Authorization', () => {
-  it('should prevent user from accessing another user\'s portfolio', async () => {
+  it("should prevent user from accessing another user's portfolio", async () => {
     const user1Portfolio = await createTestPortfolio({ userId: 'user1' })
 
     // User2 tries to access User1's portfolio
@@ -874,6 +910,7 @@ describe('Portfolio Authorization', () => {
 ```
 
 **3. E2E Testing (Playwright)**
+
 ```typescript
 // Test: Complete User Onboarding Flow
 test('should complete full onboarding flow', async ({ page }) => {
@@ -885,7 +922,7 @@ test('should complete full onboarding flow', async ({ page }) => {
   await page.route('**/api/auth/callback/google', async (route) => {
     await route.fulfill({
       status: 302,
-      headers: { Location: '/welcome' }
+      headers: { Location: '/welcome' },
     })
   })
 
@@ -977,7 +1014,7 @@ MSFT,20,350,2024-01-01,USD`
   await page.setInputFiles('input[type="file"]', {
     name: 'investments.csv',
     mimeType: 'text/csv',
-    buffer: Buffer.from(csvContent)
+    buffer: Buffer.from(csvContent),
   })
 
   await page.click('button:has-text("Import")')
@@ -991,6 +1028,7 @@ MSFT,20,350,2024-01-01,USD`
 ```
 
 **4. Security Testing**
+
 ```typescript
 // OWASP Top 10 Coverage
 
@@ -1000,7 +1038,7 @@ test('should prevent unauthorized portfolio access', async ({ request }) => {
   const user2Portfolio = await createTestPortfolio({ userId: 'user2' })
 
   const response = await request.get(`/api/portfolios/${user2Portfolio.id}`, {
-    headers: { Authorization: `Bearer ${user1Token}` }
+    headers: { Authorization: `Bearer ${user1Token}` },
   })
 
   expect(response.status()).toBe(403)
@@ -1064,9 +1102,9 @@ test('should log sensitive actions', async ({ page }) => {
   const auditLog = await prisma.auditLog.findFirst({
     where: {
       action: 'DELETED',
-      resource: 'portfolio'
+      resource: 'portfolio',
     },
-    orderBy: { createdAt: 'desc' }
+    orderBy: { createdAt: 'desc' },
   })
 
   expect(auditLog).toBeTruthy()
@@ -1076,22 +1114,23 @@ test('should log sensitive actions', async ({ page }) => {
 ```
 
 **5. Performance Testing (k6)**
+
 ```javascript
 import http from 'k6/http'
 import { check, sleep } from 'k6'
 
 export const options = {
   stages: [
-    { duration: '1m', target: 10 },   // Ramp up to 10 users
-    { duration: '3m', target: 50 },   // Ramp up to 50 users
-    { duration: '5m', target: 100 },  // Ramp up to 100 users
-    { duration: '3m', target: 50 },   // Ramp down to 50 users
-    { duration: '1m', target: 0 },    // Ramp down to 0 users
+    { duration: '1m', target: 10 }, // Ramp up to 10 users
+    { duration: '3m', target: 50 }, // Ramp up to 50 users
+    { duration: '5m', target: 100 }, // Ramp up to 100 users
+    { duration: '3m', target: 50 }, // Ramp down to 50 users
+    { duration: '1m', target: 0 }, // Ramp down to 0 users
   ],
   thresholds: {
     http_req_duration: ['p(95)<500'], // 95% of requests should be below 500ms
-    http_req_failed: ['rate<0.01'],   // Error rate should be below 1%
-  }
+    http_req_failed: ['rate<0.01'], // Error rate should be below 1%
+  },
 }
 
 export default function () {
@@ -1099,7 +1138,7 @@ export default function () {
   const dashboardRes = http.get('https://your-app.vercel.app/dashboard')
   check(dashboardRes, {
     'dashboard status is 200': (r) => r.status === 200,
-    'dashboard loads in <500ms': (r) => r.timings.duration < 500
+    'dashboard loads in <500ms': (r) => r.timings.duration < 500,
   })
 
   sleep(1)
@@ -1108,7 +1147,7 @@ export default function () {
   const portfolioRes = http.get('https://your-app.vercel.app/portfolios/123')
   check(portfolioRes, {
     'portfolio status is 200': (r) => r.status === 200,
-    'portfolio loads in <800ms': (r) => r.timings.duration < 800
+    'portfolio loads in <800ms': (r) => r.timings.duration < 800,
   })
 
   sleep(2)
@@ -1116,6 +1155,7 @@ export default function () {
 ```
 
 **6. Accessibility Testing (axe-core)**
+
 ```typescript
 import { test, expect } from '@playwright/test'
 import AxeBuilder from '@axe-core/playwright'
@@ -1139,7 +1179,7 @@ test('should have proper ARIA labels on interactive elements', async ({ page }) 
 
   for (let i = 0; i < count; i++) {
     const button = buttons.nth(i)
-    const accessibleName = await button.getAttribute('aria-label') || await button.textContent()
+    const accessibleName = (await button.getAttribute('aria-label')) || (await button.textContent())
     expect(accessibleName).toBeTruthy()
   }
 })
@@ -1164,6 +1204,7 @@ test('should support keyboard navigation', async ({ page }) => {
 ```
 
 **CI/CD Integration**:
+
 ```yaml
 # .github/workflows/test.yml
 name: Test Suite
@@ -1262,6 +1303,7 @@ jobs:
 ### Phase 0: Foundation (Weeks 1-2) - Prerequisites
 
 **Environment Setup**:
+
 - [ ] Vercel project created and connected to GitHub
 - [ ] Upstash Redis account created (for rate limiting & caching)
 - [ ] Resend account created (for email notifications)
@@ -1269,6 +1311,7 @@ jobs:
 - [ ] Development environment variables in `.env.local`
 
 **CI/CD Pipeline**:
+
 - [ ] GitHub Actions workflow configured (`.github/workflows/ci.yml`)
 - [ ] GitHub Actions workflow configured (`.github/workflows/test.yml`)
 - [ ] Codecov account connected for coverage reporting
@@ -1276,6 +1319,7 @@ jobs:
 - [ ] Required status checks configured
 
 **Testing Framework**:
+
 - [ ] Vitest installed and configured (`vitest.config.ts`)
 - [ ] Playwright installed (`pnpm playwright install --with-deps`)
 - [ ] Test database configured (`DATABASE_URL_TEST`)
@@ -1283,12 +1327,14 @@ jobs:
 - [ ] Test utilities created (`tests/helpers/test-utils.ts`)
 
 **Documentation**:
+
 - [ ] `/docs` directory structure created
 - [ ] API documentation templates ready
 - [ ] Component documentation templates ready
 - [ ] Architecture diagrams initialized
 
 **Team Onboarding**:
+
 - [ ] All team members have repository access
 - [ ] Development environment setup completed
 - [ ] Team sprint planning completed
@@ -1299,6 +1345,7 @@ jobs:
 ### Phase 1: Security (Weeks 3-6) - Critical Blockers
 
 **MFA Implementation (Week 3, 5 days)**:
+
 - [ ] `speakeasy` library installed for TOTP
 - [ ] `qrcode` library installed for QR code generation
 - [ ] Database schema updated with MFA fields
@@ -1311,6 +1358,7 @@ jobs:
 - [ ] E2E tests for MFA enrollment and login
 
 **Audit Logging (Week 4, 5 days)**:
+
 - [ ] `AuditLog` model added to Prisma schema
 - [ ] Audit logging middleware created
 - [ ] All critical actions instrumented (CRUD, auth events)
@@ -1320,6 +1368,7 @@ jobs:
 - [ ] Integration tests for audit trail completeness
 
 **GDPR Compliance (Week 5, 5 days)**:
+
 - [ ] Data export endpoint implemented
 - [ ] Data deletion endpoint implemented
 - [ ] Privacy policy page created
@@ -1330,6 +1379,7 @@ jobs:
 - [ ] Legal review completed (if required)
 
 **Security Hardening (Week 6, 7-10 days)**:
+
 - [ ] Rate limiting implemented (Upstash Redis + Bottleneck)
 - [ ] Security headers middleware configured
 - [ ] Content Security Policy (CSP) configured
@@ -1346,6 +1396,7 @@ jobs:
 ### Phase 2A: Business Logic (Weeks 3-10) - Financial Accuracy
 
 **Tax Lot Tracking (Weeks 3-4, 8 days)**:
+
 - [ ] `TaxLot` model added to Prisma schema
 - [ ] `PurchaseTransaction` model added
 - [ ] `SaleTransaction` model added
@@ -1358,6 +1409,7 @@ jobs:
 - [ ] Integration tests for tax lot CRUD
 
 **Tax Calculations (Weeks 5-6, 7 days)**:
+
 - [ ] Short-term vs long-term capital gains logic
 - [ ] Holding period calculation (365-day threshold)
 - [ ] Wash sale detection (30-day rule)
@@ -1369,6 +1421,7 @@ jobs:
 - [ ] Integration tests for complete tax scenarios
 
 **Dividend Tracking (Weeks 7-8, 6 days)**:
+
 - [ ] `Dividend` model added to Prisma schema
 - [ ] Dividend type enum (CASH, STOCK, SPECIAL, RETURN_OF_CAPITAL)
 - [ ] Dividend payment recording
@@ -1380,6 +1433,7 @@ jobs:
 - [ ] Integration tests for dividend scenarios
 
 **Corporate Actions (Weeks 9-10, 12 days)**:
+
 - [ ] `CorporateAction` model added to Prisma schema
 - [ ] Stock split processing
 - [ ] Reverse split processing
@@ -1397,6 +1451,7 @@ jobs:
 ### Phase 2B: Data Integrity (Weeks 3-10) - Reliability
 
 **Database Constraints (Weeks 3-4, 4 days)**:
+
 - [ ] CHECK constraints for positive quantities
 - [ ] CHECK constraints for positive prices
 - [ ] CHECK constraints for valid currency codes
@@ -1408,6 +1463,7 @@ jobs:
 - [ ] Rollback scripts prepared
 
 **Validation Layer (Weeks 5-6, 4 days)**:
+
 - [ ] Optimistic locking version fields added to models
 - [ ] Optimistic locking conflict detection implemented
 - [ ] Price validation logic (staleness, reasonableness)
@@ -1419,6 +1475,7 @@ jobs:
 - [ ] Unit tests for validation logic
 
 **Quality Monitoring (Weeks 7-8, 4 days)**:
+
 - [ ] Data quality metrics dashboard
 - [ ] Price staleness monitoring
 - [ ] Data inconsistency detection
@@ -1431,6 +1488,7 @@ jobs:
 ### Phase 3: UX Quick Wins (Weeks 7-10, 17 days) - User Satisfaction
 
 **Dashboard Enhancements (Week 7, 4 days)**:
+
 - [ ] Total portfolio value card
 - [ ] Total gain/loss card
 - [ ] Best performer card
@@ -1441,6 +1499,7 @@ jobs:
 - [ ] E2E tests for dashboard
 
 **Search & Filter (Week 8, 3 days)**:
+
 - [ ] Investment search by ticker
 - [ ] Investment filter by asset type
 - [ ] Investment filter by performance
@@ -1449,6 +1508,7 @@ jobs:
 - [ ] E2E tests for search/filter
 
 **CSV Import/Export (Week 9, 7 days)**:
+
 - [ ] CSV export functionality
 - [ ] CSV template download
 - [ ] CSV parser with validation
@@ -1459,6 +1519,7 @@ jobs:
 - [ ] E2E tests for CSV workflows
 
 **Mobile Responsive (Week 10, 3 days)**:
+
 - [ ] Mobile-optimized tables
 - [ ] Mobile navigation menu
 - [ ] Touch-friendly buttons
@@ -1470,6 +1531,7 @@ jobs:
 ### Phase 4: Strategic Features (Weeks 11-14, 14 days) - Advanced Functionality
 
 **Goals & Target Allocation (Week 11, 3 days)**:
+
 - [ ] Portfolio goal setting interface
 - [ ] Target allocation definition
 - [ ] Current vs target allocation comparison
@@ -1477,12 +1539,14 @@ jobs:
 - [ ] E2E tests
 
 **Multi-Portfolio Dashboard (Week 12, 2 days)**:
+
 - [ ] Aggregate portfolio view
 - [ ] Cross-portfolio analytics
 - [ ] Combined performance charts
 - [ ] E2E tests
 
 **Transaction History (Week 13, 2 days)**:
+
 - [ ] Complete transaction timeline
 - [ ] Transaction filtering
 - [ ] Transaction search
@@ -1490,6 +1554,7 @@ jobs:
 - [ ] E2E tests
 
 **Notifications & Dark Mode (Week 14, 5 days)**:
+
 - [ ] Email notification system (Resend)
 - [ ] Price alert notifications
 - [ ] Portfolio milestone notifications
@@ -1502,6 +1567,7 @@ jobs:
 ### Phase 5: Testing & QA (Weeks 15-17, 15 days) - Quality Assurance
 
 **Unit Testing (Week 15)**:
+
 - [ ] 80%+ code coverage achieved
 - [ ] 95%+ coverage for calculations
 - [ ] All calculation edge cases tested
@@ -1509,6 +1575,7 @@ jobs:
 - [ ] Coverage report reviewed
 
 **Integration Testing (Week 16)**:
+
 - [ ] 70%+ integration coverage achieved
 - [ ] 90%+ coverage for auth flows
 - [ ] 90%+ coverage for CRUD operations
@@ -1516,6 +1583,7 @@ jobs:
 - [ ] All API routes tested
 
 **E2E Testing (Week 17)**:
+
 - [ ] 100% critical user journeys tested
 - [ ] Onboarding flow tested
 - [ ] Portfolio CRUD tested
@@ -1525,6 +1593,7 @@ jobs:
 - [ ] Payment flows tested (if applicable)
 
 **Security & Performance (Week 17)**:
+
 - [ ] OWASP Top 10 coverage complete
 - [ ] Security penetration testing complete
 - [ ] Lighthouse score ≥90
@@ -1533,6 +1602,7 @@ jobs:
 - [ ] Performance budgets defined and met
 
 **Accessibility (Week 17)**:
+
 - [ ] WCAG 2.1 AA compliance verified
 - [ ] Zero axe-core violations
 - [ ] Keyboard navigation tested
@@ -1544,6 +1614,7 @@ jobs:
 ### Phase 6: Beta Launch (Weeks 18-20, 15 days) - Production Readiness
 
 **Performance Optimization (Week 18)**:
+
 - [ ] Database query optimization
 - [ ] React Server Components optimization
 - [ ] Image optimization
@@ -1552,6 +1623,7 @@ jobs:
 - [ ] CDN configuration
 
 **Security Audit (Week 19)**:
+
 - [ ] Final security audit completed
 - [ ] Penetration testing passed
 - [ ] Vulnerability scanning passed
@@ -1559,6 +1631,7 @@ jobs:
 - [ ] SSL/TLS configuration verified
 
 **Beta Deployment (Week 20)**:
+
 - [ ] Production environment configured
 - [ ] Database migration to production
 - [ ] Environment variables configured
@@ -1574,6 +1647,7 @@ jobs:
 ## 📈 Success Metrics
 
 ### Development Metrics
+
 - [ ] Code coverage: Unit ≥80%, Integration ≥70%, E2E ≥100% critical paths
 - [ ] Test pass rate: 100%
 - [ ] Build success rate: ≥95%
@@ -1581,6 +1655,7 @@ jobs:
 - [ ] Bug fix time: Critical <4 hours, High <24 hours, Medium <1 week
 
 ### Performance Metrics
+
 - [ ] Lighthouse Performance: ≥90
 - [ ] Lighthouse Accessibility: ≥90
 - [ ] Lighthouse Best Practices: ≥90
@@ -1590,6 +1665,7 @@ jobs:
 - [ ] Database query time: <100ms (p95)
 
 ### Security Metrics
+
 - [ ] OWASP Top 10: 100% coverage
 - [ ] Security vulnerabilities: 0 critical, 0 high
 - [ ] MFA adoption rate: ≥80%
@@ -1598,6 +1674,7 @@ jobs:
 - [ ] Security audit: Passed
 
 ### User Experience Metrics
+
 - [ ] WCAG 2.1 AA compliance: 100%
 - [ ] Mobile responsiveness: 100%
 - [ ] User onboarding completion: ≥80%
@@ -1609,6 +1686,7 @@ jobs:
 ## 🚀 Next Steps
 
 ### Immediate Actions (This Week)
+
 1. **Review all 6 completed analysis documents**
 2. **Approve Master Plan V2 timeline and resource allocation**
 3. **Assemble development team (6-7 people)**
@@ -1616,6 +1694,7 @@ jobs:
 5. **Schedule sprint planning for Phase 0**
 
 ### Week 1-2: Phase 0 Foundation
+
 1. **Environment setup** (Vercel, Upstash, Resend)
 2. **CI/CD pipeline** configuration
 3. **Testing framework** installation
@@ -1623,6 +1702,7 @@ jobs:
 5. **Team onboarding** and sprint kickoff
 
 ### Week 3+: Begin Implementation
+
 1. **Phase 1: Security** (Weeks 3-6)
 2. **Phase 2A: Business Logic** (Weeks 3-10, parallel)
 3. **Phase 2B: Data Integrity** (Weeks 3-10, parallel)
@@ -1633,11 +1713,13 @@ jobs:
 ## 📞 Support & Questions
 
 **Documentation Location**:
+
 - All analysis documents: `/claudedocs/`
 - Implementation guides: See individual documents
 - Code examples: Throughout all documents
 
 **Key Documents Quick Reference**:
+
 1. `security-audit-blind-spots.md` - Security requirements
 2. `business-logic-improvements.md` - Financial calculations
 3. `data-integrity-requirements.md` - Data reliability
@@ -1646,6 +1728,7 @@ jobs:
 6. `enhanced-testing-requirements.md` - Testing strategy
 
 **Recommended Reading Order**:
+
 1. This document (PROJECT_STATUS.md) - Overview
 2. MASTER_PLAN_V2.md - Complete roadmap
 3. Domain-specific documents as needed for implementation
@@ -1664,5 +1747,5 @@ jobs:
 
 ---
 
-*Last Updated: 2025-01-12*
-*Next Review: After Phase 0 completion (Week 2)*
+_Last Updated: 2025-01-12_
+_Next Review: After Phase 0 completion (Week 2)_

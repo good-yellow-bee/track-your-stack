@@ -83,6 +83,7 @@ enum AssetType {
 #### Changes
 
 1. **Add MFA fields to User model**
+
    ```prisma
    model User {
      // ... existing fields
@@ -92,6 +93,7 @@ enum AssetType {
    ```
 
 2. **Add AuditLog model** (new table)
+
    ```prisma
    model AuditLog {
      id        String   @id @default(cuid())
@@ -110,6 +112,7 @@ enum AssetType {
    ```
 
 3. **Add Session model** (new table for session management UI)
+
    ```prisma
    model SessionInfo {
      id         String   @id @default(cuid())
@@ -162,6 +165,7 @@ No data migration needed - all new fields are nullable or have defaults.
 #### Changes
 
 1. **Add TaxLot model** (new table)
+
    ```prisma
    model TaxLot {
      id           String   @id @default(cuid())
@@ -191,6 +195,7 @@ No data migration needed - all new fields are nullable or have defaults.
    ```
 
 2. **Add SaleTransaction model** (new table)
+
    ```prisma
    model SaleTransaction {
      id           String   @id @default(cuid())
@@ -397,6 +402,7 @@ pnpm prisma migrate dev --name rollback_tax_lots
 #### Changes
 
 1. **Add Dividend model**
+
    ```prisma
    model Dividend {
      id            String   @id @default(cuid())
@@ -422,6 +428,7 @@ pnpm prisma migrate dev --name rollback_tax_lots
    ```
 
 2. **Add CorporateAction model**
+
    ```prisma
    model CorporateAction {
      id            String   @id @default(cuid())
@@ -588,6 +595,7 @@ auditDataConstraints()
 #### Changes
 
 1. **Benchmarking models**
+
    ```prisma
    model PortfolioBenchmark {
      id              String   @id @default(cuid())
@@ -619,6 +627,7 @@ auditDataConstraints()
    ```
 
 2. **Goal tracking models**
+
    ```prisma
    model Goal {
      id          String   @id @default(cuid())
@@ -660,6 +669,7 @@ auditDataConstraints()
    ```
 
 3. **Price alerts & rebalancing**
+
    ```prisma
    model PriceAlert {
      id           String   @id @default(cuid())
@@ -803,6 +813,7 @@ backfillInvestmentMetadata()
 ### General Rollback Process
 
 1. **Immediate rollback** (within 1 hour):
+
    ```bash
    # Revert migration
    pnpm prisma migrate resolve --rolled-back <migration_name>
@@ -837,6 +848,7 @@ pg_restore --before='2025-10-12 14:00:00' backup.dump
 ### Staging Environment
 
 1. **Clone production data** (anonymized):
+
    ```bash
    pg_dump production_db | psql staging_db
    # Anonymize user data
@@ -844,6 +856,7 @@ pg_restore --before='2025-10-12 14:00:00' backup.dump
    ```
 
 2. **Run migrations on staging**:
+
    ```bash
    pnpm prisma migrate deploy
    pnpm tsx scripts/migrate-to-tax-lots.ts

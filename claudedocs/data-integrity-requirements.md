@@ -9,6 +9,7 @@
 This document defines comprehensive data integrity requirements for Track Your Stack to prevent data corruption, ensure calculation accuracy, and maintain system reliability. It addresses gaps in constraint enforcement, validation logic, concurrency handling, and error recovery.
 
 **Critical Issues Identified**:
+
 - ❌ Missing database constraints allow invalid data
 - ❌ No optimistic locking for concurrent edits
 - ❌ Time zone handling inconsistent
@@ -28,6 +29,7 @@ This document defines comprehensive data integrity requirements for Track Your S
 **Problem**: Database allows logically invalid data that causes calculation errors.
 
 **Current State**:
+
 ```prisma
 model Investment {
   totalQuantity        Decimal  @db.Decimal(20, 8)
@@ -84,6 +86,7 @@ ALTER TABLE "dividends" ADD CONSTRAINT "dividend_shares_positive"
 ```
 
 **Validation**:
+
 ```typescript
 // test/integrity/database-constraints.test.ts
 describe('Database Constraints', () => {
@@ -119,6 +122,7 @@ describe('Database Constraints', () => {
 ```
 
 **Implementation Tasks**:
+
 - [ ] Create migration with CHECK constraints
 - [ ] Add unit tests for each constraint
 - [ ] Document constraint violation error handling
@@ -255,6 +259,7 @@ model TaxLot {
 ```
 
 **Validation Query**:
+
 ```sql
 -- Find orphaned records (should return 0 rows)
 SELECT 'investment' AS table_name, COUNT(*) AS orphaned_count
@@ -357,14 +362,14 @@ export async function validatePrice(params: {
   if (lastKnownPrice) {
     const percentChange = Math.abs((price - lastKnownPrice) / lastKnownPrice)
 
-    if (percentChange > 0.50) {
+    if (percentChange > 0.5) {
       result.warnings.push(
         `Price changed by ${(percentChange * 100).toFixed(1)}% from last known value. ` +
-        `Previous: $${lastKnownPrice}, New: $${price}`
+          `Previous: $${lastKnownPrice}, New: $${price}`
       )
     }
 
-    if (percentChange > 0.90) {
+    if (percentChange > 0.9) {
       result.isValid = false
       result.errors.push(
         'Price change exceeds 90% from last known value. Possible data error or stock split.'
@@ -380,7 +385,7 @@ export async function validatePrice(params: {
     if (discrepancy > 0.05) {
       result.warnings.push(
         `Price differs by ${(discrepancy * 100).toFixed(1)}% from alternate source. ` +
-        `Verify accuracy.`
+          `Verify accuracy.`
       )
     }
   }
@@ -630,6 +635,7 @@ export function validateSaleDate(
 **Problem**: Concurrent edits can cause data corruption (lost updates).
 
 **Example Scenario**:
+
 ```
 User A reads: Investment AAPL, quantity: 100, avg cost: $150
 User B reads: Investment AAPL, quantity: 100, avg cost: $150
@@ -739,7 +745,10 @@ export async function addPurchaseTransaction(params: {
 
 // Custom error for version conflicts
 export class ConflictError extends Error {
-  constructor(message: string, public metadata?: any) {
+  constructor(
+    message: string,
+    public metadata?: any
+  ) {
     super(message)
     this.name = 'ConflictError'
   }
@@ -1569,6 +1578,7 @@ export async function dataIntegrityMonitor() {
 ## 7. Implementation Timeline
 
 ### Phase 1: Critical Data Integrity (Week 1-2)
+
 - ✅ Day 1-2: Database CHECK constraints
 - ✅ Day 3: UNIQUE constraints and foreign key review
 - ✅ Day 4-5: Optimistic locking implementation
@@ -1577,6 +1587,7 @@ export async function dataIntegrityMonitor() {
 - ✅ Day 10: Transaction isolation patterns
 
 ### Phase 2: Quality Assurance (Week 3)
+
 - ✅ Day 11-12: Retry logic and graceful degradation
 - ✅ Day 13-14: Price staleness detection
 - ✅ Day 15: Consistency check monitoring
@@ -1590,6 +1601,7 @@ export async function dataIntegrityMonitor() {
 ## 8. Testing Requirements
 
 ### Unit Tests
+
 - Database constraint violations
 - Validation function edge cases
 - Optimistic locking race conditions
@@ -1597,12 +1609,14 @@ export async function dataIntegrityMonitor() {
 - Time zone conversions
 
 ### Integration Tests
+
 - Concurrent edit scenarios
 - Transaction rollback on error
 - Price validation with real data
 - Staleness detection accuracy
 
 ### E2E Tests
+
 - User adds conflicting purchases (optimistic lock)
 - Corporate action propagation
 - Price refresh with API failures
@@ -1612,17 +1626,20 @@ export async function dataIntegrityMonitor() {
 ## 9. Success Metrics
 
 **Data Quality**:
+
 - ✅ Zero invalid prices in production
 - ✅ Zero negative quantities
 - ✅ Zero future-dated transactions
 - ✅ 100% foreign key integrity
 
 **Concurrency**:
+
 - ✅ Optimistic lock conflicts detected and resolved
 - ✅ <0.1% transaction rollback rate
 - ✅ Zero lost updates
 
 **Reliability**:
+
 - ✅ 99% price fetch success rate (including retries)
 - ✅ <1% stale price incidents
 - ✅ Zero data corruption events
@@ -1634,6 +1651,7 @@ export async function dataIntegrityMonitor() {
 This checklist addresses fundamental data integrity gaps that could cause financial calculation errors, data corruption, and poor user experience. Implementation of these requirements is **CRITICAL** before the application can be considered production-ready for handling real user financial data.
 
 **Next Steps**:
+
 1. Review and approve this checklist
 2. Prioritize implementation alongside security fixes
 3. Create Jira/GitHub issues for each item

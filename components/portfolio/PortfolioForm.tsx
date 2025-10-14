@@ -37,11 +37,7 @@ interface PortfolioFormProps {
   onSuccess?: () => void
 }
 
-export default function PortfolioForm({
-  mode,
-  defaultValues,
-  onSuccess,
-}: PortfolioFormProps) {
+export default function PortfolioForm({ mode, defaultValues, onSuccess }: PortfolioFormProps) {
   const router = useRouter()
   const [isSubmitting, setIsSubmitting] = useState(false)
 

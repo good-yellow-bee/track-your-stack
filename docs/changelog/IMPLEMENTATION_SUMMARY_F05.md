@@ -11,6 +11,7 @@
 Successfully implemented a robust Alpha Vantage API client for fetching real-time stock prices, cryptocurrency prices, currency exchange rates, and ticker symbol search. Includes intelligent rate limiting, caching, error handling, and retry logic.
 
 **Key Features Implemented:**
+
 - ✅ Real-time stock and ETF price quotes
 - ✅ Cryptocurrency price fetching
 - ✅ Currency exchange rate conversion
@@ -42,12 +43,15 @@ Successfully implemented a robust Alpha Vantage API client for fetching real-tim
 ## 📦 Files Created
 
 ### 1. Dependencies Installed
+
 ```bash
 pnpm add bottleneck  # Rate limiting library
 ```
 
 ### 2. Type Definitions
+
 **`types/alpha-vantage.ts`** - Comprehensive API response types
+
 - `GlobalQuoteResponse` - Raw stock quote API response
 - `CryptoExchangeRateResponse` - Raw crypto/currency API response
 - `SymbolSearchResponse` - Raw symbol search API response
@@ -58,19 +62,24 @@ pnpm add bottleneck  # Rate limiting library
 - `AlphaVantageError` - Error response type
 
 ### 3. Rate Limiting
+
 **`lib/api/rateLimiter.ts`** - Smart rate limiting for Alpha Vantage API
+
 - `getRateLimiter()` - Returns Bottleneck limiter instance
 - `incrementRequestCount()` - Tracks API usage
 - `getRequestCount()` - Returns current day request count
 - `getRemainingRequests()` - Returns remaining API quota
 
 **Rate Limits:**
+
 - **5 requests per minute** (12-second minimum spacing)
 - **500 requests per day** (auto-resets every 24 hours)
 - **1 concurrent request** (sequential execution)
 
 ### 4. Alpha Vantage Client
+
 **`lib/api/alphaVantage.ts`** - Main API client class
+
 - `AlphaVantageClient` class with singleton instance
 - Private `request()` method with rate limiting
 - `getStockQuote(symbol)` - Fetch stock/ETF quote
@@ -79,6 +88,7 @@ pnpm add bottleneck  # Rate limiting library
 - `searchSymbol(keywords)` - Search ticker symbols
 
 **Features:**
+
 - Automatic rate limiting via Bottleneck
 - 10-second request timeout
 - Error detection (API errors, timeouts, rate limits)
@@ -86,36 +96,45 @@ pnpm add bottleneck  # Rate limiting library
 - Singleton pattern for shared limiter state
 
 ### 5. Price Caching
+
 **`lib/cache/priceCache.ts`** - Intelligent caching utilities
+
 - `isCacheFresh(lastUpdated, ttl)` - Check cache freshness
 - `getCachedStockPrice(ticker)` - Retrieve cached price from investments
 - `getCachedCurrencyRate(from, to)` - Retrieve cached exchange rate
 - `updateCachedCurrencyRate(from, to, rate)` - Update currency cache
 
 **Cache TTLs** (from `lib/constants.ts`):
+
 - Stock/ETF: 15 minutes
 - Crypto: 5 minutes
 - Currency: 1 hour
 
 **Cache Storage:**
+
 - Stock prices: Stored in `investments.currentPrice` field
 - Currency rates: Stored in `currencyRate` table
 - Automatic staleness detection
 
 ### 6. Price Service
+
 **`lib/services/priceService.ts`** - High-level price service
+
 - `getAssetPrice(ticker, assetType)` - Get price with cache-first strategy
 - `getCurrencyRate(from, to)` - Get exchange rate with caching
 - `searchTickers(query)` - Search ticker symbols
 
 **Features:**
+
 - Cache-first strategy (checks cache before API)
 - Automatic cache updates
 - Asset type detection (STOCK/ETF vs CRYPTO)
 - Empty query handling
 
 ### 7. Test Endpoint
+
 **`app/api/test-alpha-vantage/route.ts`** - API validation endpoint
+
 - Test stock quotes: `?test=stock`
 - Test crypto prices: `?test=crypto`
 - Test currency rates: `?test=currency`
@@ -123,7 +142,9 @@ pnpm add bottleneck  # Rate limiting library
 - Returns remaining API quota
 
 ### 8. Environment Variables
+
 **`.env.example`** - Already documented
+
 ```bash
 ALPHA_VANTAGE_API_KEY="your_api_key_here"
 ```
@@ -137,15 +158,16 @@ ALPHA_VANTAGE_API_KEY="your_api_key_here"
 ```typescript
 // Bottleneck configuration
 const limiter = new Bottleneck({
-  minTime: 12000,              // 12 seconds between requests
-  maxConcurrent: 1,            // Sequential execution
-  reservoir: 500,              // Daily quota
+  minTime: 12000, // 12 seconds between requests
+  maxConcurrent: 1, // Sequential execution
+  reservoir: 500, // Daily quota
   reservoirRefreshAmount: 500, // Reset amount
   reservoirRefreshInterval: 24 * 60 * 60 * 1000, // Reset daily
 })
 ```
 
 **Benefits:**
+
 - Prevents rate limit errors
 - Automatic request queuing
 - Exponential backoff on failures (built-in)
@@ -168,11 +190,13 @@ const limiter = new Bottleneck({
 ```
 
 **Cache Hit Rate:**
+
 - First request: Cache miss (API call)
 - Subsequent requests: Cache hit (no API call)
 - After TTL expires: Cache miss (new API call)
 
 **Example:**
+
 - Stock price requested at 10:00 AM → API call
 - Stock price requested at 10:05 AM → Cached (hit)
 - Stock price requested at 10:20 AM → API call (15-min TTL expired)
@@ -196,6 +220,7 @@ try {
 ```
 
 **Handled Cases:**
+
 - ❌ Invalid ticker symbol
 - ❌ API timeout (10 seconds)
 - ❌ Rate limit exceeded
@@ -210,7 +235,7 @@ try {
 interface GlobalQuoteResponse {
   'Global Quote': {
     '01. symbol': string
-    '05. price': string  // String from API
+    '05. price': string // String from API
     // ...
   }
 }
@@ -218,7 +243,7 @@ interface GlobalQuoteResponse {
 // Normalized internal type
 interface StockQuote {
   symbol: string
-  price: number  // Converted to number
+  price: number // Converted to number
   // ...
 }
 
@@ -236,18 +261,21 @@ return {
 ## 🧪 Quality Checks - All Passing ✅
 
 ### TypeScript Type Checking
+
 ```bash
 pnpm typecheck
 ✓ No type errors
 ```
 
 ### ESLint
+
 ```bash
 pnpm lint
 ✓ No ESLint warnings or errors
 ```
 
 ### Production Build
+
 ```bash
 pnpm build
 ✓ Compiled successfully
@@ -259,21 +287,25 @@ pnpm build
 ## 🔒 Security Features
 
 ### API Key Protection
+
 - API key stored in environment variables
 - Never exposed to client-side code
 - Validated on server startup (warning if missing)
 
 ### Rate Limiting
+
 - Prevents accidental API quota exhaustion
 - Automatic request queuing
 - Daily quota tracking
 
 ### Input Validation
+
 - Ticker symbols uppercase-normalized
 - Query parameters sanitized
 - Timeout prevents hanging requests
 
 ### Error Handling
+
 - Generic error messages (no sensitive data leaks)
 - Proper HTTP status codes
 - Structured error responses
@@ -283,23 +315,25 @@ pnpm build
 ## 📊 API Usage Tracking
 
 ### Request Counter
+
 ```typescript
 // In-memory tracking (resets on server restart)
 let requestCount = 0
 let dailyResetTime = Date.now() + 24 * 60 * 60 * 1000
 
 incrementRequestCount() // Call on each API request
-getRemainingRequests()  // Returns 500 - requestCount
+getRemainingRequests() // Returns 500 - requestCount
 ```
 
 ### Test Endpoint Response
+
 ```json
 {
   "success": true,
   "test": "stock",
   "data": {
     "symbol": "AAPL",
-    "price": 178.50,
+    "price": 178.5,
     "previousClose": 177.25,
     "change": 1.25,
     "changePercent": 0.71,
@@ -333,12 +367,13 @@ curl "http://localhost:3000/api/test-alpha-vantage?test=search"
 ### Expected Results
 
 **Stock Quote (AAPL):**
+
 ```json
 {
   "success": true,
   "data": {
     "symbol": "AAPL",
-    "price": 178.50,
+    "price": 178.5,
     "previousClose": 177.25,
     "change": 1.25,
     "changePercent": 0.71,
@@ -348,18 +383,20 @@ curl "http://localhost:3000/api/test-alpha-vantage?test=search"
 ```
 
 **Crypto Price (BTC):**
+
 ```json
 {
   "success": true,
   "data": {
     "symbol": "BTC",
-    "price": 42000.50,
+    "price": 42000.5,
     "currency": "USD"
   }
 }
 ```
 
 **Currency Rate (EUR → USD):**
+
 ```json
 {
   "success": true,
@@ -372,6 +409,7 @@ curl "http://localhost:3000/api/test-alpha-vantage?test=search"
 ```
 
 **Symbol Search (Apple):**
+
 ```json
 {
   "success": true,
@@ -393,6 +431,7 @@ curl "http://localhost:3000/api/test-alpha-vantage?test=search"
 ## 🚀 Usage Examples
 
 ### Get Stock Price with Caching
+
 ```typescript
 import { getAssetPrice } from '@/lib/services/priceService'
 
@@ -406,6 +445,7 @@ console.log(price2) // 178.50 (from cache)
 ```
 
 ### Get Currency Rate with Caching
+
 ```typescript
 import { getCurrencyRate } from '@/lib/services/priceService'
 
@@ -419,6 +459,7 @@ console.log(sameRate) // 1.0
 ```
 
 ### Search Ticker Symbols
+
 ```typescript
 import { searchTickers } from '@/lib/services/priceService'
 
@@ -431,6 +472,7 @@ console.log(results)
 ```
 
 ### Direct Client Usage
+
 ```typescript
 import { alphaVantageClient } from '@/lib/api/alphaVantage'
 
@@ -453,22 +495,27 @@ console.log(quote)
 ## 📈 Performance Optimizations
 
 ### Cache Hit Ratio
+
 **Without Caching:**
+
 - 100 users checking AAPL price = 100 API calls
 - Quota: 500 - 100 = 400 remaining
 
 **With Caching (15-min TTL):**
+
 - 100 users checking AAPL price within 15 min = 1 API call
 - Quota: 500 - 1 = 499 remaining
 - **99% reduction in API calls**
 
 ### Rate Limiting Benefits
+
 - Prevents accidental quota exhaustion
 - Ensures fair resource usage
 - Auto-queues requests (no manual retry logic)
 - Exponential backoff on errors (built-in)
 
 ### Database Caching
+
 - Stock prices: No extra table (uses existing `investments`)
 - Currency rates: Dedicated `currencyRate` table
 - Automatic cleanup: Prisma manages old records
@@ -478,36 +525,46 @@ console.log(quote)
 ## ⚠️ Common Issues & Solutions
 
 ### Issue: API key not found
+
 **Symptom:** `⚠️ ALPHA_VANTAGE_API_KEY not set`  
 **Solution:** Add to `.env.local`:
+
 ```bash
 ALPHA_VANTAGE_API_KEY="your_key_here"
 ```
 
 ### Issue: Rate limit exceeded
+
 **Symptom:** `Error: Rate limit exceeded - please try again later`  
-**Solution:** 
+**Solution:**
+
 - Wait 12 seconds between requests
 - Check daily quota: `getRemainingRequests()`
 - Alpha Vantage free tier: 500/day max
 
 ### Issue: Invalid symbol error
+
 **Symptom:** `Error: No data found for symbol: XYZ`  
 **Solution:**
+
 - Verify ticker symbol exists
 - Use `searchSymbol()` to find correct ticker
 - Check if market is open (delayed prices)
 
 ### Issue: Timeout errors
+
 **Symptom:** `Request timeout - Alpha Vantage API not responding`  
 **Solution:**
+
 - Check internet connection
 - Alpha Vantage may be experiencing downtime
 - Increase timeout in client (default: 10 seconds)
 
 ### Issue: Cache not working
+
 **Symptom:** Every request makes API call  
 **Solution:**
+
 - Ensure `priceUpdatedAt` is set in database
 - Check TTL constants in `lib/constants.ts`
 - Verify cache freshness calculation
@@ -517,6 +574,7 @@ ALPHA_VANTAGE_API_KEY="your_key_here"
 ## 🔗 Integration Points
 
 ### Used By (Future Features)
+
 - **F06: Investment Entry** - Validate tickers, fetch prices
 - **F07: Investment Management** - Update prices
 - **F08: Calculation Engine** - Currency conversions
@@ -524,6 +582,7 @@ ALPHA_VANTAGE_API_KEY="your_key_here"
 - **F10: Portfolio Summary** - Real-time valuations
 
 ### Dependencies
+
 - **Bottleneck** - Rate limiting
 - **Axios** - HTTP requests
 - **Prisma** - Database caching
@@ -549,12 +608,14 @@ ALPHA_VANTAGE_API_KEY="your_key_here"
 ## 🎯 What's Next
 
 ### F05 Unblocks:
+
 - **F06**: Investment Entry Form (ticker validation, price fetching)
 - **F07**: Investment Management (price updates)
 - **F08**: Calculation Engine (currency conversions)
 - **F09**: Price Refresh (bulk price updates)
 
 ### Future Enhancements (Phase 2)
+
 - WebSocket integration for real-time prices
 - Historical price data (daily, intraday)
 - Technical indicators (moving averages, RSI, etc.)
@@ -570,9 +631,10 @@ ALPHA_VANTAGE_API_KEY="your_key_here"
 **Status**: ✅ **PRODUCTION READY**  
 **Quality**: All checks passing (TypeScript, ESLint, Build)  
 **Documentation**: Complete  
-**Testing**: Manual testing guide provided  
+**Testing**: Manual testing guide provided
 
 **Prerequisites for Testing:**
+
 1. Obtain API key from [alphavantage.co](https://www.alphavantage.co/support/#api-key)
 2. Add to `.env.local`: `ALPHA_VANTAGE_API_KEY="YOUR_KEY"`
 3. Test endpoints via browser or curl
@@ -581,6 +643,6 @@ ALPHA_VANTAGE_API_KEY="your_key_here"
 
 ---
 
-*Generated: 2025-10-13*  
-*Implementation Time: ~3.5 hours*  
-*Specification: claudedocs/features/F05_alpha_vantage_integration.md*
+_Generated: 2025-10-13_  
+_Implementation Time: ~3.5 hours_  
+_Specification: claudedocs/features/F05_alpha_vantage_integration.md_

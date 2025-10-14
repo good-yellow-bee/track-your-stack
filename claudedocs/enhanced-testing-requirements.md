@@ -11,6 +11,7 @@ This document defines a comprehensive testing strategy for Track Your Stack to e
 **Testing Philosophy**: Test-Driven Development (TDD) for critical financial logic, comprehensive E2E coverage for user flows, automated security testing, and continuous integration.
 
 **Coverage Targets**:
+
 - Unit Tests: 80%+ coverage
 - Integration Tests: 70%+ coverage
 - E2E Tests: Critical user journeys (100% coverage)
@@ -31,6 +32,7 @@ This document defines a comprehensive testing strategy for Track Your Stack to e
 **Critical Calculation Functions**:
 
 **Average Cost Basis Calculation**:
+
 ```typescript
 // lib/calculations/investment.test.ts
 import { describe, it, expect } from 'vitest'
@@ -92,6 +94,7 @@ describe('Average Cost Basis Calculations', () => {
 ```
 
 **Tax Lot Calculations**:
+
 ```typescript
 // lib/calculations/tax-lot.test.ts
 import { describe, it, expect } from 'vitest'
@@ -193,6 +196,7 @@ describe('Wash Sale Detection', () => {
 ```
 
 **Currency Conversion**:
+
 ```typescript
 // lib/calculations/currency.test.ts
 import { describe, it, expect } from 'vitest'
@@ -234,6 +238,7 @@ describe('Currency Conversion', () => {
 ```
 
 **Dividend Yield Calculations**:
+
 ```typescript
 // lib/calculations/dividend.test.ts
 import { describe, it, expect } from 'vitest'
@@ -279,6 +284,7 @@ describe('Dividend Yield Calculations', () => {
 ### 1.2 Data Validation (Priority: HIGH)
 
 **Price Validation**:
+
 ```typescript
 // lib/validation/price-validation.test.ts
 import { describe, it, expect } from 'vitest'
@@ -330,6 +336,7 @@ describe('Price Validation', () => {
 ```
 
 **Quantity Validation**:
+
 ```typescript
 // lib/validation/quantity-validation.test.ts
 import { describe, it, expect } from 'vitest'
@@ -360,6 +367,7 @@ describe('Quantity Validation', () => {
 ### 1.3 Security Functions (Priority: CRITICAL)
 
 **MFA TOTP Generation**:
+
 ```typescript
 // lib/auth/mfa.test.ts
 import { describe, it, expect } from 'vitest'
@@ -402,6 +410,7 @@ describe('MFA TOTP', () => {
 ```
 
 **Rate Limiting**:
+
 ```typescript
 // lib/rate-limiting/limiter.test.ts
 import { describe, it, expect, beforeEach } from 'vitest'
@@ -455,6 +464,7 @@ describe('Rate Limiting', () => {
 **Testing Framework**: Vitest with database mocking
 
 **Portfolio CRUD Operations**:
+
 ```typescript
 // lib/actions/portfolio.test.ts
 import { describe, it, expect, beforeEach } from 'vitest'
@@ -530,6 +540,7 @@ describe('Portfolio Server Actions', () => {
 ```
 
 **Investment Calculations**:
+
 ```typescript
 // lib/actions/investment.test.ts
 import { describe, it, expect, beforeEach } from 'vitest'
@@ -592,6 +603,7 @@ describe('Investment Purchase Transactions', () => {
 ### 2.2 API Routes (Priority: MEDIUM)
 
 **Alpha Vantage Integration**:
+
 ```typescript
 // lib/api/alphaVantage.test.ts
 import { describe, it, expect, beforeEach } from 'vitest'
@@ -605,26 +617,27 @@ describe('Alpha Vantage API Client', () => {
 
   it('should fetch stock quote successfully', async () => {
     mockAlphaVantageAPI.mockStockQuote('AAPL', {
-      price: 175.50,
+      price: 175.5,
       volume: 50000000,
-      change: 2.50,
+      change: 2.5,
       changePercent: 1.45,
     })
 
     const quote = await getStockQuote('AAPL')
 
     expect(quote.ticker).toBe('AAPL')
-    expect(quote.price).toBe(175.50)
+    expect(quote.price).toBe(175.5)
     expect(quote.volume).toBe(50000000)
   })
 
   it('should handle rate limiting with retry', async () => {
-    mockAlphaVantageAPI.mockRateLimitError()
-      .then(() => mockAlphaVantageAPI.mockStockQuote('AAPL', { price: 175.50 }))
+    mockAlphaVantageAPI
+      .mockRateLimitError()
+      .then(() => mockAlphaVantageAPI.mockStockQuote('AAPL', { price: 175.5 }))
 
     const quote = await getStockQuote('AAPL')
 
-    expect(quote.price).toBe(175.50)
+    expect(quote.price).toBe(175.5)
     expect(mockAlphaVantageAPI.callCount()).toBe(2) // Retry worked
   })
 
@@ -643,6 +656,7 @@ describe('Alpha Vantage API Client', () => {
 ### 3.1 Critical User Journeys (Priority: CRITICAL)
 
 **Complete Onboarding Flow**:
+
 ```typescript
 // tests/e2e/onboarding.spec.ts
 import { test, expect } from '@playwright/test'
@@ -687,6 +701,7 @@ test.describe('User Onboarding', () => {
 ```
 
 **Portfolio CRUD Operations**:
+
 ```typescript
 // tests/e2e/portfolio-crud.spec.ts
 import { test, expect } from '@playwright/test'
@@ -723,6 +738,7 @@ test.describe('Portfolio Management', () => {
 ```
 
 **Investment Tracking & Price Refresh**:
+
 ```typescript
 // tests/e2e/investment-tracking.spec.ts
 import { test, expect } from '@playwright/test'
@@ -775,6 +791,7 @@ test.describe('Investment Tracking', () => {
 ```
 
 **CSV Import**:
+
 ```typescript
 // tests/e2e/csv-import.spec.ts
 import { test, expect } from '@playwright/test'
@@ -833,6 +850,7 @@ test.describe('CSV Import', () => {
 ### 3.2 Security Flows (Priority: CRITICAL)
 
 **MFA Setup & Login**:
+
 ```typescript
 // tests/e2e/mfa.spec.ts
 import { test, expect } from '@playwright/test'
@@ -912,6 +930,7 @@ test.describe('Multi-Factor Authentication', () => {
 ```
 
 **Rate Limiting**:
+
 ```typescript
 // tests/e2e/rate-limiting.spec.ts
 import { test, expect } from '@playwright/test'
@@ -944,6 +963,7 @@ test.describe('Rate Limiting', () => {
 ### 4.1 OWASP Top 10 Coverage (Priority: CRITICAL)
 
 **A01: Broken Access Control**:
+
 ```typescript
 // tests/security/authorization.test.ts
 import { describe, it, expect } from 'vitest'
@@ -976,14 +996,13 @@ describe('Authorization Tests', () => {
 
     mockSession({ user: { id: 'attacker', email: 'hacker@example.com' } })
 
-    await expect(
-      deleteInvestment(victimInvestment.id)
-    ).rejects.toThrow('Forbidden')
+    await expect(deleteInvestment(victimInvestment.id)).rejects.toThrow('Forbidden')
   })
 })
 ```
 
 **A02: Cryptographic Failures**:
+
 ```typescript
 // tests/security/encryption.test.ts
 import { describe, it, expect } from 'vitest'
@@ -1014,6 +1033,7 @@ describe('Encryption Tests', () => {
 ```
 
 **A03: Injection**:
+
 ```typescript
 // tests/security/injection.test.ts
 import { describe, it, expect } from 'vitest'
@@ -1038,14 +1058,13 @@ describe('SQL Injection Tests', () => {
   it('should prevent NoSQL injection in filters', async () => {
     const maliciousFilter = { $ne: null }
 
-    await expect(
-      searchInvestments(maliciousFilter)
-    ).rejects.toThrow('Invalid filter')
+    await expect(searchInvestments(maliciousFilter)).rejects.toThrow('Invalid filter')
   })
 })
 ```
 
 **A05: Security Misconfiguration**:
+
 ```typescript
 // tests/security/headers.test.ts
 import { describe, it, expect } from 'vitest'
@@ -1054,9 +1073,7 @@ describe('Security Headers', () => {
   it('should set Content-Security-Policy', async () => {
     const response = await fetch('http://localhost:3000')
 
-    expect(response.headers.get('Content-Security-Policy')).toContain(
-      "default-src 'self'"
-    )
+    expect(response.headers.get('Content-Security-Policy')).toContain("default-src 'self'")
   })
 
   it('should set X-Frame-Options', async () => {
@@ -1074,6 +1091,7 @@ describe('Security Headers', () => {
 ```
 
 **A07: Identification and Authentication Failures**:
+
 ```typescript
 // tests/security/authentication.test.ts
 import { describe, it, expect } from 'vitest'
@@ -1129,6 +1147,7 @@ describe('Authentication Tests', () => {
 **Tool**: k6 (Grafana k6)
 
 **Dashboard Load Test**:
+
 ```javascript
 // tests/performance/dashboard.k6.js
 import http from 'k6/http'
@@ -1187,6 +1206,7 @@ export default function () {
 ```
 
 **Price Refresh Load Test**:
+
 ```javascript
 // tests/performance/price-refresh.k6.js
 export const options = {
@@ -1205,11 +1225,9 @@ export const options = {
 }
 
 export default function () {
-  const res = http.post(
-    'https://trackyourstack.com/api/investments/abc123/refresh-price',
-    null,
-    { cookies: { session: sessionToken } }
-  )
+  const res = http.post('https://trackyourstack.com/api/investments/abc123/refresh-price', null, {
+    cookies: { session: sessionToken },
+  })
 
   check(res, {
     'price refreshed': (r) => r.status === 200,
@@ -1224,6 +1242,7 @@ export default function () {
 **Tool**: Lighthouse CI
 
 **Configuration**:
+
 ```javascript
 // lighthouserc.js
 module.exports = {
@@ -1255,6 +1274,7 @@ module.exports = {
 ```
 
 **CI Integration**:
+
 ```yaml
 # .github/workflows/performance.yml
 name: Performance Tests
@@ -1287,6 +1307,7 @@ jobs:
 **Tool**: axe-core + Playwright
 
 **Accessibility Test Suite**:
+
 ```typescript
 // tests/a11y/accessibility.spec.ts
 import { test, expect } from '@playwright/test'
@@ -1357,12 +1378,14 @@ test.describe('Accessibility Tests', () => {
 **Manual Testing Protocol**:
 
 **Screen Readers to Test**:
+
 - NVDA (Windows, free)
 - JAWS (Windows, commercial)
 - VoiceOver (macOS/iOS, built-in)
 - TalkBack (Android, built-in)
 
 **Test Scenarios**:
+
 1. Navigate dashboard with screen reader
 2. Create portfolio using only keyboard + screen reader
 3. Add investment with form validation
@@ -1370,6 +1393,7 @@ test.describe('Accessibility Tests', () => {
 5. Understand gain/loss indicators
 
 **Acceptance Criteria**:
+
 - ✅ All interactive elements announced
 - ✅ Form validation errors read aloud
 - ✅ Dynamic content updates announced (ARIA live regions)
@@ -1383,6 +1407,7 @@ test.describe('Accessibility Tests', () => {
 ### 7.1 Continuous Integration Pipeline
 
 **GitHub Actions Workflow**:
+
 ```yaml
 # .github/workflows/test.yml
 name: Test Suite
@@ -1493,14 +1518,15 @@ jobs:
 
 **Coverage Targets**:
 
-| Test Type | Target | Critical Paths |
-|-----------|--------|----------------|
-| Unit Tests | 80%+ | 95%+ for calculations |
-| Integration Tests | 70%+ | 90%+ for auth & CRUD |
-| E2E Tests | 100% of user journeys | All critical flows |
-| Security Tests | 100% OWASP Top 10 | All vulnerabilities |
+| Test Type         | Target                | Critical Paths        |
+| ----------------- | --------------------- | --------------------- |
+| Unit Tests        | 80%+                  | 95%+ for calculations |
+| Integration Tests | 70%+                  | 90%+ for auth & CRUD  |
+| E2E Tests         | 100% of user journeys | All critical flows    |
+| Security Tests    | 100% OWASP Top 10     | All vulnerabilities   |
 
 **Coverage Report**:
+
 ```bash
 # Generate coverage report
 pnpm test:coverage
@@ -1510,6 +1536,7 @@ open coverage/index.html
 ```
 
 **Code Coverage Enforcement**:
+
 ```javascript
 // vitest.config.ts
 export default defineConfig({
@@ -1521,12 +1548,7 @@ export default defineConfig({
       branches: 75,
       functions: 80,
       lines: 80,
-      exclude: [
-        'node_modules/',
-        'test/',
-        '**/*.test.ts',
-        '**/*.spec.ts',
-      ],
+      exclude: ['node_modules/', 'test/', '**/*.test.ts', '**/*.spec.ts'],
     },
   },
 })
@@ -1539,24 +1561,28 @@ export default defineConfig({
 ### Phase-by-Phase Testing
 
 **Phase 1: Security Testing (Weeks 3-6)**
+
 - [ ] Unit tests for MFA functions (1 day)
 - [ ] Integration tests for auth flows (1 day)
 - [ ] E2E tests for MFA login (1 day)
 - [ ] Security penetration testing (2 days)
 
 **Phase 2: Business Logic Testing (Weeks 3-10)**
+
 - [ ] Unit tests for tax calculations (3 days)
 - [ ] Unit tests for dividend tracking (1 day)
 - [ ] Integration tests for corporate actions (2 days)
 - [ ] E2E tests for tax reporting (1 day)
 
 **Phase 3: UX Testing (Weeks 7-10)**
+
 - [ ] E2E tests for onboarding (1 day)
 - [ ] E2E tests for CSV import (1 day)
 - [ ] Accessibility audit with axe (1 day)
 - [ ] Screen reader testing (1 day)
 
 **Phase 5: Comprehensive QA (Weeks 15-17)**
+
 - [ ] Load testing with k6 (2 days)
 - [ ] Performance testing with Lighthouse (1 day)
 - [ ] Security audit review (2 days)
@@ -1572,26 +1598,31 @@ export default defineConfig({
 ### Test Quality Metrics
 
 **Code Coverage**:
+
 - ✅ Overall coverage ≥80%
 - ✅ Financial calculation coverage ≥95%
 - ✅ Security function coverage ≥90%
 
 **Test Stability**:
+
 - ✅ <2% flaky test rate
 - ✅ All tests pass on main branch
 - ✅ No skipped tests in CI
 
 **Performance**:
+
 - ✅ All pages <3s load time
 - ✅ Lighthouse score ≥90
 - ✅ Core Web Vitals: Green
 
 **Security**:
+
 - ✅ Zero OWASP Top 10 vulnerabilities
 - ✅ Zero critical Snyk vulnerabilities
 - ✅ Penetration test passed
 
 **Accessibility**:
+
 - ✅ Zero axe violations (WCAG 2.1 AA)
 - ✅ Screen reader testing passed
 - ✅ Keyboard navigation complete
@@ -1601,6 +1632,7 @@ export default defineConfig({
 ## Conclusion
 
 This comprehensive testing strategy ensures Track Your Stack meets the highest standards for:
+
 - **Reliability**: Extensive unit and integration testing
 - **Security**: OWASP Top 10 coverage + penetration testing
 - **Performance**: Load testing + Core Web Vitals monitoring
@@ -1608,6 +1640,7 @@ This comprehensive testing strategy ensures Track Your Stack meets the highest s
 - **User Experience**: End-to-end validation of critical flows
 
 **Next Steps**:
+
 1. Approve testing strategy
 2. Set up testing infrastructure (Vitest, Playwright, k6)
 3. Integrate tests into CI/CD pipeline

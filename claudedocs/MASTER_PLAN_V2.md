@@ -20,6 +20,7 @@ Track Your Stack is an investment portfolio tracking application built with Next
 **Target State**: Production-ready platform with tax reporting, comprehensive security, professional UX, and 85%+ competitive feature parity
 
 **Total Estimated Effort**:
+
 - **Phases 1-6** (Core Platform): ~102-105 days (~5 months)
 - **🆕 Phase 7** (Competitive Parity): +50 days (~2.5 months)
 - **Total Timeline**: **~152-155 days** (~7.5 months)
@@ -27,6 +28,7 @@ Track Your Stack is an investment portfolio tracking application built with Next
 **Recommended Approach**: Phased rollout with parallel tracks for security, business logic, UX, and competitive features
 
 **Critical Competitive Gaps**:
+
 - **100% of competitors** have asset allocation visualization (MISSING)
 - **90%+ of competitors** have benchmarking capabilities (MISSING)
 - **70%+ of competitors** have goal tracking/retirement planning (MISSING)
@@ -40,6 +42,7 @@ Track Your Stack is an investment portfolio tracking application built with Next
 Before beginning any phase, the team must choose an implementation strategy based on resources, timeline, and business goals. The full 7.5-month roadmap (Phases 0-7) represents the comprehensive path to production-ready SaaS. However, alternative paths exist for faster value delivery.
 
 ### Option A: Full Comprehensive Roadmap (7.5 months)
+
 **Target**: Production-ready SaaS with competitive parity
 
 **Timeline**: 152-155 days (~7.5 months)
@@ -49,6 +52,7 @@ Before beginning any phase, the team must choose an implementation strategy base
 **Phases**: All phases 0-7 as documented below
 
 **Delivers**:
+
 - ✅ Enterprise-grade security (MFA, audit logging, GDPR)
 - ✅ Comprehensive tax reporting (FIFO/LIFO, wash sales, 1099-B)
 - ✅ Professional UX (dashboard, mobile, accessibility)
@@ -56,6 +60,7 @@ Before beginning any phase, the team must choose an implementation strategy base
 - ✅ Production-ready infrastructure (CI/CD, monitoring, backups)
 
 **Best For**:
+
 - Well-funded teams seeking product-market fit at scale
 - SaaS business model with monetization strategy
 - Competitive positioning against established players
@@ -73,6 +78,7 @@ Before beginning any phase, the team must choose an implementation strategy base
 **Simplified Phases**:
 
 #### **Phase 0A: Security Essentials (2 weeks, 10 days)**
+
 - [ ] Multi-Factor Authentication (3 days)
   - Add `mfaEnabled`, `mfaSecret` to User model
   - Implement TOTP verification (authenticator app)
@@ -89,6 +95,7 @@ Before beginning any phase, the team must choose an implementation strategy base
   - Server-side validation enforcement
 
 #### **Phase 0B: Tax Reporting MVP (3-4 weeks, 15-20 days)**
+
 - [ ] Tax Lot Tracking (10 days)
   - Add `TaxLot` model (purchase date, quantity, cost basis)
   - FIFO allocation only (simplest method)
@@ -104,6 +111,7 @@ Before beginning any phase, the team must choose an implementation strategy base
   - Recommend CPA verification
 
 #### **Phase 0C: UX Quick Wins (2 weeks, 10 days)**
+
 - [ ] Dashboard Overview (4 days)
   - Total portfolio value card
   - Today's gain/loss card
@@ -119,6 +127,7 @@ Before beginning any phase, the team must choose an implementation strategy base
   - Error handling and validation
 
 **MVP Deliverables**:
+
 - ✅ Secure authentication with MFA
 - ✅ Basic tax lot tracking (FIFO only)
 - ✅ Simple capital gains report for tax filing
@@ -127,6 +136,7 @@ Before beginning any phase, the team must choose an implementation strategy base
 - ✅ Functional for US retail investors with tax needs
 
 **What's NOT Included** (can add post-launch):
+
 - ❌ Dividend tracking (add in iteration 1)
 - ❌ Corporate actions (add when users report issues)
 - ❌ GDPR compliance (not needed for US-only beta)
@@ -134,6 +144,7 @@ Before beginning any phase, the team must choose an implementation strategy base
 - ❌ Competitive features (asset allocation, benchmarking - add in iteration 2-3)
 
 **Beta Launch Checklist**:
+
 - [ ] Deploy to Vercel with production database
 - [ ] Set up basic error monitoring (Sentry free tier)
 - [ ] Create simple landing page explaining the MVP
@@ -143,6 +154,7 @@ Before beginning any phase, the team must choose an implementation strategy base
 - [ ] Iterate based on top 3 user requests
 
 **Success Metrics**:
+
 - 50 beta users signed up within 2 weeks
 - 20+ users add at least 5 investments
 - 10+ users generate tax report
@@ -150,6 +162,7 @@ Before beginning any phase, the team must choose an implementation strategy base
 - <5 critical bugs reported
 
 **Post-MVP Roadmap** (Iterate based on feedback):
+
 1. **Iteration 1** (2-3 weeks): Dividend tracking + improved dashboard
 2. **Iteration 2** (3-4 weeks): Asset allocation visualization + benchmarking
 3. **Iteration 3** (2-3 weeks): Corporate actions + advanced tax features
@@ -157,6 +170,7 @@ Before beginning any phase, the team must choose an implementation strategy base
 5. **Iteration 5**: Full security hardening + GDPR (if expanding to EU)
 
 **Best For**:
+
 - Solo developers or small teams (1-2 people)
 - Validating product-market fit before major investment
 - Building in public and iterating with users
@@ -173,12 +187,14 @@ Before beginning any phase, the team must choose an implementation strategy base
 **Budget**: ~$100K-150K
 
 **Focus Areas**:
+
 - **Security**: MFA only (minimal compliance)
 - **Tax Reporting**: Comprehensive (all lot methods, wash sales, 1099-B, estimated taxes)
 - **UX**: Minimal (desktop-only, basic dashboard)
 - **Features**: Tax-centric (no dividend tracking unless tax-relevant)
 
 **Phases**:
+
 1. **Security Minimal** (1 week): MFA + basic audit logging
 2. **Tax Reporting Comprehensive** (6-8 weeks):
    - All tax lot methods (FIFO, LIFO, Specific ID, Average Cost)
@@ -192,6 +208,7 @@ Before beginning any phase, the team must choose an implementation strategy base
 4. **Basic UX** (1 week): Desktop-optimized interface, CSV import
 
 **Best For**:
+
 - Targeting active traders with complex tax situations
 - Competing with TurboTax/H&R Block add-ons
 - Positioning as "the tax expert's portfolio tracker"
@@ -201,13 +218,13 @@ Before beginning any phase, the team must choose an implementation strategy base
 
 ### Recommendation Matrix
 
-| Scenario | Recommended Option | Reasoning |
-|----------|-------------------|-----------|
-| Solo developer, bootstrapping | **Option B (MVP)** | Fastest validation, lowest risk |
-| Small team (2-3), seeking funding | **Option B** → **Option A** | MVP first, then full roadmap with funding |
-| Well-funded startup, competitive market | **Option A (Full)** | Comprehensive features needed to compete |
-| Niche positioning for tax experts | **Option C (Tax-First)** | Differentiation through specialization |
-| Open-source project | **Option B** → Community-driven | MVP to attract contributors |
+| Scenario                                | Recommended Option              | Reasoning                                 |
+| --------------------------------------- | ------------------------------- | ----------------------------------------- |
+| Solo developer, bootstrapping           | **Option B (MVP)**              | Fastest validation, lowest risk           |
+| Small team (2-3), seeking funding       | **Option B** → **Option A**     | MVP first, then full roadmap with funding |
+| Well-funded startup, competitive market | **Option A (Full)**             | Comprehensive features needed to compete  |
+| Niche positioning for tax experts       | **Option C (Tax-First)**        | Differentiation through specialization    |
+| Open-source project                     | **Option B** → Community-driven | MVP to attract contributors               |
 
 ---
 
@@ -217,15 +234,15 @@ Before beginning any phase, the team must choose an implementation strategy base
 
 **15 Critical Security Gaps Identified:**
 
-| Priority | Issue | Impact | Effort |
-|----------|-------|--------|--------|
+| Priority    | Issue                          | Impact                     | Effort |
+| ----------- | ------------------------------ | -------------------------- | ------ |
 | 🔴 CRITICAL | No Multi-Factor Authentication | Credential compromise risk | 3 days |
-| 🔴 CRITICAL | No Audit Logging | No compliance trail | 4 days |
-| 🔴 CRITICAL | Missing GDPR Compliance | Legal risk for EU users | 5 days |
-| 🟡 HIGH | Weak Rate Limiting | DoS vulnerability | 3 days |
-| 🟡 HIGH | No Session Management UI | Security awareness gap | 2 days |
-| 🟡 HIGH | Insufficient Input Validation | Injection risks | 2 days |
-| 🟡 HIGH | No Encryption Documentation | Unclear data protection | 2 days |
+| 🔴 CRITICAL | No Audit Logging               | No compliance trail        | 4 days |
+| 🔴 CRITICAL | Missing GDPR Compliance        | Legal risk for EU users    | 5 days |
+| 🟡 HIGH     | Weak Rate Limiting             | DoS vulnerability          | 3 days |
+| 🟡 HIGH     | No Session Management UI       | Security awareness gap     | 2 days |
+| 🟡 HIGH     | Insufficient Input Validation  | Injection risks            | 2 days |
+| 🟡 HIGH     | No Encryption Documentation    | Unclear data protection    | 2 days |
 
 **Additional Gaps**: Content Security Policy, security headers, password requirements, dependency scanning, security testing, penetration testing, incident response plan
 
@@ -237,13 +254,13 @@ Before beginning any phase, the team must choose an implementation strategy base
 
 **11 Critical Financial Calculation Gaps:**
 
-| Priority | Issue | Impact | Effort |
-|----------|-------|--------|--------|
-| 🔴 CRITICAL | No Tax Reporting | Unusable for US users | 15 days |
-| 🔴 CRITICAL | No Dividend Tracking | 30-40% returns underreported | 7 days |
-| 🔴 CRITICAL | No Corporate Actions | Data corruption on stock splits | 8 days |
-| 🟡 HIGH | Transaction Fees Ignored | Inaccurate cost basis | 1 day |
-| 🟡 HIGH | Wrong Currency Conversion | Incorrect multi-currency returns | 2 days |
+| Priority    | Issue                     | Impact                           | Effort  |
+| ----------- | ------------------------- | -------------------------------- | ------- |
+| 🔴 CRITICAL | No Tax Reporting          | Unusable for US users            | 15 days |
+| 🔴 CRITICAL | No Dividend Tracking      | 30-40% returns underreported     | 7 days  |
+| 🔴 CRITICAL | No Corporate Actions      | Data corruption on stock splits  | 8 days  |
+| 🟡 HIGH     | Transaction Fees Ignored  | Inaccurate cost basis            | 1 day   |
+| 🟡 HIGH     | Wrong Currency Conversion | Incorrect multi-currency returns | 2 days  |
 
 **Additional Gaps**: Short selling, margin accounts, interest/fees, realized vs unrealized gains, year-end reports, multi-account consolidation
 
@@ -255,13 +272,13 @@ Before beginning any phase, the team must choose an implementation strategy base
 
 **12 Data Integrity Vulnerabilities:**
 
-| Priority | Issue | Impact | Effort |
-|----------|-------|--------|--------|
-| 🔴 CRITICAL | No Database Constraints | Invalid data allowed | 2 days |
-| 🔴 CRITICAL | No Optimistic Locking | Lost update conflicts | 2 days |
-| 🟡 HIGH | No Price Validation | Corrupt price data | 2 days |
-| 🟡 HIGH | Inconsistent Time Zones | Date boundary errors | 1 day |
-| 🟡 HIGH | No Staleness Detection | Outdated data displayed | 1 day |
+| Priority    | Issue                   | Impact                  | Effort |
+| ----------- | ----------------------- | ----------------------- | ------ |
+| 🔴 CRITICAL | No Database Constraints | Invalid data allowed    | 2 days |
+| 🔴 CRITICAL | No Optimistic Locking   | Lost update conflicts   | 2 days |
+| 🟡 HIGH     | No Price Validation     | Corrupt price data      | 2 days |
+| 🟡 HIGH     | Inconsistent Time Zones | Date boundary errors    | 1 day  |
+| 🟡 HIGH     | No Staleness Detection  | Outdated data displayed | 1 day  |
 
 **Additional Gaps**: Uniqueness constraints, foreign key integrity, quantity validation, date validation, transaction isolation, retry logic, graceful degradation
 
@@ -274,6 +291,7 @@ Before beginning any phase, the team must choose an implementation strategy base
 **23 UX/Feature Opportunities Identified:**
 
 **Phase 1: Quick Wins (8 features, 17 days)**
+
 - Dashboard overview with key metrics
 - Price refresh button with feedback
 - Bulk price refresh
@@ -284,6 +302,7 @@ Before beginning any phase, the team must choose an implementation strategy base
 - Accessibility improvements
 
 **Phase 2: Strategic Initiatives (6 features, 14 days)**
+
 - Onboarding flow & tutorial
 - Notification system
 - Advanced reporting & export
@@ -292,6 +311,7 @@ Before beginning any phase, the team must choose an implementation strategy base
 - Social features (optional)
 
 **Phase 3: Low Priority (9 features, 4 days)**
+
 - Dark mode, currency settings, notes, news feed, rebalancing calculator, i18n, etc.
 
 **Priority**: Phase 1 critical for user adoption
@@ -303,11 +323,13 @@ Before beginning any phase, the team must choose an implementation strategy base
 ### Phase 0: Foundation & Planning (Week 1-2, 10 days)
 
 **Goals**:
+
 - Establish development infrastructure
 - Set up quality gates
 - Plan parallel work tracks
 
 **Deliverables**:
+
 - [ ] Enhanced CI/CD pipeline (testing, security scans)
 - [ ] Database backup strategy
 - [ ] Development environment standardization
@@ -316,6 +338,7 @@ Before beginning any phase, the team must choose an implementation strategy base
 - [ ] Risk mitigation plan
 
 **Parallel Tracks Setup**:
+
 - **Track A**: Security Team (2 developers)
 - **Track B**: Business Logic Team (2 developers)
 - **Track C**: UX/Frontend Team (1-2 developers)
@@ -328,6 +351,7 @@ Before beginning any phase, the team must choose an implementation strategy base
 **Track A: Critical Security (Weeks 3-6)**
 
 **Week 3: Authentication & Authorization**
+
 - [ ] Multi-Factor Authentication (TOTP)
   - Add `mfaEnabled`, `mfaSecret` to User model
   - Implement TOTP verification flow
@@ -342,6 +366,7 @@ Before beginning any phase, the team must choose an implementation strategy base
   - Server-side validation enforcement
 
 **Week 4: Compliance & Logging**
+
 - [ ] Audit Logging System
   - `AuditLog` model implementation
   - Audit middleware for all mutations
@@ -353,6 +378,7 @@ Before beginning any phase, the team must choose an implementation strategy base
   - Cookie consent banner
 
 **Week 5: GDPR & Rate Limiting**
+
 - [ ] GDPR Compliance (Part 2)
   - Privacy policy implementation
   - Terms of service
@@ -364,6 +390,7 @@ Before beginning any phase, the team must choose an implementation strategy base
   - Rate limit exceeded UI
 
 **Week 6: Security Hardening**
+
 - [ ] Content Security Policy
 - [ ] Security headers (Helmet.js)
 - [ ] Password requirements enforcement
@@ -372,6 +399,7 @@ Before beginning any phase, the team must choose an implementation strategy base
 - [ ] Encryption documentation
 
 **Deliverables**:
+
 - ✅ MFA enabled for all users
 - ✅ Complete audit trail
 - ✅ GDPR compliant
@@ -385,6 +413,7 @@ Before beginning any phase, the team must choose an implementation strategy base
 **Track B: Tax Reporting & Financial Accuracy (Weeks 3-7, 25 days)**
 
 **Week 3-4: Tax Lot Foundation**
+
 - [ ] Database schema updates
   - `TaxLot` model
   - `SaleTransaction` model
@@ -397,6 +426,7 @@ Before beginning any phase, the team must choose an implementation strategy base
   - Wash sale detection
 
 **Week 5-6: Tax Calculations**
+
 - [ ] Capital gains engine
   - Short-term vs long-term classification
   - Cost basis calculation with fees
@@ -408,6 +438,7 @@ Before beginning any phase, the team must choose an implementation strategy base
   - PDF report generation
 
 **Week 7: Dividend Tracking**
+
 - [ ] Dividend model implementation
 - [ ] Dividend yield calculations
 - [ ] Qualified vs ordinary dividend classification
@@ -415,6 +446,7 @@ Before beginning any phase, the team must choose an implementation strategy base
 - [ ] Dividend reinvestment tracking
 
 **Week 8-9: Corporate Actions**
+
 - [ ] Corporate action model
 - [ ] Stock split handler
   - Adjust quantity, price, cost basis
@@ -426,6 +458,7 @@ Before beginning any phase, the team must choose an implementation strategy base
 - [ ] Delisting handler
 
 **Week 10: Currency & Fees**
+
 - [ ] Historical exchange rate tracking
 - [ ] Currency conversion at purchase time
 - [ ] Transaction fee tracking
@@ -434,12 +467,14 @@ Before beginning any phase, the team must choose an implementation strategy base
 **Track D: Data Integrity (Weeks 3-5, 12 days parallel)**
 
 **Week 3: Database Constraints**
+
 - [ ] CHECK constraints (positive values, reasonable bounds)
 - [ ] UNIQUE constraints (portfolio names, investment tickers)
 - [ ] Foreign key integrity review
 - [ ] Constraint violation testing
 
 **Week 4: Validation & Concurrency**
+
 - [ ] Price validation logic
 - [ ] Quantity validation rules
 - [ ] Date validation
@@ -448,6 +483,7 @@ Before beginning any phase, the team must choose an implementation strategy base
 - [ ] Conflict resolution UI
 
 **Week 5: Quality Assurance**
+
 - [ ] Time zone standardization
 - [ ] Price staleness detection
 - [ ] Retry logic with exponential backoff
@@ -456,6 +492,7 @@ Before beginning any phase, the team must choose an implementation strategy base
 - [ ] Automated integrity checks
 
 **Deliverables**:
+
 - ✅ Complete tax lot tracking
 - ✅ Accurate capital gains calculations
 - ✅ Dividend tracking and yield
@@ -470,6 +507,7 @@ Before beginning any phase, the team must choose an implementation strategy base
 **Track C: Critical UX Improvements**
 
 **Week 7: Dashboard & Visualization**
+
 - [ ] Dashboard overview cards
   - Total portfolio value
   - Aggregate gain/loss
@@ -480,6 +518,7 @@ Before beginning any phase, the team must choose an implementation strategy base
   - Daily snapshot generation cron job
 
 **Week 8: Mobile & Accessibility**
+
 - [ ] Mobile responsive design
   - Table → Card list transformation
   - Bottom navigation
@@ -496,6 +535,7 @@ Before beginning any phase, the team must choose an implementation strategy base
   - Staleness indicators
 
 **Week 9: Search & Import**
+
 - [ ] Search and filter investments
   - Search by ticker
   - Filter by asset type
@@ -508,6 +548,7 @@ Before beginning any phase, the team must choose an implementation strategy base
   - Error handling
 
 **Week 10: Polish & Testing**
+
 - [ ] Loading states across app
 - [ ] Error boundaries
 - [ ] Toast notifications
@@ -515,6 +556,7 @@ Before beginning any phase, the team must choose an implementation strategy base
 - [ ] UX testing and bug fixes
 
 **Deliverables**:
+
 - ✅ Intuitive dashboard
 - ✅ Mobile-friendly experience
 - ✅ WCAG 2.1 AA compliant
@@ -528,6 +570,7 @@ Before beginning any phase, the team must choose an implementation strategy base
 **Track C: Engagement & Retention**
 
 **Week 11-12: Onboarding & Notifications**
+
 - [ ] Welcome flow
   - 3-step onboarding wizard
   - Quick start checklist
@@ -541,6 +584,7 @@ Before beginning any phase, the team must choose an implementation strategy base
   - Weekly digest email
 
 **Week 13: Reporting & Export**
+
 - [ ] Advanced reporting
   - PDF portfolio report
   - CSV holdings export
@@ -553,6 +597,7 @@ Before beginning any phase, the team must choose an implementation strategy base
   - Form 1099-DIV equivalent
 
 **Week 14: Comparison & Watchlist**
+
 - [ ] Portfolio comparison view
   - Side-by-side summary table
   - Performance chart overlay
@@ -564,6 +609,7 @@ Before beginning any phase, the team must choose an implementation strategy base
   - Target price notifications
 
 **Deliverables**:
+
 - ✅ Low user abandonment
 - ✅ High engagement
 - ✅ Tax reporting ready
@@ -576,6 +622,7 @@ Before beginning any phase, the team must choose an implementation strategy base
 **Comprehensive Testing Strategy**
 
 **Week 15: Unit & Integration Testing**
+
 - [ ] Tax calculation tests
   - FIFO/LIFO/Specific ID scenarios
   - Wash sale detection
@@ -589,6 +636,7 @@ Before beginning any phase, the team must choose an implementation strategy base
   - Validation edge cases
 
 **Week 16: E2E & Security Testing**
+
 - [ ] Playwright E2E tests
   - Complete user journey
   - Onboarding flow
@@ -603,6 +651,7 @@ Before beginning any phase, the team must choose an implementation strategy base
   - Input validation fuzzing
 
 **Week 17: Performance & Accessibility Testing**
+
 - [ ] Performance testing
   - Lighthouse audits
   - Load testing (k6 or Artillery)
@@ -615,6 +664,7 @@ Before beginning any phase, the team must choose an implementation strategy base
   - WCAG 2.1 AA compliance verification
 
 **Deliverables**:
+
 - ✅ 80%+ test coverage
 - ✅ All OWASP Top 10 addressed
 - ✅ Sub-3s page loads
@@ -627,6 +677,7 @@ Before beginning any phase, the team must choose an implementation strategy base
 **Controlled Beta Launch**
 
 **Week 18: Beta Preparation**
+
 - [ ] Beta user recruitment (50-100 users)
 - [ ] Monitoring setup
   - Sentry for error tracking
@@ -638,6 +689,7 @@ Before beginning any phase, the team must choose an implementation strategy base
   - NPS survey
 
 **Week 19: Beta Launch**
+
 - [ ] Soft launch to beta users
 - [ ] Daily monitoring and triage
 - [ ] Bug fixing priority queue
@@ -645,6 +697,7 @@ Before beginning any phase, the team must choose an implementation strategy base
 - [ ] Feature usage analytics review
 
 **Week 20: Iteration & Refinement**
+
 - [ ] Critical bug fixes
 - [ ] UX refinements based on feedback
 - [ ] Performance optimizations
@@ -652,6 +705,7 @@ Before beginning any phase, the team must choose an implementation strategy base
 - [ ] Prepare for public launch
 
 **Deliverables**:
+
 - ✅ 50+ beta users onboarded
 - ✅ Feedback incorporated
 - ✅ Critical bugs resolved
@@ -694,6 +748,7 @@ Before beginning any phase, the team must choose an implementation strategy base
   - Geographic breakdown visualization
 
 **Database Schema Updates**:
+
 ```prisma
 model Investment {
   // Existing fields...
@@ -732,6 +787,7 @@ model Investment {
   - Sharpe ratio display (optional)
 
 **Database Schema Updates**:
+
 ```prisma
 model PortfolioBenchmark {
   id          String   @id @default(cuid())
@@ -783,6 +839,7 @@ model BenchmarkPrice {
   - Alert management UI with status tracking
 
 **Database Schema Updates**:
+
 ```prisma
 model TargetAllocation {
   id          String   @id @default(cuid())
@@ -891,6 +948,7 @@ enum PriceAlertType {
   - Milestone notifications
 
 **Database Schema Updates**:
+
 ```prisma
 enum GoalType {
   RETIREMENT
@@ -950,6 +1008,7 @@ enum GoalStatus {
   - Time-period selection (1M, 3M, 1Y, YTD, All)
 
 **Deliverables**:
+
 - ✅ Asset allocation visualization (pie chart, sector breakdown, geographic breakdown)
 - ✅ Benchmark comparison (S&P 500, NASDAQ, custom benchmarks)
 - ✅ Portfolio risk score and volatility metrics
@@ -961,6 +1020,7 @@ enum GoalStatus {
 - ✅ 85%+ feature parity with top 3 competitors
 
 **Success Metrics**:
+
 - **Feature Parity Score**: >85% vs Empower, Sharesight, Seeking Alpha
 - **User Engagement**: +50% increase in daily active users (DAU)
 - **Feature Adoption**: >70% of users view asset allocation chart
@@ -975,6 +1035,7 @@ enum GoalStatus {
 **Recommended Team Size**: 6-7 people for 5-month timeline
 
 **Team Composition**:
+
 - **1 Tech Lead / Architect** (full-time)
   - Oversees all tracks
   - Code reviews
@@ -1057,6 +1118,7 @@ Features
 ### Technical Risks
 
 **Risk 1: Tax Calculation Complexity**
+
 - **Impact**: HIGH - Wrong calculations could cause user financial harm
 - **Likelihood**: MEDIUM
 - **Mitigation**:
@@ -1067,6 +1129,7 @@ Features
   - User verification prompts
 
 **Risk 2: Alpha Vantage API Reliability**
+
 - **Impact**: MEDIUM - Price fetching failures
 - **Likelihood**: MEDIUM
 - **Mitigation**:
@@ -1076,6 +1139,7 @@ Features
   - Manual price entry option
 
 **Risk 3: Database Migration Failures**
+
 - **Impact**: HIGH - Data corruption or loss
 - **Likelihood**: LOW
 - **Mitigation**:
@@ -1086,6 +1150,7 @@ Features
   - Point-in-time recovery capability
 
 **Risk 4: Performance Degradation**
+
 - **Impact**: MEDIUM - Poor user experience
 - **Likelihood**: MEDIUM
 - **Mitigation**:
@@ -1100,6 +1165,7 @@ Features
 ### Business Risks
 
 **Risk 5: Regulatory Compliance**
+
 - **Impact**: HIGH - Legal liability
 - **Likelihood**: LOW
 - **Mitigation**:
@@ -1110,6 +1176,7 @@ Features
   - Insurance (E&O coverage)
 
 **Risk 6: User Adoption**
+
 - **Impact**: HIGH - Product failure
 - **Likelihood**: MEDIUM
 - **Mitigation**:
@@ -1120,6 +1187,7 @@ Features
   - Referral program
 
 **Risk 7: Data Security Breach**
+
 - **Impact**: CRITICAL - Reputation damage, legal liability
 - **Likelihood**: LOW
 - **Mitigation**:
@@ -1136,17 +1204,20 @@ Features
 ### Phase 1-2: Foundation (Weeks 1-10)
 
 **Security Metrics**:
+
 - ✅ 100% MFA adoption for new users
 - ✅ Zero security vulnerabilities (OWASP Top 10)
 - ✅ Audit log for 100% of mutations
 - ✅ GDPR compliant (verified by legal)
 
 **Business Logic Metrics**:
+
 - ✅ Tax calculations match TurboTax within $0.01
 - ✅ Corporate actions handled correctly (0 data corruption incidents)
 - ✅ Multi-currency accuracy within 0.1%
 
 **Data Integrity Metrics**:
+
 - ✅ Zero invalid data in production
 - ✅ <0.1% optimistic lock conflicts
 - ✅ 99.9% price fetch success rate
@@ -1156,16 +1227,19 @@ Features
 ### Phase 3-4: UX & Features (Weeks 7-14)
 
 **User Activation**:
+
 - ✅ 80%+ signup → first portfolio within 24 hours
 - ✅ 75%+ onboarding checklist completion
 - ✅ 40%+ CSV import adoption
 
 **User Engagement**:
+
 - ✅ WAU/MAU > 60% (weekly active / monthly active)
 - ✅ 90%+ users refresh prices weekly
 - ✅ 70%+ users view performance charts
 
 **User Satisfaction**:
+
 - ✅ Net Promoter Score (NPS) > 40
 - ✅ <10% monthly churn rate
 - ✅ >4.5 star rating (when launched)
@@ -1175,18 +1249,21 @@ Features
 ### Phase 5-6: Quality & Launch (Weeks 15-20)
 
 **Quality Metrics**:
+
 - ✅ 80%+ code coverage (unit + integration tests)
 - ✅ <3 second page load (Lighthouse score >90)
 - ✅ WCAG 2.1 AA compliance (zero axe violations)
 - ✅ Zero critical bugs in production
 
 **Beta Launch Metrics**:
+
 - ✅ 50+ beta users recruited
 - ✅ 10+ user interviews conducted
 - ✅ NPS > 40 from beta cohort
 - ✅ <5% user-reported bug rate
 
 **Public Launch Readiness**:
+
 - ✅ 100% feature completeness (Phase 1-4)
 - ✅ Security audit passed
 - ✅ Performance benchmarks met
@@ -1217,14 +1294,14 @@ Total Duration: 20 weeks (~5 months)
 
 ### By Track
 
-| Track | Focus Area | Effort | Weeks |
-|-------|------------|--------|-------|
-| Track A | Security | 22-25 days | Weeks 3-6 |
-| Track B | Business Logic | 33 days | Weeks 3-10 |
-| Track C | UX/Frontend | 31 days | Weeks 7-14 |
-| Track D | Data Integrity | 12 days | Weeks 3-5 |
-| Testing | Quality Assurance | 15 days | Weeks 15-17 |
-| Beta | Launch & Iteration | 15 days | Weeks 18-20 |
+| Track   | Focus Area         | Effort     | Weeks       |
+| ------- | ------------------ | ---------- | ----------- |
+| Track A | Security           | 22-25 days | Weeks 3-6   |
+| Track B | Business Logic     | 33 days    | Weeks 3-10  |
+| Track C | UX/Frontend        | 31 days    | Weeks 7-14  |
+| Track D | Data Integrity     | 12 days    | Weeks 3-5   |
+| Testing | Quality Assurance  | 15 days    | Weeks 15-17 |
+| Beta    | Launch & Iteration | 15 days    | Weeks 18-20 |
 
 **Total**: ~128 days of effort across 20 weeks (parallel execution)
 
@@ -1232,15 +1309,15 @@ Total Duration: 20 weeks (~5 months)
 
 ### By Phase
 
-| Phase | Description | Duration | Effort |
-|-------|-------------|----------|--------|
-| Phase 0 | Foundation & Planning | 2 weeks | 10 days |
-| Phase 1 | Security Foundation | 4 weeks | 22-25 days |
-| Phase 2 | Business Logic & Data | 8 weeks | 45 days |
-| Phase 3 | UX Quick Wins | 4 weeks | 17 days |
-| Phase 4 | Strategic Features | 4 weeks | 14 days |
-| Phase 5 | Testing & QA | 3 weeks | 15 days |
-| Phase 6 | Beta Launch | 3 weeks | 15 days |
+| Phase   | Description           | Duration | Effort     |
+| ------- | --------------------- | -------- | ---------- |
+| Phase 0 | Foundation & Planning | 2 weeks  | 10 days    |
+| Phase 1 | Security Foundation   | 4 weeks  | 22-25 days |
+| Phase 2 | Business Logic & Data | 8 weeks  | 45 days    |
+| Phase 3 | UX Quick Wins         | 4 weeks  | 17 days    |
+| Phase 4 | Strategic Features    | 4 weeks  | 14 days    |
+| Phase 5 | Testing & QA          | 3 weeks  | 15 days    |
+| Phase 6 | Beta Launch           | 3 weeks  | 15 days    |
 
 **Total**: ~20 weeks (~5 months) with parallel execution
 
@@ -1253,6 +1330,7 @@ Total Duration: 20 weeks (~5 months)
 **Purpose**: Pre-production testing and validation
 
 **Setup**:
+
 - Separate Vercel project
 - Separate database (Neon or Supabase)
 - Identical environment variables
@@ -1260,6 +1338,7 @@ Total Duration: 20 weeks (~5 months)
 - Automated deployments from `develop` branch
 
 **Usage**:
+
 - All feature branches merge to `develop` → auto-deploy to staging
 - QA testing on staging
 - Beta users may access staging for early feedback
@@ -1315,6 +1394,7 @@ pnpm smoke-test
 ```
 
 **Rollback Plan**:
+
 - Keep previous version deployed in Vercel (instant rollback)
 - Database rollback: restore from backup + manual SQL if needed
 - Feature flags for gradual rollout of risky features
@@ -1355,6 +1435,7 @@ curl https://trackyourstack.com/api/health
 ```
 
 **Success Criteria**:
+
 - Application returns to previous stable state
 - Error rate drops to baseline
 - All critical user flows functional
@@ -1445,6 +1526,7 @@ pnpm tsx scripts/verify-fix.ts
 ##### Phase 1: Security Foundation Rollback
 
 **MFA Rollback**:
+
 ```sql
 -- Emergency disable MFA for all users (allows login if MFA broken)
 UPDATE "User" SET "mfaEnabled" = false WHERE "mfaEnabled" = true;
@@ -1455,6 +1537,7 @@ VALUES ('MFA_EMERGENCY_DISABLE', 'User', '{"reason": "rollback", "count": (SELEC
 ```
 
 **Audit Logging Rollback**:
+
 - Disable audit logging middleware
 - Keep existing audit log data (no deletion)
 - Revert application code to remove audit calls
@@ -1491,11 +1574,13 @@ git push origin main
 ```
 
 **Data Loss Warning**:
+
 - All individual purchase history will be lost
 - Only aggregated quantities/cost basis preserved
 - Users must re-enter purchase details if needed
 
 **Prevention**:
+
 - Migrate users incrementally (not all at once)
 - Keep old schema during transition period
 - Dual-write to both old and new schema
@@ -1505,6 +1590,7 @@ git push origin main
 ##### Phase 3: UX Quick Wins Rollback
 
 **Dashboard/UI Rollback**:
+
 - Instant rollback (frontend-only changes)
 - No data migration involved
 - Low risk
@@ -1523,16 +1609,18 @@ git push origin main
 **General Feature Rollback Pattern**:
 
 1. **Disable feature via feature flag** (instant):
+
    ```typescript
    // app/config/features.ts
    export const FEATURES = {
-     BENCHMARKING: false,  // Disable feature
+     BENCHMARKING: false, // Disable feature
      GOAL_TRACKING: false,
      PRICE_ALERTS: false,
    }
    ```
 
 2. **Revert code** (if feature flag not enough):
+
    ```bash
    git revert <feature_commit>
    git push origin main
@@ -1549,20 +1637,21 @@ git push origin main
 
 #### Rollback Decision Matrix
 
-| Severity | Time Since Deploy | Data Modified | Recommended Action | Timeline |
-|----------|------------------|---------------|-------------------|----------|
-| 🟢 Low | Any | No | Code rollback via Vercel | <5 min |
-| 🟡 Medium | <1 hour | No | Code rollback + monitor | <10 min |
-| 🟡 Medium | <1 hour | Yes (minimal) | Forward fix | <30 min |
-| 🔴 High | <1 hour | Yes (significant) | PITR + code rollback | <30 min |
-| 🔴 High | >1 hour | Yes | Forward fix + manual correction | 1-2 hours |
-| 🔴 Critical | Any | Data corruption | PITR + incident response | <1 hour |
+| Severity    | Time Since Deploy | Data Modified     | Recommended Action              | Timeline  |
+| ----------- | ----------------- | ----------------- | ------------------------------- | --------- |
+| 🟢 Low      | Any               | No                | Code rollback via Vercel        | <5 min    |
+| 🟡 Medium   | <1 hour           | No                | Code rollback + monitor         | <10 min   |
+| 🟡 Medium   | <1 hour           | Yes (minimal)     | Forward fix                     | <30 min   |
+| 🔴 High     | <1 hour           | Yes (significant) | PITR + code rollback            | <30 min   |
+| 🔴 High     | >1 hour           | Yes               | Forward fix + manual correction | 1-2 hours |
+| 🔴 Critical | Any               | Data corruption   | PITR + incident response        | <1 hour   |
 
 ---
 
 #### Rollback Communication Template
 
 **Internal Team (Slack/Discord)**:
+
 ```
 🚨 ROLLBACK IN PROGRESS
 Deployment: [deployment_id]
@@ -1573,6 +1662,7 @@ Status updates: [every 5 minutes]
 ```
 
 **External Users (Status Page)**:
+
 ```
 ⚠️ Service Update - [timestamp]
 
@@ -1626,6 +1716,7 @@ After any rollback:
    - [ ] Team trained on rollback process?
 
 **Risk Score Calculation**:
+
 - 0-2 factors: ✅ Low risk, standard deployment
 - 3-4 factors: ⚠️ Medium risk, deploy during low-traffic, monitor closely
 - 5+ factors: 🚨 High risk, incremental rollout, immediate rollback ready
@@ -1633,6 +1724,7 @@ After any rollback:
 ---
 
 **See Also**:
+
 - [MIGRATION_STRATEGY.md](./MIGRATION_STRATEGY.md) - Detailed database migration procedures
 - [security-audit-blind-spots.md](./security-audit-blind-spots.md) - Security incident response
 
@@ -1643,6 +1735,7 @@ After any rollback:
 ### Application Monitoring
 
 **Error Tracking**: Sentry
+
 - Real-time error notifications
 - Error grouping and trends
 - User impact analysis
@@ -1650,6 +1743,7 @@ After any rollback:
 - Release tracking
 
 **Analytics**: PostHog or Mixpanel
+
 - User behavior tracking
 - Feature adoption rates
 - Funnel analysis (signup → onboarding → engagement)
@@ -1657,6 +1751,7 @@ After any rollback:
 - A/B testing capability
 
 **Performance**: Vercel Analytics
+
 - Core Web Vitals
 - Page load times
 - API response times
@@ -1667,12 +1762,14 @@ After any rollback:
 ### Database Monitoring
 
 **Query Performance**:
+
 - Prisma logging in development
 - Slow query log in production
 - Index usage analysis
 - Connection pool monitoring
 
 **Data Quality**:
+
 - Daily integrity checks (cron job)
 - Orphaned record detection
 - Price staleness alerts
@@ -1683,12 +1780,14 @@ After any rollback:
 ### Security Monitoring
 
 **Access Logs**:
+
 - Authentication attempts (success/failure)
 - MFA usage rates
 - Session creation/destruction
 - Account deletion requests
 
 **Threat Detection**:
+
 - Rate limit violations
 - Unusual access patterns
 - Multiple failed login attempts
@@ -1701,12 +1800,14 @@ After any rollback:
 ### User Documentation
 
 **Getting Started**:
+
 - [ ] Account creation guide
 - [ ] Portfolio setup tutorial
 - [ ] Adding investments guide
 - [ ] Understanding performance metrics
 
 **Feature Guides**:
+
 - [ ] CSV import instructions
 - [ ] Tax reporting guide
 - [ ] Dividend tracking explanation
@@ -1714,6 +1815,7 @@ After any rollback:
 - [ ] Multi-currency portfolios
 
 **FAQ**:
+
 - [ ] Common questions
 - [ ] Troubleshooting
 - [ ] Privacy and security
@@ -1724,18 +1826,21 @@ After any rollback:
 ### Developer Documentation
 
 **Architecture**:
+
 - [ ] System architecture diagram
 - [ ] Database schema documentation
 - [ ] API documentation
 - [ ] Authentication flow
 
 **Development**:
+
 - [ ] Local setup guide
 - [ ] Testing strategy
 - [ ] Deployment process
 - [ ] Contribution guidelines
 
 **Operations**:
+
 - [ ] Monitoring and alerting
 - [ ] Incident response plan
 - [ ] Backup and recovery
@@ -1747,16 +1852,16 @@ After any rollback:
 
 ### Infrastructure Costs (Monthly)
 
-| Service | Tier | Cost |
-|---------|------|------|
-| Vercel | Pro | $20/month |
-| Neon/Supabase | Pro | $25/month |
-| Redis (Upstash) | Pay-as-go | $5-10/month |
-| Resend (Email) | Pro | $20/month |
-| Sentry | Team | $26/month |
-| PostHog/Mixpanel | Startup | $0-25/month |
-| Alpha Vantage | Premium | $50/month |
-| Domain | Annual | ~$1/month |
+| Service          | Tier      | Cost        |
+| ---------------- | --------- | ----------- |
+| Vercel           | Pro       | $20/month   |
+| Neon/Supabase    | Pro       | $25/month   |
+| Redis (Upstash)  | Pay-as-go | $5-10/month |
+| Resend (Email)   | Pro       | $20/month   |
+| Sentry           | Team      | $26/month   |
+| PostHog/Mixpanel | Startup   | $0-25/month |
+| Alpha Vantage    | Premium   | $50/month   |
+| Domain           | Annual    | ~$1/month   |
 
 **Total**: ~$150-180/month for production + staging
 
@@ -1766,17 +1871,18 @@ After any rollback:
 
 **Personnel** (assuming market rates):
 
-| Role | Rate | Duration | Total |
-|------|------|----------|-------|
-| Tech Lead | $150/hour | 800 hours | $120,000 |
-| Backend Engineers (2) | $125/hour | 1,600 hours | $200,000 |
+| Role                   | Rate      | Duration    | Total    |
+| ---------------------- | --------- | ----------- | -------- |
+| Tech Lead              | $150/hour | 800 hours   | $120,000 |
+| Backend Engineers (2)  | $125/hour | 1,600 hours | $200,000 |
 | Frontend Engineers (2) | $120/hour | 1,200 hours | $144,000 |
-| Full-Stack Engineer | $130/hour | 800 hours | $104,000 |
-| QA Engineer | $100/hour | 300 hours | $30,000 |
+| Full-Stack Engineer    | $130/hour | 800 hours   | $104,000 |
+| QA Engineer            | $100/hour | 300 hours   | $30,000  |
 
 **Total Personnel**: ~$598,000
 
 **Additional Costs**:
+
 - Legal consultation (GDPR, disclaimers): $5,000
 - Tax professional consultation: $3,000
 - Security audit/penetration testing: $10,000
@@ -1794,6 +1900,7 @@ After any rollback:
 ### MVP+ (3-Month Timeline, $350K Budget)
 
 **Must-Have**:
+
 - ✅ Critical security fixes (MFA, audit logging, GDPR)
 - ✅ Tax lot tracking + basic tax reporting
 - ✅ Dividend tracking
@@ -1801,6 +1908,7 @@ After any rollback:
 - ✅ UX quick wins (dashboard, mobile, CSV import)
 
 **Defer to V2**:
+
 - ❌ Corporate actions (manual workaround)
 - ❌ Advanced reporting
 - ❌ Notification system
@@ -1808,6 +1916,7 @@ After any rollback:
 - ❌ Watchlist
 
 **Reduced Team**:
+
 - 1 Tech Lead
 - 2 Backend Engineers
 - 1 Frontend Engineer
@@ -1822,16 +1931,19 @@ After any rollback:
 This master plan provides a comprehensive roadmap to transform Track Your Stack from a functional MVP to a production-ready, feature-complete investment tracking platform.
 
 **Critical Path**:
+
 1. **Security** → Protect user data and enable public launch
 2. **Tax Reporting** → Essential for US market viability
 3. **Data Integrity** → Foundation for accurate calculations
 4. **UX** → Competitive user experience
 
 **Recommended Approach**:
+
 - **5-month full-scope implementation** with parallel execution
 - **OR 3-month MVP+ with focused scope** for faster launch
 
 **Next Steps**:
+
 1. Review and approve master plan
 2. Secure budget and resources
 3. Recruit/assign development team
@@ -1839,6 +1951,7 @@ This master plan provides a comprehensive roadmap to transform Track Your Stack 
 5. Begin parallel execution on Phase 1-2
 
 **Success Criteria**:
+
 - Production-ready platform
 - Tax-compliant for US users
 - GDPR-compliant for EU users
@@ -1852,6 +1965,7 @@ This master plan provides a comprehensive roadmap to transform Track Your Stack 
 ### Appendix A: Complete Feature Checklist
 
 **Security** (15 items):
+
 - [ ] Multi-Factor Authentication
 - [ ] Audit Logging
 - [ ] GDPR Compliance
@@ -1869,6 +1983,7 @@ This master plan provides a comprehensive roadmap to transform Track Your Stack 
 - [ ] Security Documentation
 
 **Business Logic** (11 items):
+
 - [ ] Tax Lot Tracking
 - [ ] Tax Calculation Engine
 - [ ] Dividend Tracking
@@ -1882,6 +1997,7 @@ This master plan provides a comprehensive roadmap to transform Track Your Stack 
 - [ ] Year-End Tax Reports
 
 **Data Integrity** (12 items):
+
 - [ ] Database CHECK Constraints
 - [ ] UNIQUE Constraints
 - [ ] Foreign Key Integrity
@@ -1896,6 +2012,7 @@ This master plan provides a comprehensive roadmap to transform Track Your Stack 
 - [ ] Data Consistency Monitoring
 
 **UX/Features** (23 items):
+
 - [ ] Dashboard Overview
 - [ ] Price Refresh Button
 - [ ] Bulk Price Refresh
@@ -1927,6 +2044,7 @@ This master plan provides a comprehensive roadmap to transform Track Your Stack 
 ### Appendix B: Technology Stack Details
 
 **Frontend**:
+
 - Next.js 15 (App Router)
 - React 19
 - TypeScript
@@ -1940,6 +2058,7 @@ This master plan provides a comprehensive roadmap to transform Track Your Stack 
 - react-joyride for tours
 
 **Backend**:
+
 - Next.js Server Actions
 - API Routes
 - Prisma ORM
@@ -1950,11 +2069,13 @@ This master plan provides a comprehensive roadmap to transform Track Your Stack 
 - Uptime Kuma (monitoring)
 
 **External APIs**:
+
 - Alpha Vantage (market data primary)
 - Polygon.io (fallback)
 - IEX Cloud (fallback)
 
 **Infrastructure**:
+
 - Vercel (hosting & deployment)
 - GitHub Actions (CI/CD)
 - Redis (Upstash - rate limiting & caching)
@@ -1962,6 +2083,7 @@ This master plan provides a comprehensive roadmap to transform Track Your Stack 
 - PostHog/Mixpanel (analytics)
 
 **Development**:
+
 - ESLint + Prettier
 - Husky (git hooks)
 - Vitest (unit tests)
@@ -2113,23 +2235,27 @@ model Portfolio {
 ### Appendix D: Reference Materials
 
 **Tax Reporting**:
+
 - IRS Publication 550 (Investment Income and Expenses)
 - IRS Form 8949 (Sales and Other Dispositions of Capital Assets)
 - Wash Sale Rule (IRC Section 1091)
 - Qualified Dividend Requirements (IRC Section 1(h)(11))
 
 **Security Standards**:
+
 - OWASP Top 10 Web Application Security Risks
 - NIST Cybersecurity Framework
 - GDPR Compliance Checklist
 - WCAG 2.1 Level AA Guidelines
 
 **Financial APIs**:
+
 - Alpha Vantage Documentation
 - Polygon.io API Reference
 - IEX Cloud API Documentation
 
 **Development Best Practices**:
+
 - Next.js 15 Documentation
 - Prisma Best Practices
 - React Testing Library Guide
