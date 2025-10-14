@@ -33,7 +33,13 @@ export function CreatePortfolioForm() {
 
   async function handleSubmit(formData: FormData) {
     startTransition(async () => {
-      const result = await createPortfolio(formData)
+      // Convert FormData to typed input
+      const input = {
+        name: formData.get('name') as string,
+        baseCurrency: formData.get('baseCurrency') as string,
+      }
+
+      const result = await createPortfolio(input)
 
       if (result.success) {
         toasts.portfolio.created()
