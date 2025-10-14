@@ -1,9 +1,13 @@
 'use client'
 
-import { useState, useTransition } from 'react'
+import { useState, useTransition, useRef } from 'react'
 import { useRouter } from 'next/navigation'
 import { addInvestment } from '@/lib/actions/investment'
 import { toasts } from '@/lib/utils/toast'
+import {
+  ALL_CURRENCIES,
+  DEFAULT_CURRENCY,
+} from '@/lib/constants/currencies'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
@@ -30,18 +34,17 @@ const ASSET_TYPES = [
   { value: 'CRYPTO', label: 'Cryptocurrency' },
 ]
 
-const CURRENCIES = ['USD', 'EUR', 'GBP', 'JPY', 'CAD', 'AUD', 'BTC', 'ETH']
-
 interface AddInvestmentFormProps {
   portfolioId: string
 }
 
 export function AddInvestmentForm({ portfolioId }: AddInvestmentFormProps) {
   const router = useRouter()
+  const formRef = useRef<HTMLFormElement>(null)
   const [open, setOpen] = useState(false)
   const [isPending, startTransition] = useTransition()
   const [assetType, setAssetType] = useState('STOCK')
-  const [currency, setCurrency] = useState('USD')
+  const [currency, setCurrency] = useState(DEFAULT_CURRENCY)
 
   async function handleSubmit(formData: FormData) {
     // Get ticker for better error messages
@@ -57,6 +60,10 @@ export function AddInvestmentForm({ portfolioId }: AddInvestmentFormProps) {
         } else {
           toasts.investment.added(ticker.toUpperCase())
         }
+        // Reset form state
+        formRef.current?.reset()
+        setAssetType('STOCK')
+        setCurrency(DEFAULT_CURRENCY)
         setOpen(false)
         router.refresh()
       } else {
@@ -92,7 +99,7 @@ export function AddInvestmentForm({ portfolioId }: AddInvestmentFormProps) {
             exists, it will be aggregated with weighted average cost.
           </DialogDescription>
         </DialogHeader>
-        <form action={handleSubmit} className="space-y-4">
+        <form ref={formRef} action={handleSubmit} className="space-y-4">
           <div className="grid grid-cols-2 gap-4">
             <div className="space-y-2">
               <Label htmlFor="ticker">Ticker Symbol</Label>
@@ -179,9 +186,9 @@ export function AddInvestmentForm({ portfolioId }: AddInvestmentFormProps) {
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
-                  {CURRENCIES.map((curr) => (
-                    <SelectItem key={curr} value={curr}>
-                      {curr}
+                  {ALL_CURRENCIES.map((curr) => (
+                    <SelectItem key={curr.value} value={curr.value}>
+                      {curr.label}
                     </SelectItem>
                   ))}
                 </SelectContent>

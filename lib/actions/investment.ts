@@ -134,21 +134,27 @@ export async function addInvestment(
     let aggregated = false
 
     if (existingInvestment) {
-      // Aggregate with weighted average cost basis
-      const existingQty = existingInvestment.totalQuantity.toNumber()
-      const existingAvg = existingInvestment.averageCostBasis.toNumber()
-      const newQty = validatedQuantity
-      const newPrice = validatedPrice
+      // Aggregate with weighted average cost basis using Decimal arithmetic
+      // to prevent floating-point precision errors
+      const existingQty = existingInvestment.totalQuantity
+      const existingAvg = existingInvestment.averageCostBasis
+      const newQty = new Decimal(validatedQuantity)
+      const newPrice = new Decimal(validatedPrice)
 
-      const totalQty = existingQty + newQty
-      const totalCost = existingQty * existingAvg + newQty * newPrice
-      const newAvgCostBasis = totalCost / totalQty
+      // Calculate: totalQty = existingQty + newQty
+      const totalQty = existingQty.plus(newQty)
+
+      // Calculate: totalCost = (existingQty * existingAvg) + (newQty * newPrice)
+      const totalCost = existingQty.times(existingAvg).plus(newQty.times(newPrice))
+
+      // Calculate: newAvgCostBasis = totalCost / totalQty
+      const newAvgCostBasis = totalCost.dividedBy(totalQty)
 
       await prisma.investment.update({
         where: { id: existingInvestment.id },
         data: {
-          totalQuantity: new Decimal(totalQty),
-          averageCostBasis: new Decimal(newAvgCostBasis),
+          totalQuantity: totalQty,
+          averageCostBasis: newAvgCostBasis,
         },
       })
 

@@ -1,9 +1,10 @@
 'use client'
 
-import { useState, useTransition } from 'react'
+import { useState, useTransition, useRef } from 'react'
 import { useRouter } from 'next/navigation'
 import { createPortfolio } from '@/lib/actions/portfolio'
 import { toasts } from '@/lib/utils/toast'
+import { FIAT_CURRENCIES, DEFAULT_CURRENCY } from '@/lib/constants/currencies'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
@@ -23,20 +24,12 @@ import {
   DialogTrigger,
 } from '@/components/ui/dialog'
 
-const CURRENCIES = [
-  { value: 'USD', label: 'USD - US Dollar' },
-  { value: 'EUR', label: 'EUR - Euro' },
-  { value: 'GBP', label: 'GBP - British Pound' },
-  { value: 'JPY', label: 'JPY - Japanese Yen' },
-  { value: 'CAD', label: 'CAD - Canadian Dollar' },
-  { value: 'AUD', label: 'AUD - Australian Dollar' },
-]
-
 export function CreatePortfolioForm() {
   const router = useRouter()
+  const formRef = useRef<HTMLFormElement>(null)
   const [open, setOpen] = useState(false)
   const [isPending, startTransition] = useTransition()
-  const [currency, setCurrency] = useState('USD')
+  const [currency, setCurrency] = useState(DEFAULT_CURRENCY)
 
   async function handleSubmit(formData: FormData) {
     startTransition(async () => {
@@ -44,6 +37,9 @@ export function CreatePortfolioForm() {
 
       if (result.success) {
         toasts.portfolio.created()
+        // Reset form state
+        formRef.current?.reset()
+        setCurrency(DEFAULT_CURRENCY)
         setOpen(false)
         router.refresh()
       } else {
@@ -70,7 +66,7 @@ export function CreatePortfolioForm() {
             Add a new portfolio to track your investments.
           </DialogDescription>
         </DialogHeader>
-        <form action={handleSubmit} className="space-y-4">
+        <form ref={formRef} action={handleSubmit} className="space-y-4">
           <div className="space-y-2">
             <Label htmlFor="name">Portfolio Name</Label>
             <Input
@@ -92,7 +88,7 @@ export function CreatePortfolioForm() {
                 <SelectValue placeholder="Select currency" />
               </SelectTrigger>
               <SelectContent>
-                {CURRENCIES.map((curr) => (
+                {FIAT_CURRENCIES.map((curr) => (
                   <SelectItem key={curr.value} value={curr.value}>
                     {curr.label}
                   </SelectItem>

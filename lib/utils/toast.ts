@@ -50,33 +50,48 @@ export const toasts = {
 
   // Price refresh operations
   prices: {
-    refreshing: () =>
-      toast.loading('Refreshing prices...', { id: 'price-refresh' }),
-    refreshed: (count: number) =>
-      toast.success(`${count} ${count === 1 ? 'price' : 'prices'} updated`, {
-        id: 'price-refresh',
+    refreshing: (portfolioId?: string) =>
+      toast.loading('Refreshing prices...', {
+        id: portfolioId ? `price-refresh-${portfolioId}` : 'price-refresh',
       }),
-    failed: () => toast.error('Price refresh failed', { id: 'price-refresh' }),
-    partialSuccess: (success: number, total: number) =>
+    refreshed: (count: number, portfolioId?: string) =>
+      toast.success(`${count} ${count === 1 ? 'price' : 'prices'} updated`, {
+        id: portfolioId ? `price-refresh-${portfolioId}` : 'price-refresh',
+      }),
+    failed: (portfolioId?: string) =>
+      toast.error('Price refresh failed', {
+        id: portfolioId ? `price-refresh-${portfolioId}` : 'price-refresh',
+      }),
+    partialSuccess: (success: number, total: number, portfolioId?: string) =>
       toast.warning(
         `${success} of ${total} prices updated. Some prices may be stale.`,
-        { id: 'price-refresh' }
+        { id: portfolioId ? `price-refresh-${portfolioId}` : 'price-refresh' }
       ),
   },
 
   // Currency conversion
   currency: {
-    converting: (from: string, to: string) =>
+    converting: (from: string, to: string, investmentId?: string) =>
       toast.loading(`Converting ${from} to ${to}...`, {
-        id: 'currency-conversion',
+        id: investmentId
+          ? `currency-conversion-${investmentId}`
+          : 'currency-conversion',
       }),
-    converted: (from: string, to: string, rate: number) =>
+    converted: (from: string, to: string, rate: number, investmentId?: string) =>
       toast.success(
         `Converted at rate: 1 ${from} = ${rate.toFixed(4)} ${to}`,
-        { id: 'currency-conversion' }
+        {
+          id: investmentId
+            ? `currency-conversion-${investmentId}`
+            : 'currency-conversion',
+        }
       ),
-    conversionError: () =>
-      toast.error('Currency conversion failed', { id: 'currency-conversion' }),
+    conversionError: (investmentId?: string) =>
+      toast.error('Currency conversion failed', {
+        id: investmentId
+          ? `currency-conversion-${investmentId}`
+          : 'currency-conversion',
+      }),
   },
 
   // Generic operations
