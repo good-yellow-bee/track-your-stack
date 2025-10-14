@@ -206,6 +206,7 @@ git commit -m "feat: implement portfolio creation form
 ```
 
 **⚠️ This applies to ALL commits:**
+
 - Code changes
 - Tests
 - Documentation (including CLAUDE.md)
