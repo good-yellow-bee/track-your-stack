@@ -34,10 +34,14 @@ export async function createPortfolio(input: CreatePortfolioInput) {
 
     return { success: true, portfolio }
   } catch (error) {
-    console.error('Error creating portfolio:', error)
+    console.error('Error creating portfolio:', {
+      error,
+      userId: (await requireAuth().catch(() => ({ id: 'unknown' }))).id,
+      timestamp: new Date().toISOString(),
+    })
     return {
       success: false,
-      error: error instanceof Error ? error.message : 'Failed to create portfolio',
+      error: 'Failed to create portfolio',
     }
   }
 }
@@ -58,10 +62,14 @@ export async function getPortfolios() {
 
     return { success: true, portfolios }
   } catch (error) {
-    console.error('Error fetching portfolios:', error)
+    console.error('Error fetching portfolios:', {
+      error,
+      userId: (await requireAuth().catch(() => ({ id: 'unknown' }))).id,
+      timestamp: new Date().toISOString(),
+    })
     return {
       success: false,
-      error: error instanceof Error ? error.message : 'Failed to fetch portfolios',
+      error: 'Failed to fetch portfolios',
     }
   }
 }
@@ -92,10 +100,15 @@ export async function getPortfolio(id: string) {
 
     return { success: true, portfolio }
   } catch (error) {
-    console.error('Error fetching portfolio:', error)
+    console.error('Error fetching portfolio:', {
+      error,
+      portfolioId: id,
+      userId: (await requireAuth().catch(() => ({ id: 'unknown' }))).id,
+      timestamp: new Date().toISOString(),
+    })
     return {
       success: false,
-      error: error instanceof Error ? error.message : 'Failed to fetch portfolio',
+      error: 'Failed to fetch portfolio',
     }
   }
 }
@@ -135,10 +148,15 @@ export async function updatePortfolio(input: UpdatePortfolioInput) {
 
     return { success: true, portfolio }
   } catch (error) {
-    console.error('Error updating portfolio:', error)
+    console.error('Error updating portfolio:', {
+      error,
+      portfolioId: input.id,
+      userId: (await requireAuth().catch(() => ({ id: 'unknown' }))).id,
+      timestamp: new Date().toISOString(),
+    })
     return {
       success: false,
-      error: error instanceof Error ? error.message : 'Failed to update portfolio',
+      error: 'Failed to update portfolio',
     }
   }
 }
@@ -174,10 +192,15 @@ export async function deletePortfolio(input: DeletePortfolioInput) {
 
     return { success: true }
   } catch (error) {
-    console.error('Error deleting portfolio:', error)
+    console.error('Error deleting portfolio:', {
+      error,
+      portfolioId: input.id,
+      userId: (await requireAuth().catch(() => ({ id: 'unknown' }))).id,
+      timestamp: new Date().toISOString(),
+    })
     return {
       success: false,
-      error: error instanceof Error ? error.message : 'Failed to delete portfolio',
+      error: 'Failed to delete portfolio',
     }
   }
 }

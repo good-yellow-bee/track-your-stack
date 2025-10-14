@@ -10,6 +10,12 @@ const limiter = new Bottleneck({
 })
 
 // Track API usage
+// TODO: PRODUCTION LIMITATION - In-memory state is ephemeral and resets on server restart.
+// In serverless environments (Vercel, AWS Lambda), each function invocation may get a new
+// instance, causing inaccurate quota tracking. This could lead to exceeding Alpha Vantage's
+// daily limit (500 calls/day) without detection.
+// RECOMMENDATION: Implement persistent storage (Redis, PostgreSQL) for production deployment
+// to track request counts across server restarts and function instances.
 let requestCount = 0
 let dailyResetTime = Date.now() + 24 * 60 * 60 * 1000
 

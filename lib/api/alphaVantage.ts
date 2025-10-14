@@ -37,16 +37,21 @@ export class AlphaVantageClient {
           timeout: 10000,
         })
 
-        // Check for API errors
-        const data = response.data as Record<string, unknown>
-        if (data['Error Message'] || data['Note'] || data['Information']) {
-          const error = data as AlphaVantageError
+        // Runtime type check and API error validation
+        const data = response.data
+        if (!data || typeof data !== 'object') {
+          throw new Error('Invalid API response: expected object')
+        }
+
+        const dataObj = data as Record<string, unknown>
+        if (dataObj['Error Message'] || dataObj['Note'] || dataObj['Information']) {
+          const error = dataObj as AlphaVantageError
           throw new Error(
             error['Error Message'] || error['Note'] || error['Information'] || 'API Error'
           )
         }
 
-        return response.data
+        return data as T
       } catch (error) {
         if (error instanceof AxiosError) {
           if (error.code === 'ECONNABORTED') {
@@ -72,17 +77,29 @@ export class AlphaVantageClient {
 
     const quote = data['Global Quote']
 
-    if (!quote || !quote['05. price']) {
+    // Runtime validation of required fields
+    if (
+      !quote ||
+      typeof quote !== 'object' ||
+      !quote['05. price'] ||
+      !quote['01. symbol']
+    ) {
       throw new Error(`No data found for symbol: ${symbol}`)
+    }
+
+    // Safe parsing with fallbacks
+    const price = parseFloat(quote['05. price'])
+    if (isNaN(price)) {
+      throw new Error(`Invalid price data for symbol: ${symbol}`)
     }
 
     return {
       symbol: quote['01. symbol'],
-      price: parseFloat(quote['05. price']),
-      previousClose: parseFloat(quote['08. previous close']),
-      change: parseFloat(quote['09. change']),
-      changePercent: parseFloat(quote['10. change percent'].replace('%', '')),
-      volume: parseInt(quote['06. volume']),
+      price,
+      previousClose: parseFloat(quote['08. previous close'] || '0'),
+      change: parseFloat(quote['09. change'] || '0'),
+      changePercent: parseFloat((quote['10. change percent'] || '0%').replace('%', '')),
+      volume: parseInt(quote['06. volume'] || '0'),
       lastUpdated: new Date(quote['07. latest trading day']),
     }
   }
@@ -99,13 +116,24 @@ export class AlphaVantageClient {
 
     const rate = data['Realtime Currency Exchange Rate']
 
-    if (!rate || !rate['5. Exchange Rate']) {
+    // Runtime validation of required fields
+    if (
+      !rate ||
+      typeof rate !== 'object' ||
+      !rate['5. Exchange Rate'] ||
+      !rate['1. From_Currency Code']
+    ) {
       throw new Error(`No data found for crypto: ${symbol}`)
+    }
+
+    const price = parseFloat(rate['5. Exchange Rate'])
+    if (isNaN(price)) {
+      throw new Error(`Invalid price data for crypto: ${symbol}`)
     }
 
     return {
       symbol: rate['1. From_Currency Code'],
-      price: parseFloat(rate['5. Exchange Rate']),
+      price,
       currency: rate['3. To_Currency Code'],
       lastUpdated: new Date(rate['6. Last Refreshed']),
     }
@@ -123,14 +151,26 @@ export class AlphaVantageClient {
 
     const rate = data['Realtime Currency Exchange Rate']
 
-    if (!rate || !rate['5. Exchange Rate']) {
+    // Runtime validation of required fields
+    if (
+      !rate ||
+      typeof rate !== 'object' ||
+      !rate['5. Exchange Rate'] ||
+      !rate['1. From_Currency Code'] ||
+      !rate['3. To_Currency Code']
+    ) {
       throw new Error(`No exchange rate found for ${from}/${to}`)
+    }
+
+    const exchangeRate = parseFloat(rate['5. Exchange Rate'])
+    if (isNaN(exchangeRate)) {
+      throw new Error(`Invalid exchange rate for ${from}/${to}`)
     }
 
     return {
       from: rate['1. From_Currency Code'],
       to: rate['3. To_Currency Code'],
-      rate: parseFloat(rate['5. Exchange Rate']),
+      rate: exchangeRate,
       lastUpdated: new Date(rate['6. Last Refreshed']),
     }
   }
