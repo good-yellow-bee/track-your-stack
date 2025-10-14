@@ -19,17 +19,19 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={inter.className}>
-        <SessionProvider>{children}</SessionProvider>
-        <Toaster
-          position="top-right"
-          toastOptions={{
-            classNames: {
-              success: 'border-green-500',
-              error: 'border-red-500',
-              warning: 'border-yellow-500',
-            },
-          }}
-        />
+        <SessionProvider>
+          {children}
+          <Toaster
+            position="top-right"
+            toastOptions={{
+              classNames: {
+                success: 'border-green-500',
+                error: 'border-red-500',
+                warning: 'border-yellow-500',
+              },
+            }}
+          />
+        </SessionProvider>
       </body>
     </html>
   )
