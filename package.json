@@ -19,6 +19,7 @@
     "test:e2e:debug": "playwright test --debug",
     "test:e2e:report": "playwright show-report",
     "test:all": "pnpm test:coverage && pnpm test:e2e",
+    "pre-push": "pnpm format:check && pnpm lint && pnpm typecheck && pnpm test run && pnpm build",
     "db:generate": "prisma generate",
     "db:push": "prisma db push",
     "db:migrate": "prisma migrate dev",
