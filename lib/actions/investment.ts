@@ -16,19 +16,33 @@ type ActionResult<T = void> = {
 
 // Validation schemas
 const AddInvestmentSchema = z.object({
-  ticker: z
-    .string()
-    .trim()
-    .min(1, 'Ticker is required')
-    .max(20)
-    .transform((val) => val.toUpperCase()),
-  assetName: z.string().trim().min(1, 'Asset name is required').max(200),
+  ticker: z.preprocess(
+    (val) => (val === null || val === undefined ? '' : val),
+    z
+      .string()
+      .trim()
+      .min(1, 'Ticker is required')
+      .max(20)
+      .transform((val) => val.toUpperCase())
+  ),
+  assetName: z.preprocess(
+    (val) => (val === null || val === undefined ? '' : val),
+    z.string().trim().min(1, 'Asset name is required').max(200)
+  ),
   assetType: z.nativeEnum(AssetType),
-  quantity: z.number().positive('Quantity must be a positive number'),
-  pricePerUnit: z.number().positive('Price per unit must be a positive number'),
+  quantity: z.coerce.number().positive('Quantity must be a positive number'),
+  pricePerUnit: z.coerce.number().positive('Price per unit must be a positive number'),
   currency: z.string().length(3, 'Invalid currency code'),
   purchaseDate: z.string().optional(),
   notes: z.string().max(500).optional(),
+})
+
+const UpdateInvestmentSchema = z.object({
+  assetName: z.preprocess(
+    (val) => (val === null || val === undefined ? '' : val),
+    z.string().trim().min(1, 'Asset name is required').max(200)
+  ),
+  assetType: z.nativeEnum(AssetType),
 })
 
 /**
@@ -59,56 +73,16 @@ export async function addInvestment(
     return { success: false, error: 'Forbidden' }
   }
 
-  // Extract and validate form data with proper type checking
-  const tickerRaw = formData.get('ticker')
-  const assetNameRaw = formData.get('assetName')
-  const assetTypeRaw = formData.get('assetType')
-  const quantityRaw = formData.get('quantity')
-  const pricePerUnitRaw = formData.get('pricePerUnit')
-  const currencyRaw = formData.get('currency')
-  const purchaseDateRaw = formData.get('purchaseDate')
-  const notesRaw = formData.get('notes')
-
-  if (typeof tickerRaw !== 'string' || !tickerRaw.trim()) {
-    return { success: false, error: 'Ticker is required' }
-  }
-
-  if (typeof assetNameRaw !== 'string' || !assetNameRaw.trim()) {
-    return { success: false, error: 'Asset name is required' }
-  }
-
-  if (typeof assetTypeRaw !== 'string') {
-    return { success: false, error: 'Asset type is required' }
-  }
-
-  if (typeof quantityRaw !== 'string') {
-    return { success: false, error: 'Quantity is required' }
-  }
-
-  if (typeof pricePerUnitRaw !== 'string') {
-    return { success: false, error: 'Price per unit is required' }
-  }
-
-  const quantity = parseFloat(quantityRaw)
-  const pricePerUnit = parseFloat(pricePerUnitRaw)
-
-  if (isNaN(quantity)) {
-    return { success: false, error: 'Quantity must be a number' }
-  }
-
-  if (isNaN(pricePerUnit)) {
-    return { success: false, error: 'Price per unit must be a number' }
-  }
-
+  // Extract and validate form data using Zod (handles type coercion and validation)
   const validated = AddInvestmentSchema.safeParse({
-    ticker: tickerRaw,
-    assetName: assetNameRaw,
-    assetType: assetTypeRaw,
-    quantity,
-    pricePerUnit,
-    currency: typeof currencyRaw === 'string' ? currencyRaw : 'USD',
-    purchaseDate: typeof purchaseDateRaw === 'string' ? purchaseDateRaw : undefined,
-    notes: typeof notesRaw === 'string' ? notesRaw : undefined,
+    ticker: formData.get('ticker'),
+    assetName: formData.get('assetName'),
+    assetType: formData.get('assetType'),
+    quantity: formData.get('quantity'), // Zod will coerce string to number
+    pricePerUnit: formData.get('pricePerUnit'), // Zod will coerce string to number
+    currency: formData.get('currency') || 'USD',
+    purchaseDate: formData.get('purchaseDate') || undefined,
+    notes: formData.get('notes') || undefined,
   })
 
   if (!validated.success) {
@@ -257,15 +231,27 @@ export async function updateInvestment(
     return { success: false, error: 'Forbidden' }
   }
 
-  const assetName = formData.get('assetName') as string
-  const assetType = formData.get('assetType') as AssetType
+  // Validate form data
+  const validated = UpdateInvestmentSchema.safeParse({
+    assetName: formData.get('assetName'),
+    assetType: formData.get('assetType'),
+  })
+
+  if (!validated.success) {
+    return {
+      success: false,
+      error: validated.error.issues[0]?.message || 'Invalid input',
+    }
+  }
+
+  const { assetName, assetType } = validated.data
 
   try {
     await prisma.investment.update({
       where: { id: investmentId },
       data: {
-        ...(assetName && { assetName }),
-        ...(assetType && { assetType }),
+        assetName,
+        assetType,
       },
     })
 
