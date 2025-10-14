@@ -154,7 +154,7 @@ Before implementing ANY feature, follow this mandatory workflow:
          └─────────┬───────────┘            │
                    │                        │
                    └────────────────────────┘
-                   
+
          ┌─────────▼─────────┐
          │       YES         │
          └─────────┬─────────┘
@@ -186,11 +186,16 @@ git checkout -b fix/price-cache-bug
 ### 2. Implement Feature
 
 - Work on the feature branch
+- **🚨 CRITICAL: Run `pnpm pre-push` before EVERY commit** (not just before pushing)
+- Fix any quality check failures before committing
 - Commit frequently with descriptive messages
 - Keep commits atomic (one logical change per commit)
 
 ```bash
-# Commit changes
+# ALWAYS run quality checks BEFORE committing
+pnpm pre-push
+
+# If all checks pass, commit changes
 git add <files>
 git commit -m "feat: implement portfolio creation form
 
@@ -199,6 +204,15 @@ git commit -m "feat: implement portfolio creation form
 - Add form validation with Zod
 - Update documentation and screenshots"
 ```
+
+**⚠️ This applies to ALL commits:**
+- Code changes
+- Tests
+- Documentation (including CLAUDE.md)
+- Configuration files
+- **EVERYTHING**
+
+Running `pnpm pre-push` locally prevents CI failures and ensures professional quality standards.
 
 ### 3. Test Thoroughly
 
