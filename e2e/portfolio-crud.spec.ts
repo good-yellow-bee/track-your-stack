@@ -89,7 +89,10 @@ test.describe('Portfolio CRUD Operations', () => {
     await expect(page.getByText(/are you absolutely sure/i)).toBeVisible()
 
     // Confirm deletion
-    await page.getByRole('button', { name: /delete portfolio/i, exact: false }).last().click()
+    await page
+      .getByRole('button', { name: /delete portfolio/i, exact: false })
+      .last()
+      .click()
 
     // Wait for success toast
     await expect(page.getByRole('status')).toContainText(/portfolio deleted/i)
@@ -161,7 +164,9 @@ test.describe('Portfolio CRUD Operations', () => {
     }
   })
 
-  test('should navigate to portfolio detail page when clicking portfolio card', async ({ page }) => {
+  test('should navigate to portfolio detail page when clicking portfolio card', async ({
+    page,
+  }) => {
     // Click on a portfolio card
     const portfolio = page.getByText('Test Portfolio').first()
     await portfolio.click()

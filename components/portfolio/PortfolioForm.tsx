@@ -59,7 +59,11 @@ export default function PortfolioForm({ mode, defaultValues, onSuccess }: Portfo
           : await updatePortfolio({ ...data, id: defaultValues!.id! })
 
       if (result.success) {
-        mode === 'create' ? toasts.portfolio.created() : toasts.portfolio.updated()
+        if (mode === 'create') {
+          toasts.portfolio.created()
+        } else {
+          toasts.portfolio.updated()
+        }
         form.reset()
         onSuccess?.()
         if (mode === 'create') {
@@ -69,12 +73,18 @@ export default function PortfolioForm({ mode, defaultValues, onSuccess }: Portfo
         // Handle specific error types
         if (result.error?.includes('Unauthorized') || result.error?.includes('Authentication')) {
           toasts.authError()
+        } else if (mode === 'create') {
+          toasts.portfolio.createError()
         } else {
-          mode === 'create' ? toasts.portfolio.createError() : toasts.portfolio.updateError()
+          toasts.portfolio.updateError()
         }
       }
     } catch {
-      mode === 'create' ? toasts.portfolio.createError() : toasts.portfolio.updateError()
+      if (mode === 'create') {
+        toasts.portfolio.createError()
+      } else {
+        toasts.portfolio.updateError()
+      }
     } finally {
       setIsSubmitting(false)
     }

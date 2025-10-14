@@ -74,7 +74,6 @@ describe('Investment Actions', () => {
       formData.append('quantity', '10')
       formData.append('pricePerUnit', '150')
       formData.append('currency', 'USD')
-
       ;(prisma.portfolio.findUnique as ReturnType<typeof vi.fn>).mockResolvedValue(mockPortfolio)
       ;(prisma.investment.findFirst as ReturnType<typeof vi.fn>).mockResolvedValue(null)
 
@@ -133,15 +132,19 @@ describe('Investment Actions', () => {
 
       // Mock $transaction to execute the array of operations
       let actualUpdateData: any
-      ;(prisma.$transaction as ReturnType<typeof vi.fn>).mockImplementation(async (operations: any[]) => {
-        // Execute each operation (they are promises) and collect results
-        const results = await Promise.all(operations.map(async (op: any) => {
-          // The operations are the return values of prisma.investment.update() etc.
-          // which are promises that resolve when the Prisma method mocks are called
-          return op
-        }))
-        return results
-      })
+      ;(prisma.$transaction as ReturnType<typeof vi.fn>).mockImplementation(
+        async (operations: any[]) => {
+          // Execute each operation (they are promises) and collect results
+          const results = await Promise.all(
+            operations.map(async (op: any) => {
+              // The operations are the return values of prisma.investment.update() etc.
+              // which are promises that resolve when the Prisma method mocks are called
+              return op
+            })
+          )
+          return results
+        }
+      )
 
       // Mock the Prisma operations that will be passed to $transaction
       prisma.investment.update = vi.fn().mockImplementation((args) => {
@@ -184,7 +187,6 @@ describe('Investment Actions', () => {
       formData.append('quantity', '10')
       formData.append('pricePerUnit', '300')
       formData.append('currency', 'USD')
-
       ;(prisma.portfolio.findUnique as ReturnType<typeof vi.fn>).mockResolvedValue(mockPortfolio)
       ;(prisma.investment.findFirst as ReturnType<typeof vi.fn>).mockResolvedValue(null)
       ;(prisma.investment.create as ReturnType<typeof vi.fn>).mockResolvedValue({
@@ -334,7 +336,6 @@ describe('Investment Actions', () => {
       formData.append('quantity', '10')
       formData.append('pricePerUnit', '150')
       formData.append('currency', 'USD')
-
       ;(prisma.portfolio.findUnique as ReturnType<typeof vi.fn>).mockResolvedValue(mockPortfolio)
       ;(prisma.investment.findFirst as ReturnType<typeof vi.fn>).mockResolvedValue(null)
       ;(prisma.$transaction as ReturnType<typeof vi.fn>).mockRejectedValue(
@@ -357,7 +358,6 @@ describe('Investment Actions', () => {
       formData.append('quantity', '10.5')
       formData.append('pricePerUnit', '150.25')
       formData.append('currency', 'USD')
-
       ;(prisma.portfolio.findUnique as ReturnType<typeof vi.fn>).mockResolvedValue(mockPortfolio)
       ;(prisma.investment.findFirst as ReturnType<typeof vi.fn>).mockResolvedValue(null)
 
@@ -394,7 +394,6 @@ describe('Investment Actions', () => {
       const formData = new FormData()
       formData.append('assetName', 'Apple Inc. Updated')
       formData.append('assetType', AssetType.ETF)
-
       ;(prisma.investment.findUnique as ReturnType<typeof vi.fn>).mockResolvedValue(mockInvestment)
       ;(prisma.investment.update as ReturnType<typeof vi.fn>).mockResolvedValue({
         ...mockInvestment,
@@ -580,12 +579,9 @@ describe('Investment Actions', () => {
       formData.append('quantity', '10')
       formData.append('pricePerUnit', '150')
       formData.append('currency', 'USD')
-
       ;(prisma.portfolio.findUnique as ReturnType<typeof vi.fn>).mockResolvedValue(mockPortfolio)
       ;(prisma.investment.findFirst as ReturnType<typeof vi.fn>).mockResolvedValue(null)
-      ;(prisma.$transaction as ReturnType<typeof vi.fn>).mockRejectedValue(
-        new Error('Test error')
-      )
+      ;(prisma.$transaction as ReturnType<typeof vi.fn>).mockRejectedValue(new Error('Test error'))
 
       await addInvestment(mockPortfolio.id, formData)
 
@@ -601,7 +597,6 @@ describe('Investment Actions', () => {
       formData.append('quantity', '10')
       formData.append('pricePerUnit', '150')
       formData.append('currency', 'USD')
-
       ;(prisma.portfolio.findUnique as ReturnType<typeof vi.fn>).mockResolvedValue(mockPortfolio)
       ;(prisma.investment.findFirst as ReturnType<typeof vi.fn>).mockResolvedValue(null)
       ;(prisma.$transaction as ReturnType<typeof vi.fn>).mockRejectedValue(
@@ -654,7 +649,7 @@ describe('Investment Actions', () => {
       // Manual calculation with Decimal precision would be:
       // The actual calculated value depends on Decimal.js implementation
       // We verify it's in the reasonable range around 150.91
-      expect(avgCost.toNumber()).toBeGreaterThan(150.90)
+      expect(avgCost.toNumber()).toBeGreaterThan(150.9)
       expect(avgCost.toNumber()).toBeLessThan(150.92)
     })
   })

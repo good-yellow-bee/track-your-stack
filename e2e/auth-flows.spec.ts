@@ -17,7 +17,9 @@ test.describe('Authentication Flows', () => {
     await page.context().clearCookies()
   })
 
-  test('should redirect to sign-in page when accessing protected route while unauthenticated', async ({ page }) => {
+  test('should redirect to sign-in page when accessing protected route while unauthenticated', async ({
+    page,
+  }) => {
     // Try to access protected portfolios page
     await page.goto('/portfolios')
 
@@ -158,7 +160,9 @@ test.describe('Authenticated User Flows', () => {
 
     // Look for user menu/profile button
     // This will depend on your navigation implementation
-    const userMenu = page.getByRole('button', { name: /profile/i }).or(page.locator('[aria-label*="user" i]'))
+    const userMenu = page
+      .getByRole('button', { name: /profile/i })
+      .or(page.locator('[aria-label*="user" i]'))
 
     // Note: This test may need adjustment based on actual UI
     test.skip()
@@ -176,7 +180,9 @@ test.describe('Authorization Error Handling', () => {
     test.skip()
   })
 
-  test('should show forbidden error toast when accessing unauthorized resource', async ({ page }) => {
+  test('should show forbidden error toast when accessing unauthorized resource', async ({
+    page,
+  }) => {
     // This test would require attempting to access another user's portfolio
     // For now, it's a placeholder for future implementation
     test.skip()
@@ -217,7 +223,9 @@ test.describe('Sign-out Flow', () => {
 })
 
 test.describe('Error Page', () => {
-  test('should display error page with appropriate toast on unexpected errors', async ({ page }) => {
+  test('should display error page with appropriate toast on unexpected errors', async ({
+    page,
+  }) => {
     // Navigate to a page and trigger an error
     // This is a placeholder test - actual implementation depends on error scenarios
     test.skip()
@@ -227,8 +235,6 @@ test.describe('Error Page', () => {
     await page.goto('/this-page-does-not-exist')
 
     // Verify 404 page or not-found page
-    await expect(
-      page.getByText(/not found/i).or(page.getByText(/404/i))
-    ).toBeVisible()
+    await expect(page.getByText(/not found/i).or(page.getByText(/404/i))).toBeVisible()
   })
 })

@@ -189,14 +189,14 @@ describe('Toast Utilities', () => {
 
     it('should call toast.error with forbidden message', () => {
       toasts.forbidden()
-      expect(toast.error).toHaveBeenCalledWith(
-        "You don't have permission to perform this action."
-      )
+      expect(toast.error).toHaveBeenCalledWith("You don't have permission to perform this action.")
     })
 
     it('should call toast.error with rate limit message', () => {
       toasts.rateLimitError()
-      expect(toast.error).toHaveBeenCalledWith('API rate limit exceeded. Please wait a moment and try again.')
+      expect(toast.error).toHaveBeenCalledWith(
+        'API rate limit exceeded. Please wait a moment and try again.'
+      )
     })
   })
 

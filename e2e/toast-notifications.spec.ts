@@ -156,7 +156,9 @@ test.describe('Toast Notification System', () => {
     await expect(toast).toBeVisible()
 
     // Try to find and click close button (if Sonner provides one)
-    const closeButton = toast.getByRole('button', { name: /close/i }).or(toast.locator('[aria-label*="close" i]'))
+    const closeButton = toast
+      .getByRole('button', { name: /close/i })
+      .or(toast.locator('[aria-label*="close" i]'))
 
     if (await closeButton.isVisible()) {
       await closeButton.click()

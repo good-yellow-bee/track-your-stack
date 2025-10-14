@@ -1,6 +1,16 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
-import { createPortfolio, getPortfolios, getPortfolio, updatePortfolio, deletePortfolio } from '@/lib/actions/portfolio'
-import type { CreatePortfolioInput, UpdatePortfolioInput, DeletePortfolioInput } from '@/lib/validations/portfolio'
+import {
+  createPortfolio,
+  getPortfolios,
+  getPortfolio,
+  updatePortfolio,
+  deletePortfolio,
+} from '@/lib/actions/portfolio'
+import type {
+  CreatePortfolioInput,
+  UpdatePortfolioInput,
+  DeletePortfolioInput,
+} from '@/lib/validations/portfolio'
 
 // Mock dependencies
 vi.mock('@/lib/auth', () => ({
