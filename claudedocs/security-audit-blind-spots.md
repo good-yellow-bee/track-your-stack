@@ -20,6 +20,7 @@ This security audit identified **15 critical security blind spots** in the curre
 - **3 LOW-PRIORITY** enhancements for post-launch
 
 ### Financial Impact:
+
 - Potential GDPR fines: €20M or 4% of revenue
 - Data breach costs: Average $4.45M (IBM 2023 report)
 - Regulatory compliance failures: License revocation risk
@@ -35,12 +36,14 @@ This security audit identified **15 critical security blind spots** in the curre
 **Impact**: Complete portfolio data exposure
 
 #### Problem:
+
 - Current implementation relies solely on Google OAuth
 - If user's Google account is compromised, all portfolio data is accessible
 - No additional authentication layer for sensitive operations
 - High-value portfolios ($100K+) need extra protection
 
 #### Current State:
+
 ```typescript
 // lib/auth.ts - Only Google OAuth, no MFA
 providers: [
@@ -52,6 +55,7 @@ providers: [
 ```
 
 #### Threat Scenarios:
+
 1. **Phishing Attack**: User's Google credentials stolen → Full portfolio access
 2. **Session Hijacking**: Stolen session cookie → Unauthorized transactions
 3. **Insider Threat**: Shared device → Portfolio manipulation
@@ -107,6 +111,7 @@ export function verifyMFAToken(secret: string, token: string): boolean {
 ```
 
 **UI Flow**:
+
 1. Settings → Security → Enable 2FA
 2. Display QR code for Google Authenticator / Authy
 3. User scans QR code
@@ -126,6 +131,7 @@ export function verifyMFAToken(secret: string, token: string): boolean {
 **Impact**: Compliance failures, dispute resolution impossible
 
 #### Problem:
+
 - No record of who created/modified/deleted portfolios
 - No timestamp of investment entries
 - Cannot prove data integrity for legal disputes
@@ -133,9 +139,11 @@ export function verifyMFAToken(secret: string, token: string): boolean {
 - Currently listed as "low priority" - THIS IS WRONG FOR FINANCIAL APPS
 
 #### Current State:
+
 No audit logging implementation. Only basic `createdAt`/`updatedAt` timestamps.
 
 #### Threat Scenarios:
+
 1. **Insider Fraud**: Employee manipulates user portfolio, no trail
 2. **Legal Dispute**: User claims unauthorized changes, no proof
 3. **Compliance Audit**: Regulators request audit trail, doesn't exist
@@ -228,6 +236,7 @@ export async function deletePortfolio(portfolioId: string) {
 ```
 
 **What to Log**:
+
 - ✅ Portfolio create/update/delete
 - ✅ Investment create/update/delete
 - ✅ Transaction create/update/delete
@@ -237,12 +246,14 @@ export async function deletePortfolio(portfolioId: string) {
 - ✅ Permission denied events
 
 **What NOT to Log** (Privacy):
+
 - ❌ Portfolio names (PII)
 - ❌ Investment notes (may contain PII)
 - ❌ Full session tokens
 - ❌ API keys
 
 **Retention Policy**:
+
 - Keep audit logs for 7 years (financial records requirement)
 - Separate database table for performance
 - Archive old logs to cold storage after 1 year
@@ -259,6 +270,7 @@ export async function deletePortfolio(portfolioId: string) {
 **Impact**: €20M fine or 4% of annual revenue
 
 #### Problem:
+
 - No user-initiated account deletion
 - No data export before deletion (Right to Portability)
 - No data retention policies defined
@@ -268,15 +280,15 @@ export async function deletePortfolio(portfolioId: string) {
 
 #### GDPR Requirements:
 
-| Requirement | Status | Current Gap |
-|-------------|---------|-------------|
-| Right to Access | ❌ Missing | No data export feature in MVP |
-| Right to Erasure | ❌ Missing | No account deletion flow |
-| Right to Portability | ❌ Missing | CSV export in Phase 2, should be Phase 1 |
-| Right to Rectification | ✅ Partial | Edit features exist |
-| Right to Object | ❌ Missing | No opt-out mechanisms |
-| Data Minimization | ⚠️ Unclear | Collects Google profile image (needed?) |
-| Privacy by Default | ⚠️ Unclear | No default privacy settings |
+| Requirement            | Status     | Current Gap                              |
+| ---------------------- | ---------- | ---------------------------------------- |
+| Right to Access        | ❌ Missing | No data export feature in MVP            |
+| Right to Erasure       | ❌ Missing | No account deletion flow                 |
+| Right to Portability   | ❌ Missing | CSV export in Phase 2, should be Phase 1 |
+| Right to Rectification | ✅ Partial | Edit features exist                      |
+| Right to Object        | ❌ Missing | No opt-out mechanisms                    |
+| Data Minimization      | ⚠️ Unclear | Collects Google profile image (needed?)  |
+| Privacy by Default     | ⚠️ Unclear | No default privacy settings              |
 
 #### Recommendation:
 
@@ -403,6 +415,7 @@ export async function deleteUserAccount(userId: string, confirmPassword: string)
 ```
 
 **Data Retention Policy**:
+
 ```typescript
 // Soft delete: 30 days retention
 // Hard delete: After 30 days, permanently remove:
@@ -415,6 +428,7 @@ export async function deleteUserAccount(userId: string, confirmPassword: string)
 ```
 
 **Cookie Consent** (Required for EU):
+
 ```tsx
 // components/CookieConsent.tsx
 'use client'
@@ -424,10 +438,11 @@ export function CookieConsent() {
   if (consent !== null) return null
 
   return (
-    <div className="fixed bottom-0 left-0 right-0 bg-white border-t p-4 z-50">
+    <div className="fixed bottom-0 left-0 right-0 z-50 border-t bg-white p-4">
       <div className="container flex items-center justify-between">
         <p className="text-sm">
-          We use cookies to improve your experience. By using our site, you agree to our cookie policy.
+          We use cookies to improve your experience. By using our site, you agree to our cookie
+          policy.
         </p>
         <Button onClick={() => setConsent(true)}>Accept</Button>
       </div>
@@ -448,6 +463,7 @@ export function CookieConsent() {
 **Impact**: DoS, spam, resource exhaustion
 
 #### Problem:
+
 - Rate limiting only on Alpha Vantage API and auth endpoints
 - Portfolio/investment mutations unprotected
 - Could create thousands of portfolios
@@ -455,17 +471,16 @@ export function CookieConsent() {
 - No per-user quotas
 
 #### Current State:
+
 ```typescript
 // middleware.ts - Only protects routes, no rate limiting
 export const config = {
-  matcher: [
-    '/dashboard/:path*',
-    '/portfolios/:path*',
-  ],
+  matcher: ['/dashboard/:path*', '/portfolios/:path*'],
 }
 ```
 
 #### Threat Scenarios:
+
 1. **Resource Exhaustion**: Malicious user creates 10,000 portfolios
 2. **Database Bloat**: Spam investments, corrupt data
 3. **API Abuse**: Automated scripts hammer endpoints
@@ -521,21 +536,16 @@ export const rateLimiters = {
 }
 
 // Middleware wrapper
-export async function checkRateLimit(
-  limiter: Ratelimit,
-  identifier: string
-): Promise<void> {
+export async function checkRateLimit(limiter: Ratelimit, identifier: string): Promise<void> {
   const { success, remaining } = await limiter.limit(identifier)
 
   if (!success) {
-    throw new Error(
-      `Rate limit exceeded. ${remaining} requests remaining.`
-    )
+    throw new Error(`Rate limit exceeded. ${remaining} requests remaining.`)
   }
 }
 
 // Usage in Server Actions
-'use server'
+;('use server')
 export async function createPortfolio(data: CreatePortfolioInput) {
   const user = await requireAuth()
 
@@ -551,18 +561,19 @@ export async function createPortfolio(data: CreatePortfolioInput) {
 
 **Rate Limit Matrix**:
 
-| Operation | Limit | Window | Rationale |
-|-----------|-------|---------|-----------|
-| Sign-in attempts | 10 | 1 hour | Brute force prevention |
-| Portfolio create | 10 | 1 hour | Reasonable usage |
-| Portfolio delete | 5 | 1 hour | Destructive operation |
-| Investment create | 50 | 1 hour | Bulk entry support |
-| Investment delete | 20 | 1 hour | Moderate restriction |
-| Price refresh | 100 | 1 day | API quota protection |
-| Data export | 5 | 1 day | Resource-intensive |
-| Search queries | 100 | 1 minute | Prevent scraping |
+| Operation         | Limit | Window   | Rationale              |
+| ----------------- | ----- | -------- | ---------------------- |
+| Sign-in attempts  | 10    | 1 hour   | Brute force prevention |
+| Portfolio create  | 10    | 1 hour   | Reasonable usage       |
+| Portfolio delete  | 5     | 1 hour   | Destructive operation  |
+| Investment create | 50    | 1 hour   | Bulk entry support     |
+| Investment delete | 20    | 1 hour   | Moderate restriction   |
+| Price refresh     | 100   | 1 day    | API quota protection   |
+| Data export       | 5     | 1 day    | Resource-intensive     |
+| Search queries    | 100   | 1 minute | Prevent scraping       |
 
 **User Quotas** (Optional - Phase 2):
+
 ```typescript
 // Limit total resources per user
 const USER_LIMITS = {
@@ -585,6 +596,7 @@ const USER_LIMITS = {
 **Impact**: Compromised session cannot be revoked
 
 #### Problem:
+
 - Users cannot see active sessions
 - No way to revoke sessions from other devices
 - No login history
@@ -688,6 +700,7 @@ export async function revokeSession(sessionId: string) {
 **Impact**: SQL injection, XSS, DoS
 
 #### Problem:
+
 - Zod validation mentioned but not detailed
 - No maximum lengths specified
 - No maximum counts per user
@@ -711,40 +724,36 @@ export const LIMITS = {
 
 // Portfolio validation
 export const portfolioSchema = z.object({
-  name: z.string()
+  name: z
+    .string()
     .min(LIMITS.PORTFOLIO_NAME.min)
     .max(LIMITS.PORTFOLIO_NAME.max)
     .regex(/^[a-zA-Z0-9\s\-_]+$/, 'Only letters, numbers, spaces, hyphens, underscores'),
-  baseCurrency: z.string()
+  baseCurrency: z
+    .string()
     .length(3)
     .regex(/^[A-Z]{3}$/, 'Must be 3-letter currency code'),
 })
 
 // Investment validation
 export const investmentSchema = z.object({
-  ticker: z.string()
+  ticker: z
+    .string()
     .min(LIMITS.TICKER.min)
     .max(LIMITS.TICKER.max)
     .regex(/^[A-Z0-9\.\-]+$/, 'Only uppercase letters, numbers, dots, hyphens')
-    .transform(s => s.toUpperCase()),
-  quantity: z.number()
-    .positive('Must be positive')
-    .finite()
-    .max(1000000000, 'Quantity too large'),
-  pricePerUnit: z.number()
-    .positive('Must be positive')
-    .finite()
-    .max(10000000, 'Price too large'),
-  purchaseDate: z.date()
+    .transform((s) => s.toUpperCase()),
+  quantity: z.number().positive('Must be positive').finite().max(1000000000, 'Quantity too large'),
+  pricePerUnit: z.number().positive('Must be positive').finite().max(10000000, 'Price too large'),
+  purchaseDate: z
+    .date()
     .max(new Date(), 'Cannot be in future')
     .min(new Date('1900-01-01'), 'Date too old'),
-  notes: z.string()
-    .max(LIMITS.INVESTMENT_NOTES.max)
-    .optional(),
+  notes: z.string().max(LIMITS.INVESTMENT_NOTES.max).optional(),
 })
 
 // Enforce limits in Server Actions
-'use server'
+;('use server')
 export async function createPortfolio(data: z.infer<typeof portfolioSchema>) {
   const user = await requireAuth()
 
@@ -754,9 +763,7 @@ export async function createPortfolio(data: z.infer<typeof portfolioSchema>) {
   })
 
   if (count >= LIMITS.MAX_PORTFOLIOS_PER_USER) {
-    throw new Error(
-      `Maximum ${LIMITS.MAX_PORTFOLIOS_PER_USER} portfolios per user`
-    )
+    throw new Error(`Maximum ${LIMITS.MAX_PORTFOLIOS_PER_USER} portfolios per user`)
   }
 
   // Validate input
@@ -780,6 +787,7 @@ export async function createPortfolio(data: z.infer<typeof portfolioSchema>) {
 **Impact**: Sensitive data exposure
 
 #### Problem:
+
 - Spec says "encryption at rest (PostgreSQL default)"
 - What exactly is encrypted?
 - Are notes encrypted?
@@ -799,11 +807,7 @@ const ALGORITHM = 'aes-256-gcm'
 
 export function encrypt(text: string): string {
   const iv = crypto.randomBytes(16)
-  const cipher = crypto.createCipheriv(
-    ALGORITHM,
-    Buffer.from(ENCRYPTION_KEY, 'hex'),
-    iv
-  )
+  const cipher = crypto.createCipheriv(ALGORITHM, Buffer.from(ENCRYPTION_KEY, 'hex'), iv)
 
   let encrypted = cipher.update(text, 'utf8', 'hex')
   encrypted += cipher.final('hex')
@@ -841,12 +845,14 @@ export function decrypt(encryptedText: string): string {
 ```
 
 **Key Management**:
+
 - Store `ENCRYPTION_KEY` in Vercel environment variables
 - Rotate keys annually
 - Keep old keys for decryption of old data
 - Use separate keys for production/staging
 
 **Database-Level Encryption**:
+
 - Vercel Postgres includes encryption at rest
 - All data encrypted on disk
 - Transparent to application
@@ -869,12 +875,14 @@ export function decrypt(encryptedText: string): string {
 ### 10. No Security Headers
 
 **Missing**:
+
 - `X-Frame-Options: DENY`
 - `X-Content-Type-Options: nosniff`
 - `Referrer-Policy: strict-origin-when-cross-origin`
 - `Permissions-Policy`
 
 **Recommendation**:
+
 ```typescript
 // next.config.ts
 const securityHeaders = [
@@ -899,23 +907,25 @@ const securityHeaders = [
 ## 🟢 LOW-PRIORITY ENHANCEMENTS
 
 ### 13. No Honeypot/Bot Detection
+
 ### 14. No IP Geolocation Blocking
+
 ### 15. No Advanced Threat Detection
 
 ---
 
 ## 📊 Risk Matrix
 
-| Security Gap | Risk Level | Effort | Priority |
-|--------------|-----------|---------|----------|
-| MFA | 🔴 Critical | 3 days | P0 - Before launch |
-| Audit Logging | 🔴 Critical | 4 days | P0 - MVP |
-| GDPR Compliance | 🔴 Critical | 5 days | P0 - Before EU users |
-| Rate Limiting | 🔴 High | 3 days | P1 - Phase 1 |
-| Session Management | 🟡 Medium | 2 days | P2 - Phase 1 |
-| Input Validation | 🟡 Medium | 2 days | P1 - Phase 1 |
-| Encryption Clarity | 🟡 Medium | 2 days | P2 - Phase 1 |
-| Security Headers | 🟡 Medium | 1 day | P2 - Before launch |
+| Security Gap       | Risk Level  | Effort | Priority             |
+| ------------------ | ----------- | ------ | -------------------- |
+| MFA                | 🔴 Critical | 3 days | P0 - Before launch   |
+| Audit Logging      | 🔴 Critical | 4 days | P0 - MVP             |
+| GDPR Compliance    | 🔴 Critical | 5 days | P0 - Before EU users |
+| Rate Limiting      | 🔴 High     | 3 days | P1 - Phase 1         |
+| Session Management | 🟡 Medium   | 2 days | P2 - Phase 1         |
+| Input Validation   | 🟡 Medium   | 2 days | P1 - Phase 1         |
+| Encryption Clarity | 🟡 Medium   | 2 days | P2 - Phase 1         |
+| Security Headers   | 🟡 Medium   | 1 day  | P2 - Before launch   |
 
 **Total Estimated Effort**: 22-25 days for all critical + medium gaps
 
@@ -924,21 +934,25 @@ const securityHeaders = [
 ## ✅ Security Implementation Roadmap
 
 ### Week 1 (Critical - P0):
+
 - [ ] Implement audit logging system
 - [ ] Add GDPR compliance features (export, delete)
 - [ ] Define and enforce input validation limits
 
 ### Week 2 (High Priority - P1):
+
 - [ ] Implement rate limiting across all operations
 - [ ] Add MFA (TOTP-based 2FA)
 - [ ] Enhance session management UI
 
 ### Week 3 (Medium Priority - P2):
+
 - [ ] Clarify and document encryption strategy
 - [ ] Add security headers (CSP, X-Frame-Options)
 - [ ] Implement environment variable validation
 
 ### Pre-Launch Checklist:
+
 - [ ] Security penetration testing
 - [ ] OWASP Top 10 verification
 - [ ] Legal review of GDPR compliance
@@ -959,12 +973,12 @@ This playbook defines procedures for detecting, responding to, and recovering fr
 
 ### Incident Severity Levels
 
-| Severity | Definition | Response Time | Examples |
-|----------|------------|---------------|-----------|
-| 🔴 **P0 (Critical)** | Active data breach, widespread service disruption | Immediate (<15 min) | Database exposed, mass account compromise, payment data leaked |
-| 🟡 **P1 (High)** | Potential breach, significant vulnerability | <1 hour | Authentication bypass discovered, SQL injection found, MFA circumvented |
-| 🟢 **P2 (Medium)** | Security issue with limited impact | <24 hours | Single account compromised, rate limit exceeded, suspicious activity detected |
-| ⚪ **P3 (Low)** | Security concern requiring investigation | <72 hours | Vulnerability report received, unusual login pattern, outdated dependency |
+| Severity             | Definition                                        | Response Time       | Examples                                                                      |
+| -------------------- | ------------------------------------------------- | ------------------- | ----------------------------------------------------------------------------- |
+| 🔴 **P0 (Critical)** | Active data breach, widespread service disruption | Immediate (<15 min) | Database exposed, mass account compromise, payment data leaked                |
+| 🟡 **P1 (High)**     | Potential breach, significant vulnerability       | <1 hour             | Authentication bypass discovered, SQL injection found, MFA circumvented       |
+| 🟢 **P2 (Medium)**   | Security issue with limited impact                | <24 hours           | Single account compromised, rate limit exceeded, suspicious activity detected |
+| ⚪ **P3 (Low)**      | Security concern requiring investigation          | <72 hours           | Vulnerability report received, unusual login pattern, outdated dependency     |
 
 ---
 
@@ -973,16 +987,19 @@ This playbook defines procedures for detecting, responding to, and recovering fr
 #### Core Team
 
 **Incident Commander** (IC):
+
 - **Name**: [Engineering Lead]
 - **Phone**: [Emergency Contact]
 - **Responsibility**: Coordinate response, make decisions, communicate with stakeholders
 
 **Technical Lead**:
+
 - **Name**: [Senior Engineer]
 - **Phone**: [Emergency Contact]
 - **Responsibility**: Investigate incident, implement fixes, coordinate technical response
 
 **Communications Lead**:
+
 - **Name**: [Product Manager / CEO]
 - **Email**: [Contact]
 - **Responsibility**: User communication, status page updates, PR if needed
@@ -990,11 +1007,13 @@ This playbook defines procedures for detecting, responding to, and recovering fr
 #### Extended Team
 
 **Legal Counsel**:
+
 - **Firm**: [Law Firm Name]
 - **Contact**: [Phone/Email]
 - **When to Involve**: Data breach, GDPR violations, legal compliance issues
 
 **Security Consultant** (Optional):
+
 - **Firm**: [Security Firm if retained]
 - **Contact**: [Phone/Email]
 - **When to Involve**: Complex breaches, forensic analysis needed
@@ -1006,6 +1025,7 @@ This playbook defines procedures for detecting, responding to, and recovering fr
 #### Detection Methods
 
 **Automated Monitoring**:
+
 - Sentry error rate spikes (>10x normal)
 - Failed authentication attempts (>100/minute)
 - Database connection failures
@@ -1013,6 +1033,7 @@ This playbook defines procedures for detecting, responding to, and recovering fr
 - Unusual data exports (>10,000 records)
 
 **Manual Reports**:
+
 - User reports suspicious activity
 - Security researcher reports vulnerability
 - Audit log anomalies detected during review
@@ -1043,6 +1064,7 @@ P2_Medium:
 #### P0 Critical Incident Response
 
 **1. Acknowledge & Assemble** (2 minutes)
+
 ```
 - IC acknowledges incident in #security-incidents
 - Assemble core incident response team
@@ -1050,6 +1072,7 @@ P2_Medium:
 ```
 
 **2. Assess Scope** (5 minutes)
+
 ```bash
 # Check affected systems
 - Database: SELECT COUNT(*) FROM "User" WHERE "updatedAt" > NOW() - INTERVAL '1 hour'
@@ -1059,6 +1082,7 @@ P2_Medium:
 ```
 
 **3. Contain Breach** (8 minutes)
+
 ```bash
 # Emergency containment actions:
 
@@ -1088,6 +1112,7 @@ UPDATE "User" SET "active" = false WHERE "id" IN (SELECT compromised_user_ids);
 #### Forensic Analysis Checklist
 
 **Data Access Audit**:
+
 ```sql
 -- Who accessed what data?
 SELECT
@@ -1117,6 +1142,7 @@ HAVING COUNT(*) > 10;
 ```
 
 **Authentication Anomalies**:
+
 ```sql
 -- Failed login attempts
 SELECT
@@ -1150,6 +1176,7 @@ WHERE a."action" = 'LOGIN_SUCCESS'
 ```
 
 **Database Changes**:
+
 ```sql
 -- Recent data modifications
 SELECT
@@ -1166,6 +1193,7 @@ ORDER BY (n_tup_ins + n_tup_upd + n_tup_del) DESC;
 #### Determine Root Cause
 
 Common Attack Vectors:
+
 - [ ] SQL injection
 - [ ] Authentication bypass
 - [ ] Session hijacking
@@ -1184,6 +1212,7 @@ Common Attack Vectors:
 #### Fix Implementation
 
 **1. Patch Vulnerability** (Varies by issue)
+
 ```bash
 # Example: Fix SQL injection
 git checkout -b hotfix/sql-injection-fix
@@ -1199,6 +1228,7 @@ vercel --prod
 ```
 
 **2. Rotate Compromised Credentials**
+
 ```bash
 # Rotate API keys
 # Alpha Vantage
@@ -1217,6 +1247,7 @@ UPDATE "Session" SET "expires" = NOW();
 ```
 
 **3. Restore Data** (if corruption occurred)
+
 ```bash
 # Restore from backup
 pg_restore --clean --if-exists -d $DATABASE_URL backup_pre_incident.dump
@@ -1228,6 +1259,7 @@ SELECT COUNT(*) FROM "Investment";
 ```
 
 **4. Strengthen Security**
+
 ```bash
 # Enable additional rate limiting
 redis-cli SET rate_limit:auth:global 10  # 10 requests/minute
@@ -1249,6 +1281,7 @@ ADMIN_IP_WHITELIST="1.2.3.4,5.6.7.8"
 **P0 - Data Breach Notification**
 
 **Email to All Users** (Within 72 hours, GDPR requirement):
+
 ```
 Subject: Important Security Notice - Action Required
 
@@ -1283,6 +1316,7 @@ Track Your Stack Security Team
 ```
 
 **Status Page Update**:
+
 ```
 🚨 Security Incident - Under Investigation
 
@@ -1299,6 +1333,7 @@ Your data: [status - safe/potentially affected/unknown]
 ```
 
 **Internal Communication** (Slack #security-incidents):
+
 ```
 🚨 INCIDENT UPDATE [Timestamp]
 
@@ -1322,12 +1357,14 @@ INCIDENT COMMANDER: [Name]
 ### Phase 6: Post-Incident Review
 
 **Within 24 Hours**:
+
 - [ ] Incident timeline documented
 - [ ] Root cause analysis completed
 - [ ] Affected users identified and notified
 - [ ] Regulatory notifications filed (GDPR, state breach laws)
 
 **Within 1 Week**:
+
 - [ ] Post-mortem meeting held
 - [ ] Lessons learned documented
 - [ ] Prevention measures identified
@@ -1344,6 +1381,7 @@ INCIDENT COMMANDER: [Name]
 **Affected Users**: [Number/Percentage]
 
 ## Timeline
+
 - [Timestamp]: Incident detected
 - [Timestamp]: Team assembled
 - [Timestamp]: Containment actions taken
@@ -1353,9 +1391,11 @@ INCIDENT COMMANDER: [Name]
 - [Timestamp]: Services restored
 
 ## Root Cause
+
 [Detailed explanation of what caused the incident]
 
 ## Impact
+
 - **Users Affected**: [Number]
 - **Data Exposed**: [Type and extent]
 - **Service Downtime**: [Duration]
@@ -1363,17 +1403,21 @@ INCIDENT COMMANDER: [Name]
 - **Reputation Impact**: [Assessment]
 
 ## What Went Well
+
 - [Things that worked in our response]
 
 ## What Went Wrong
+
 - [Things that didn't work or were delayed]
 
 ## Action Items
+
 - [ ] [Preventive measure 1] - Owner: [Name] - Due: [Date]
 - [ ] [Preventive measure 2] - Owner: [Name] - Due: [Date]
 - [ ] [Process improvement 1] - Owner: [Name] - Due: [Date]
 
 ## Lessons Learned
+
 [Key takeaways for future incidents]
 ```
 
@@ -1384,18 +1428,21 @@ INCIDENT COMMANDER: [Name]
 #### Notification Requirements
 
 **GDPR (EU Users)**:
+
 - **Timeline**: Within 72 hours of discovery
 - **Who to Notify**: Data Protection Authority (DPA) in affected countries
 - **What to Report**: Nature of breach, affected data, estimated users, mitigation steps
 - **Penalties**: Up to €20 million or 4% of annual revenue
 
 **CCPA (California Users)**:
+
 - **Timeline**: Without unreasonable delay
 - **Who to Notify**: California Attorney General (if >500 residents affected)
 - **What to Report**: Same as GDPR
 - **Penalties**: Up to $7,500 per violation
 
 **State Breach Notification Laws** (US):
+
 - **Timeline**: Varies by state (most require "without unreasonable delay")
 - **Who to Notify**: Affected users and state attorney general
 - **Requirements**: Vary by state
@@ -1437,30 +1484,30 @@ Request urgent response within [timeframe].
 
 #### Internal Team
 
-| Role | Name | Phone | Email |
-|------|------|-------|-------|
-| Incident Commander | [Name] | [Phone] | [Email] |
-| Technical Lead | [Name] | [Phone] | [Email] |
-| CEO / Founder | [Name] | [Phone] | [Email] |
-| Engineering Team | #engineering | - | eng@trackyourstack.com |
+| Role               | Name         | Phone   | Email                  |
+| ------------------ | ------------ | ------- | ---------------------- |
+| Incident Commander | [Name]       | [Phone] | [Email]                |
+| Technical Lead     | [Name]       | [Phone] | [Email]                |
+| CEO / Founder      | [Name]       | [Phone] | [Email]                |
+| Engineering Team   | #engineering | -       | eng@trackyourstack.com |
 
 #### External Partners
 
-| Service | Purpose | Contact | Access |
-|---------|---------|---------|--------|
-| Legal Counsel | Legal guidance | [Law Firm] | [Phone/Email] |
-| Security Consultant | Forensic analysis | [Firm] | [Phone/Email] |
-| Vercel Support | Infrastructure | support@vercel.com | https://vercel.com/support |
-| Neon Support | Database | support@neon.tech | https://neon.tech/docs/support |
-| Alpha Vantage | API provider | support@alphavantage.co | - |
+| Service             | Purpose           | Contact                 | Access                         |
+| ------------------- | ----------------- | ----------------------- | ------------------------------ |
+| Legal Counsel       | Legal guidance    | [Law Firm]              | [Phone/Email]                  |
+| Security Consultant | Forensic analysis | [Firm]                  | [Phone/Email]                  |
+| Vercel Support      | Infrastructure    | support@vercel.com      | https://vercel.com/support     |
+| Neon Support        | Database          | support@neon.tech       | https://neon.tech/docs/support |
+| Alpha Vantage       | API provider      | support@alphavantage.co | -                              |
 
 #### Regulatory Contacts
 
-| Authority | Jurisdiction | Contact | When to Notify |
-|-----------|-------------|---------|----------------|
-| ICO (UK) | UK/EU GDPR | casework@ico.org.uk | Data breach affecting EU users |
+| Authority     | Jurisdiction    | Contact                              | When to Notify                     |
+| ------------- | --------------- | ------------------------------------ | ---------------------------------- |
+| ICO (UK)      | UK/EU GDPR      | casework@ico.org.uk                  | Data breach affecting EU users     |
 | California AG | California CCPA | https://oag.ca.gov/ecrime/databreach | >500 California residents affected |
-| FBI IC3 | Federal (US) | https://www.ic3.gov/ | Major cyber crime |
+| FBI IC3       | Federal (US)    | https://www.ic3.gov/                 | Major cyber crime                  |
 
 ---
 
@@ -1501,12 +1548,14 @@ ps aux | grep postgres
 ### Training & Drills
 
 **Quarterly Security Drills**:
+
 - Simulate P0 incident (e.g., "database exposed")
 - Practice communication procedures
 - Test backup/restore procedures
 - Verify contact information is up to date
 
 **Annual Review**:
+
 - Update incident response playbook
 - Review past incidents and lessons learned
 - Update emergency contacts

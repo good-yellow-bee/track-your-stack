@@ -14,6 +14,7 @@ This report identifies **11 critical gaps** in the business logic and financial 
 **Overall Assessment**: ⚠️ **INCOMPLETE FOR TAX COMPLIANCE**
 
 ### Critical Findings:
+
 - **Tax Reporting**: Completely missing (CRITICAL for US users)
 - **Dividend Tracking**: Not implemented (major income source)
 - **Corporate Actions**: No support for splits, mergers
@@ -21,6 +22,7 @@ This report identifies **11 critical gaps** in the business logic and financial 
 - **Currency Conversion**: Timing issues with gains/loss calculation
 
 ### User Impact:
+
 - **Cannot use for tax filing** without FIFO/LIFO tracking
 - **Inaccurate returns** without dividend tracking (30-40% of total return)
 - **Data corruption** if stock splits occur (manual quantity adjustment required)
@@ -34,6 +36,7 @@ This report identifies **11 critical gaps** in the business logic and financial 
 ### Standard Tax Disclaimer Template
 
 This disclaimer MUST appear on:
+
 - Tax report pages
 - 1099-B export pages
 - Capital gains summary pages
@@ -179,6 +182,7 @@ for users. However:
 ### Professional Consultation Required
 
 Users MUST consult with qualified tax professionals (CPAs, enrolled agents, tax attorneys) before:
+
 - Filing tax returns based on our calculations
 - Making investment decisions with tax implications
 - Claiming deductions or credits
@@ -187,6 +191,7 @@ Users MUST consult with qualified tax professionals (CPAs, enrolled agents, tax 
 ### Known Limitations
 
 Our tax reporting features have known limitations:
+
 - FIFO method only in MVP (LIFO and Specific ID coming later)
 - No wash sale rule detection initially
 - No state tax calculations (federal only)
@@ -198,6 +203,7 @@ Our tax reporting features have known limitations:
 
 You agree to indemnify and hold harmless Track Your Stack from any claims, losses, or damages
 arising from your use of tax reporting features, including but not limited to:
+
 - IRS audits or tax penalties
 - Incorrect tax filings
 - Lost tax benefits or overpayment
@@ -218,25 +224,30 @@ obligated to notify users of such changes.
 ## Tax Data Handling
 
 ### Data We Collect
+
 - Purchase dates, quantities, and prices
 - Sale transactions and capital gains
 - Tax lot allocations and cost basis methods
 - User-selected tax filing preferences
 
 ### How We Use Tax Data
+
 - To calculate capital gains and losses
 - To generate tax reports and exports
 - To improve our tax calculation algorithms
 - To comply with legal obligations (if subpoenaed)
 
 ### Data Security
+
 Tax data is encrypted at rest and in transit. However, we cannot guarantee absolute security.
 Users are responsible for backing up tax-critical data.
 
 ### Data Retention
+
 Tax data is retained for 7 years (standard IRS audit period) unless users request deletion.
 
 ### Sharing with Tax Professionals
+
 Users may export tax data to share with CPAs. We do not directly share with third parties without consent.
 ```
 
@@ -343,6 +354,7 @@ Before filing your taxes, have your CPA verify:
 - [ ] Any discrepancies are documented and explained
 
 **Questions for Your CPA:**
+
 1. Does my tax lot method (FIFO/LIFO) optimize my tax situation?
 2. Should I consider tax loss harvesting opportunities?
 3. Are there any wash sale violations I should address?
@@ -350,6 +362,7 @@ Before filing your taxes, have your CPA verify:
 5. Are there state-specific tax implications I should know about?
 
 **Documents to Bring to Your CPA:**
+
 - This capital gains report
 - All broker 1099-B statements
 - Record of all purchases and sales
@@ -364,6 +377,7 @@ Before filing your taxes, have your CPA verify:
 For **Option B (MVP Path)**, implement minimum viable disclaimers:
 
 **Phase 0B (Tax Reporting MVP)**:
+
 - [ ] Primary disclaimer component (1 day)
   - Create `TaxDisclaimer.tsx` component
   - Add to all tax report pages
@@ -384,6 +398,7 @@ For **Option B (MVP Path)**, implement minimum viable disclaimers:
 ### Future Enhancements (Post-MVP)
 
 **Phase 2 (Full Tax Reporting)**:
+
 - Annual re-acceptance reminder
 - CPA export format with built-in disclaimer
 - Email notification before tax season with disclaimer reminder
@@ -394,6 +409,7 @@ For **Option B (MVP Path)**, implement minimum viable disclaimers:
 ### Error & Omissions Insurance
 
 **Recommendation**: After beta launch, consider E&O insurance:
+
 - **Coverage**: $1-2 million professional liability
 - **Cost**: ~$2,000-5,000/year for startups
 - **Protects**: Legal fees if sued for tax calculation errors
@@ -406,6 +422,7 @@ For **Option B (MVP Path)**, implement minimum viable disclaimers:
 ### Problem Statement
 
 **Current State**: The application has NO tax reporting capabilities:
+
 - ❌ No FIFO (First In, First Out) tracking
 - ❌ No LIFO (Last In, First Out) tracking
 - ❌ No Specific ID method support
@@ -415,6 +432,7 @@ For **Option B (MVP Path)**, implement minimum viable disclaimers:
 - ❌ No wash sale rule detection
 
 **Impact**: Users cannot:
+
 1. File accurate tax returns
 2. Optimize tax strategy (tax loss harvesting)
 3. Prove cost basis to IRS
@@ -439,6 +457,7 @@ model PurchaseTransaction {
 ```
 
 **Problem**:
+
 - Aggregation destroys tax lot identity
 - Cannot determine which shares were sold (FIFO vs LIFO vs Specific ID)
 - No concept of "holding period" (short-term < 1 year, long-term ≥ 1 year)
@@ -602,9 +621,10 @@ export async function calculateSaleTaxImpact(
       status: { in: ['OPEN', 'PARTIAL'] },
       remainingQuantity: { gt: 0 },
     },
-    orderBy: method === 'FIFO'
-      ? { purchaseDate: 'asc' }  // Sell oldest first
-      : { purchaseDate: 'desc' }, // Sell newest first (LIFO)
+    orderBy:
+      method === 'FIFO'
+        ? { purchaseDate: 'asc' } // Sell oldest first
+        : { purchaseDate: 'desc' }, // Sell newest first (LIFO)
   })
 
   if (availableLots.length === 0) {
@@ -698,7 +718,7 @@ export async function checkWashSale(
     },
   })
 
-  return purchases.some(p => p.quantity.gte(quantitySold))
+  return purchases.some((p) => p.quantity.gte(quantitySold))
 }
 ```
 
@@ -718,7 +738,7 @@ export interface TaxReport {
 }
 
 export interface TaxTransaction {
-  description: string  // "100 shares of AAPL"
+  description: string // "100 shares of AAPL"
   dateAcquired: Date
   dateSold: Date
   proceeds: Decimal
@@ -730,10 +750,7 @@ export interface TaxTransaction {
 /**
  * Generate Form 1099-B equivalent report
  */
-export async function generateTaxReport(
-  userId: string,
-  taxYear: number
-): Promise<TaxReport> {
+export async function generateTaxReport(userId: string, taxYear: number): Promise<TaxReport> {
   const startDate = new Date(`${taxYear}-01-01`)
   const endDate = new Date(`${taxYear}-12-31`)
 
@@ -741,7 +758,7 @@ export async function generateTaxReport(
   const sales = await prisma.saleTransaction.findMany({
     where: {
       investment: {
-        portfolio: { userId }
+        portfolio: { userId },
       },
       saleDate: {
         gte: startDate,
@@ -785,9 +802,7 @@ export async function generateTaxReport(
       }
 
       if (allocation.taxLot.isWashSale) {
-        washSaleAdjustments = washSaleAdjustments.add(
-          allocation.taxLot.washSaleAmount || 0
-        )
+        washSaleAdjustments = washSaleAdjustments.add(allocation.taxLot.washSaleAmount || 0)
       }
     }
   }
@@ -808,7 +823,16 @@ export async function generateTaxReport(
  */
 export function exportToTurboTaxCSV(report: TaxReport): string {
   const rows = [
-    ['Description', 'Date Acquired', 'Date Sold', 'Proceeds', 'Cost Basis', 'Gain/Loss', 'Type', 'Wash Sale'],
+    [
+      'Description',
+      'Date Acquired',
+      'Date Sold',
+      'Proceeds',
+      'Cost Basis',
+      'Gain/Loss',
+      'Type',
+      'Wash Sale',
+    ],
   ]
 
   // Short-term transactions
@@ -839,28 +863,32 @@ export function exportToTurboTaxCSV(report: TaxReport): string {
     ])
   }
 
-  return rows.map(row => row.join(',')).join('\n')
+  return rows.map((row) => row.join(',')).join('\n')
 }
 ```
 
 ### Implementation Timeline
 
 **Phase 1a - Database Schema** (Week 2, 3 days):
+
 - Add TaxLot, SaleTransaction, TaxLotAllocation models
 - Migration script to convert existing PurchaseTransactions to TaxLots
 - Add costBasisMethod to Portfolio
 
 **Phase 1b - Tax Calculations** (Week 3, 4 days):
+
 - Implement FIFO/LIFO logic
 - Calculate holding periods
 - Wash sale detection
 
 **Phase 1c - UI for Sales** (Week 4, 3 days):
+
 - "Sell Investment" flow
 - Show tax impact before confirming sale
 - Tax lot selection (for Specific ID method)
 
 **Phase 2 - Tax Reports** (Week 5-6, 5 days):
+
 - Generate 1099-B equivalent report
 - CSV export for TurboTax/H&R Block
 - Annual tax summary dashboard
@@ -876,12 +904,14 @@ export function exportToTurboTaxCSV(report: TaxReport): string {
 ### Problem Statement
 
 **Current State**: Dividends are completely ignored:
+
 - ❌ No dividend payment tracking
 - ❌ No dividend yield calculation
 - ❌ No total return including dividends
 - ❌ No dividend reinvestment (DRIP) support
 
 **Impact**:
+
 - **30-40% of total stock returns** come from dividends (S&P 500 historical)
 - Portfolio performance metrics are wildly inaccurate
 - Users cannot evaluate dividend-focused strategies
@@ -975,16 +1005,14 @@ model DividendPaymentHistory {
 export interface DividendMetrics {
   totalDividendsReceived: Decimal
   annualDividendIncome: Decimal
-  dividendYield: number  // Percentage
-  yieldOnCost: number    // Yield based on original purchase price
+  dividendYield: number // Percentage
+  yieldOnCost: number // Yield based on original purchase price
 }
 
 /**
  * Calculate dividend metrics for an investment
  */
-export async function calculateDividendMetrics(
-  investmentId: string
-): Promise<DividendMetrics> {
+export async function calculateDividendMetrics(investmentId: string): Promise<DividendMetrics> {
   const investment = await prisma.investment.findUnique({
     where: { id: investmentId },
     include: { dividends: true },
@@ -1002,9 +1030,7 @@ export async function calculateDividendMetrics(
   const oneYearAgo = new Date()
   oneYearAgo.setFullYear(oneYearAgo.getFullYear() - 1)
 
-  const recentDividends = investment.dividends.filter(
-    div => div.paymentDate >= oneYearAgo
-  )
+  const recentDividends = investment.dividends.filter((div) => div.paymentDate >= oneYearAgo)
 
   const annualDividendIncome = recentDividends.reduce(
     (sum, div) => sum.add(div.totalAmount),
@@ -1012,8 +1038,7 @@ export async function calculateDividendMetrics(
   )
 
   // Current dividend yield (annual income / current value)
-  const currentValue = (investment.currentPrice || new Decimal(0))
-    .mul(investment.totalQuantity)
+  const currentValue = (investment.currentPrice || new Decimal(0)).mul(investment.totalQuantity)
 
   const dividendYield = currentValue.gt(0)
     ? annualDividendIncome.div(currentValue).mul(100).toNumber()
@@ -1036,9 +1061,7 @@ export async function calculateDividendMetrics(
 /**
  * Calculate total return including dividends
  */
-export async function calculateTotalReturn(
-  investment: Investment
-): Promise<{
+export async function calculateTotalReturn(investment: Investment): Promise<{
   priceReturn: Decimal
   dividendReturn: Decimal
   totalReturn: Decimal
@@ -1130,16 +1153,19 @@ export function AddDividendForm({ investmentId }: { investmentId: string }) {
 ### Implementation Timeline
 
 **Phase 1 - Schema & Data Entry** (Week 3, 2 days):
+
 - Add Dividend model
 - Manual dividend entry form
 - Display dividend history
 
 **Phase 2 - Calculations** (Week 3-4, 2 days):
+
 - Dividend metrics calculation
 - Total return including dividends
 - Dividend yield dashboard
 
 **Phase 3 - Automatic Dividend Fetching** (Phase 2, 3 days):
+
 - Alpha Vantage has dividend history API
 - Fetch historical dividends
 - Auto-populate for new investments
@@ -1155,6 +1181,7 @@ export function AddDividendForm({ investmentId }: { investmentId: string }) {
 ### Problem Statement
 
 **Current State**: No support for corporate actions:
+
 - ❌ Stock splits (2:1, 3:1, etc.)
 - ❌ Reverse splits (1:10)
 - ❌ Ticker symbol changes (FB → META)
@@ -1163,6 +1190,7 @@ export function AddDividendForm({ investmentId }: { investmentId: string }) {
 - ❌ Rights offerings
 
 **Impact**:
+
 - Data corruption after stock split (quantity incorrect)
 - Manual adjustment required (error-prone)
 - Cost basis calculations wrong
@@ -1171,6 +1199,7 @@ export function AddDividendForm({ investmentId }: { investmentId: string }) {
 ### Real-World Examples
 
 **Stock Split Example**:
+
 ```
 User owns 100 shares of AAPL at $600/share
 June 2014: AAPL does 7:1 stock split
@@ -1192,6 +1221,7 @@ Current app behavior:
 ```
 
 **Ticker Change Example**:
+
 ```
 User owns 50 shares of FB (Facebook)
 October 2021: FB changes ticker to META
@@ -1284,9 +1314,7 @@ model CorporateActionLog {
 ```typescript
 // lib/corporate-actions/handler.ts
 
-export async function processCorporateAction(
-  actionId: string
-): Promise<void> {
+export async function processCorporateAction(actionId: string): Promise<void> {
   const action = await prisma.corporateAction.findUnique({
     where: { id: actionId },
   })
@@ -1455,16 +1483,19 @@ async function processDelisting(action: CorporateAction): Promise<void> {
 ### Corporate Action Data Source
 
 **Option 1: Alpha Vantage** (Limited)
+
 - Has some corporate action data
 - Not comprehensive
 - Manual entry required
 
 **Option 2: Polygon.io** (Better)
+
 - Comprehensive corporate action data
 - Includes splits, dividends, mergers
 - $99/month
 
 **Option 3: Manual Entry + Community**
+
 - Admin interface to enter corporate actions
 - Community-reported actions
 - Verification process
@@ -1472,16 +1503,19 @@ async function processDelisting(action: CorporateAction): Promise<void> {
 ### Implementation Timeline
 
 **Phase 1 - Schema & Infrastructure** (Week 5, 3 days):
+
 - Add CorporateAction and CorporateActionLog models
 - Stock split handler
 - Ticker change handler
 
 **Phase 2 - User Notifications** (Week 5-6, 2 days):
+
 - Email notifications for affected users
 - In-app notifications
 - Corporate action history page
 
 **Phase 3 - Data Source Integration** (Week 6-7, 3 days):
+
 - Integrate with Polygon.io OR
 - Build admin interface for manual entry
 - Automated processing
@@ -1497,6 +1531,7 @@ async function processDelisting(action: CorporateAction): Promise<void> {
 ### Problem Statement
 
 **Current State**: Brokerage fees and commissions are ignored
+
 - ❌ No commission tracking on purchases
 - ❌ No commission tracking on sales
 - ❌ Cost basis calculations are inaccurate
@@ -1572,6 +1607,7 @@ const costBasisPerUnit = totalCost / quantity
 ### Problem Statement
 
 **Current State**: Currency conversion timing is unclear
+
 - When is conversion rate applied? Purchase date or current date?
 - For gains/loss calculation, should use historical rates
 - Current implementation might show incorrect gain/loss
@@ -1638,13 +1674,13 @@ export function calculateGainLossMultiCurrency(taxLot, currentPrice, portfolio) 
 
 ## 📊 Implementation Priority Matrix
 
-| Feature | User Impact | Effort | Priority | Phase |
-|---------|-------------|--------|----------|-------|
-| Tax Lot Tracking | 🔴 Critical | 15 days | P0 | Phase 1 |
-| Dividend Tracking | 🔴 Critical | 7 days | P0 | Phase 1 |
-| Corporate Actions | 🔴 Critical | 8 days | P1 | Phase 1 |
-| Transaction Fees | 🟡 High | 1 day | P2 | Phase 1 |
-| Currency Timing Fix | 🟡 High | 2 days | P2 | Phase 1 |
+| Feature             | User Impact | Effort  | Priority | Phase   |
+| ------------------- | ----------- | ------- | -------- | ------- |
+| Tax Lot Tracking    | 🔴 Critical | 15 days | P0       | Phase 1 |
+| Dividend Tracking   | 🔴 Critical | 7 days  | P0       | Phase 1 |
+| Corporate Actions   | 🔴 Critical | 8 days  | P1       | Phase 1 |
+| Transaction Fees    | 🟡 High     | 1 day   | P2       | Phase 1 |
+| Currency Timing Fix | 🟡 High     | 2 days  | P2       | Phase 1 |
 
 **Total Additional Effort**: 33 days (6.5 weeks)
 
@@ -1653,16 +1689,19 @@ export function calculateGainLossMultiCurrency(taxLot, currentPrice, portfolio) 
 ## 🎯 Recommended Implementation Sequence
 
 ### Week 3-4: Foundation
+
 1. Implement tax lot schema
 2. Migrate existing data to tax lots
 3. Add dividend schema
 
 ### Week 5-6: Core Features
+
 4. Implement FIFO/LIFO calculations
 5. Add dividend entry and calculations
 6. Corporate action infrastructure
 
 ### Week 7-8: Polish & Testing
+
 7. Tax report generation
 8. Corporate action processing
 9. Integration testing
