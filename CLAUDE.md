@@ -122,6 +122,52 @@ Documentation Agent (Parallel):
 
 Before implementing ANY feature, follow this mandatory workflow:
 
+**📋 PRE-PUSH QUALITY GATE WORKFLOW:**
+
+```
+┌─────────────────────────────────────────────────────────┐
+│ Ready to push code?                                     │
+└──────────────────┬──────────────────────────────────────┘
+                   │
+                   ▼
+           ┌───────────────┐
+           │ Run pnpm      │
+           │ pre-push      │
+           └───────┬───────┘
+                   │
+         ┌─────────▼─────────┐
+         │ All checks pass?  │
+         └─────────┬─────────┘
+                   │
+         ┌─────────▼─────────┐
+         │       NO          │ ◄────────────┐
+         └─────────┬─────────┘              │
+                   │                        │
+                   ▼                        │
+         ┌─────────────────────┐            │
+         │ Fix the failures:   │            │
+         │ • pnpm format       │            │
+         │ • pnpm lint --fix   │            │
+         │ • Fix type errors   │            │
+         │ • Fix failing tests │            │
+         │ • Fix build errors  │            │
+         └─────────┬───────────┘            │
+                   │                        │
+                   └────────────────────────┘
+                   
+         ┌─────────▼─────────┐
+         │       YES         │
+         └─────────┬─────────┘
+                   │
+                   ▼
+         ┌─────────────────────┐
+         │ ✅ SAFE TO PUSH     │
+         │ git push origin ... │
+         └─────────────────────┘
+```
+
+**🚨 NEVER skip pre-push checks. NEVER push failing code.**
+
 ### 1. Create Feature Branch
 
 ```bash
@@ -156,22 +202,55 @@ git commit -m "feat: implement portfolio creation form
 
 ### 3. Test Thoroughly
 
-**Before merging, MUST verify:**
+**🚨 MANDATORY: Run Quality Checks Before Every Push**
 
-- [ ] Feature works as expected
-- [ ] All existing tests pass
-- [ ] New tests added for new functionality
-- [ ] No console errors
-- [ ] No TypeScript errors
-- [ ] No ESLint warnings
-- [ ] Documentation updated
-- [ ] Screenshots captured
+Before pushing code or creating a PR, you MUST run the same quality checks that CI/CD will run:
 
 ```bash
-# Run all checks
-pnpm lint
+# Run all quality checks (same as CI pipeline)
+pnpm pre-push
+
+# This runs in sequence:
+# 1. Format Check (Prettier)  ✓
+# 2. Lint (ESLint)            ✓
+# 3. Type Check (TypeScript)  ✓
+# 4. Unit Tests (Vitest)      ✓
+# 5. Build (Next.js)          ✓
+```
+
+**If any check fails, FIX IT before pushing. Do NOT push failing code.**
+
+**Manual verification checklist:**
+
+- [ ] `pnpm pre-push` passes with no errors
+- [ ] Feature works as expected in `pnpm dev`
+- [ ] New tests added for new functionality
+- [ ] No console errors in browser
+- [ ] Documentation updated (if applicable)
+- [ ] Screenshots captured (if UI changes)
+
+**Optional: Run E2E tests locally** (if you have authentication setup):
+
+```bash
+pnpm test:e2e
+```
+
+**Quick fixes for common failures:**
+
+```bash
+# Format failures → Auto-fix
+pnpm format
+
+# Lint failures → Auto-fix (some)
+pnpm lint --fix
+
+# Type failures → Fix manually based on errors
 pnpm typecheck
+
+# Test failures → Fix tests or implementation
 pnpm test
+
+# Build failures → Fix based on error messages
 pnpm build
 ```
 
