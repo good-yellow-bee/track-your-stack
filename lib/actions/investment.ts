@@ -158,44 +158,61 @@ export async function addInvestment(
       // Calculate: newAvgCostBasis = totalCost / totalQty
       const newAvgCostBasis = totalCost.dividedBy(totalQty)
 
-      await prisma.investment.update({
-        where: { id: existingInvestment.id },
-        data: {
-          totalQuantity: totalQty,
-          averageCostBasis: newAvgCostBasis,
-        },
-      })
+      // Use transaction to ensure atomicity: both investment update and
+      // purchase transaction creation must succeed or both fail
+      await prisma.$transaction([
+        prisma.investment.update({
+          where: { id: existingInvestment.id },
+          data: {
+            totalQuantity: totalQty,
+            averageCostBasis: newAvgCostBasis,
+          },
+        }),
+        prisma.purchaseTransaction.create({
+          data: {
+            investmentId: existingInvestment.id,
+            quantity: new Decimal(validatedQuantity),
+            pricePerUnit: new Decimal(validatedPrice),
+            currency,
+            purchaseDate: purchaseDate && purchaseDate.trim() ? new Date(purchaseDate) : new Date(),
+            notes: notes || null,
+          },
+        }),
+      ])
 
       investmentId = existingInvestment.id
       aggregated = true
     } else {
-      // Create new investment
-      const newInvestment = await prisma.investment.create({
-        data: {
-          portfolioId,
-          ticker,
-          assetName,
-          assetType,
-          totalQuantity: new Decimal(validatedQuantity),
-          averageCostBasis: new Decimal(validatedPrice),
-          purchaseCurrency: currency,
-        },
+      // Create new investment with purchase transaction atomically
+      const result = await prisma.$transaction(async (tx) => {
+        const newInvestment = await tx.investment.create({
+          data: {
+            portfolioId,
+            ticker,
+            assetName,
+            assetType,
+            totalQuantity: new Decimal(validatedQuantity),
+            averageCostBasis: new Decimal(validatedPrice),
+            purchaseCurrency: currency,
+          },
+        })
+
+        await tx.purchaseTransaction.create({
+          data: {
+            investmentId: newInvestment.id,
+            quantity: new Decimal(validatedQuantity),
+            pricePerUnit: new Decimal(validatedPrice),
+            currency,
+            purchaseDate: purchaseDate && purchaseDate.trim() ? new Date(purchaseDate) : new Date(),
+            notes: notes || null,
+          },
+        })
+
+        return newInvestment
       })
 
-      investmentId = newInvestment.id
+      investmentId = result.id
     }
-
-    // Create purchase transaction record
-    await prisma.purchaseTransaction.create({
-      data: {
-        investmentId,
-        quantity: new Decimal(validatedQuantity),
-        pricePerUnit: new Decimal(validatedPrice),
-        currency,
-        purchaseDate: purchaseDate && purchaseDate.trim() ? new Date(purchaseDate) : new Date(),
-        notes: notes || null,
-      },
-    })
 
     revalidatePath(`/portfolios/${portfolioId}`)
     revalidatePath('/dashboard')
