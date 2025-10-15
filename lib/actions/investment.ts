@@ -16,22 +16,11 @@ type ActionResult<T = void> = {
 
 // Validation schemas
 const AddInvestmentSchema = z.object({
-  ticker: z.preprocess(
-    (val) => (val === null || val === undefined ? '' : val),
-    z
       .string()
       .trim()
       .min(1, 'Ticker is required')
       .max(20)
-      .transform((val) => val.toUpperCase())
-  ),
-  assetName: z.preprocess(
-    (val) => (val === null || val === undefined ? '' : val),
-    z.string().trim().min(1, 'Asset name is required').max(200)
-  ),
   assetType: z.nativeEnum(AssetType),
-  quantity: z.coerce.number().positive('Quantity must be a positive number'),
-  pricePerUnit: z.coerce.number().positive('Price per unit must be a positive number'),
   currency: z.string().length(3, 'Invalid currency code'),
   purchaseDate: z.string().optional(),
   notes: z.string().max(500).optional(),
@@ -73,16 +62,7 @@ export async function addInvestment(
     return { success: false, error: 'Forbidden' }
   }
 
-  // Extract and validate form data using Zod (handles type coercion and validation)
   const validated = AddInvestmentSchema.safeParse({
-    ticker: formData.get('ticker'),
-    assetName: formData.get('assetName'),
-    assetType: formData.get('assetType'),
-    quantity: formData.get('quantity'), // Zod will coerce string to number
-    pricePerUnit: formData.get('pricePerUnit'), // Zod will coerce string to number
-    currency: formData.get('currency') || 'USD',
-    purchaseDate: formData.get('purchaseDate') || undefined,
-    notes: formData.get('notes') || undefined,
   })
 
   if (!validated.success) {
@@ -231,27 +211,11 @@ export async function updateInvestment(
     return { success: false, error: 'Forbidden' }
   }
 
-  // Validate form data
-  const validated = UpdateInvestmentSchema.safeParse({
-    assetName: formData.get('assetName'),
-    assetType: formData.get('assetType'),
-  })
-
-  if (!validated.success) {
-    return {
-      success: false,
-      error: validated.error.issues[0]?.message || 'Invalid input',
-    }
-  }
-
-  const { assetName, assetType } = validated.data
 
   try {
     await prisma.investment.update({
       where: { id: investmentId },
       data: {
-        assetName,
-        assetType,
       },
     })
 
