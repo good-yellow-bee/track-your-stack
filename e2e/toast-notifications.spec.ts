@@ -1,7 +1,9 @@
 import { test, expect } from '@playwright/test'
+import * as fs from 'fs'
+import * as path from 'path'
 
 /**
- * Toast Notifications E2E Tests
+ * Toast Notification E2E Tests
  *
  * Tests the toast notification system including:
  * - Toast positioning and visibility
@@ -11,7 +13,14 @@ import { test, expect } from '@playwright/test'
  * - Different toast types (success, error, warning, info)
  */
 
-test.describe('Toast Notification System', () => {
+// Skip all tests in this file if auth file doesn't exist
+const authFilePath = path.join(__dirname, 'fixtures', '.auth', 'user.json')
+const hasAuth = fs.existsSync(authFilePath)
+
+test.describe('Toast Notifications', () => {
+  test.skip(!hasAuth, 'Skipping: Authentication not configured')
+
+  // Note: These tests require authentication
   test.use({
     storageState: 'e2e/fixtures/.auth/user.json',
   })

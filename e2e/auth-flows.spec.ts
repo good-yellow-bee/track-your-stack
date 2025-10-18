@@ -1,4 +1,6 @@
 import { test, expect } from '@playwright/test'
+import * as fs from 'fs'
+import * as path from 'path'
 
 /**
  * Authentication Flows E2E Tests
@@ -11,7 +13,12 @@ import { test, expect } from '@playwright/test'
  * - Sign-out flow
  */
 
+// Skip auth-dependent tests if auth file doesn't exist
+const authFilePath = path.join(__dirname, 'fixtures', '.auth', 'user.json')
+const hasAuth = fs.existsSync(authFilePath)
+
 test.describe('Authentication Flows', () => {
+  test.skip(!hasAuth, 'Skipping: Authentication not configured')
   test.beforeEach(async ({ page }) => {
     // Clear all cookies to start fresh
     await page.context().clearCookies()
