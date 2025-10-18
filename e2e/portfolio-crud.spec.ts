@@ -22,9 +22,11 @@ test.describe('Portfolio CRUD Operations', () => {
 
   // Note: These tests require authentication
   // In a real scenario, you would set up auth state before tests
-  test.use({
-    storageState: 'e2e/fixtures/.auth/user.json',
-  })
+  if (hasAuth) {
+    test.use({
+      storageState: 'e2e/fixtures/.auth/user.json',
+    })
+  }
 
   test.beforeEach(async ({ page }) => {
     // Navigate to portfolios page before each test

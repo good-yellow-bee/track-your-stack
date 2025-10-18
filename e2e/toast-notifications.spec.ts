@@ -21,9 +21,11 @@ test.describe('Toast Notifications', () => {
   test.skip(!hasAuth, 'Skipping: Authentication not configured')
 
   // Note: These tests require authentication
-  test.use({
-    storageState: 'e2e/fixtures/.auth/user.json',
-  })
+  if (hasAuth) {
+    test.use({
+      storageState: 'e2e/fixtures/.auth/user.json',
+    })
+  }
 
   test('should display toast at top-right position', async ({ page }) => {
     await page.goto('/portfolios')
