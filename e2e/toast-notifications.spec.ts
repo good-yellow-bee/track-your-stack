@@ -1,7 +1,9 @@
 import { test, expect } from '@playwright/test'
+import * as fs from 'fs'
+import * as path from 'path'
 
 /**
- * Toast Notifications E2E Tests
+ * Toast Notification E2E Tests
  *
  * Tests the toast notification system including:
  * - Toast positioning and visibility
@@ -11,10 +13,19 @@ import { test, expect } from '@playwright/test'
  * - Different toast types (success, error, warning, info)
  */
 
-test.describe('Toast Notification System', () => {
-  test.use({
-    storageState: 'e2e/fixtures/.auth/user.json',
-  })
+// Skip all tests in this file if auth file doesn't exist
+const authFilePath = path.join(__dirname, 'fixtures', '.auth', 'user.json')
+const hasAuth = fs.existsSync(authFilePath)
+
+test.describe('Toast Notifications', () => {
+  test.skip(!hasAuth, 'Skipping: Authentication not configured')
+
+  // Note: These tests require authentication
+  if (hasAuth) {
+    test.use({
+      storageState: 'e2e/fixtures/.auth/user.json',
+    })
+  }
 
   test('should display toast at top-right position', async ({ page }) => {
     await page.goto('/portfolios')
@@ -215,9 +226,13 @@ test.describe('Toast Notification System', () => {
 })
 
 test.describe('Toast Integration with Features', () => {
-  test.use({
-    storageState: 'e2e/fixtures/.auth/user.json',
-  })
+  test.skip(!hasAuth, 'Skipping: Authentication not configured')
+
+  if (hasAuth) {
+    test.use({
+      storageState: 'e2e/fixtures/.auth/user.json',
+    })
+  }
 
   test('should show appropriate toasts for all portfolio CRUD operations', async ({ page }) => {
     await page.goto('/portfolios')

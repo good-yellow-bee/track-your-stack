@@ -1,4 +1,6 @@
 import { test, expect } from '@playwright/test'
+import * as fs from 'fs'
+import * as path from 'path'
 
 /**
  * Portfolio CRUD E2E Tests
@@ -11,12 +13,20 @@ import { test, expect } from '@playwright/test'
  * - Error handling with appropriate error toasts
  */
 
+// Skip all tests in this file if auth file doesn't exist
+const authFilePath = path.join(__dirname, 'fixtures', '.auth', 'user.json')
+const hasAuth = fs.existsSync(authFilePath)
+
 test.describe('Portfolio CRUD Operations', () => {
+  test.skip(!hasAuth, 'Skipping: Authentication not configured')
+
   // Note: These tests require authentication
   // In a real scenario, you would set up auth state before tests
-  test.use({
-    storageState: 'e2e/fixtures/.auth/user.json',
-  })
+  if (hasAuth) {
+    test.use({
+      storageState: 'e2e/fixtures/.auth/user.json',
+    })
+  }
 
   test.beforeEach(async ({ page }) => {
     // Navigate to portfolios page before each test
