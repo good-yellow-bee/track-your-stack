@@ -10,7 +10,7 @@ export const metadata: Metadata = {
 export default async function PortfoliosPage() {
   const result = await getPortfolios()
 
-  if (!result.success || !result.portfolios) {
+  if (!result.success || !result.data) {
     return (
       <div className="flex min-h-[400px] items-center justify-center">
         <p className="text-muted-foreground">{result.error}</p>
@@ -25,7 +25,7 @@ export default async function PortfoliosPage() {
         <p className="text-muted-foreground">Manage your investment portfolios</p>
       </div>
 
-      <PortfolioList portfolios={result.portfolios} />
+      <PortfolioList portfolios={result.data} />
     </div>
   )
 }

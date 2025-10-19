@@ -11,11 +11,11 @@
 
 ## 📊 Progress Overview
 
-| Phase                 | Features    | Status      | Progress   |
-| --------------------- | ----------- | ----------- | ---------- |
-| **Phase 1: MVP**      | 12 features | In Progress | 9/12 (75%) |
-| **Phase 2: Advanced** | 4 features  | Not Started | 0/4 (0%)   |
-| **Total**             | 16 features | In Progress | 9/16 (56%) |
+| Phase                 | Features    | Status      | Progress    |
+| --------------------- | ----------- | ----------- | ----------- |
+| **Phase 1: MVP**      | 12 features | In Progress | 11/12 (92%) |
+| **Phase 2: Advanced** | 4 features  | Not Started | 0/4 (0%)    |
+| **Total**             | 16 features | In Progress | 11/16 (69%) |
 
 ---
 
@@ -33,12 +33,12 @@
 | [F07](features/F07_investment_management.md)     | Investment Management (Edit/Delete) | F06          | 2 days         | ✅ Completed   |
 | [F08](features/F08_calculation_engine.md)        | Calculation Engine                  | F06          | 2 days         | ✅ Completed   |
 | [F09](features/F09_price_refresh.md)             | Price Refresh & Caching             | F05, F06     | 2 days         | ✅ Completed   |
-| [F10](features/F10_portfolio_summary.md)         | Portfolio Summary & Metrics         | F08          | 1-2 days       | ⬜ Not Started |
+| [F10](features/F10_portfolio_summary.md)         | Portfolio Summary & Metrics         | F08          | 1-2 days       | ✅ Completed   |
 | [F11](features/F11_visualizations.md)            | Charts & Visualizations             | F10          | 2-3 days       | ⬜ Not Started |
 
 **MVP Total Estimated Time:** 19.5-25 days + 4-5 days buffer = **5-6 weeks** (with testing infrastructure)
 
-**MVP Status:** 10/12 features completed (83%), ~3-5 days remaining for F10 and F11
+**MVP Status:** 11/12 features completed (92%), ~2-3 days remaining for F11
 
 ### 📝 Implementation Notes
 
@@ -50,17 +50,15 @@
 - ✅ **E2E Testing Framework** - Playwright setup with authentication flows and portfolio management tests
 - ✅ **Database Transactions** - Prisma transactions for data integrity in investment aggregation
 - ✅ **F08: Calculation Engine** - Complete business logic for investment metrics, portfolio summary, multi-currency conversion, and formatting utilities (21 tests)
+- ✅ **F10: Portfolio Summary & Metrics** - Visual summary cards with total value, cost, gain/loss, and best performer; allocation list with progress bars (5 new components)
 
 **Next Priorities:**
 
-1. **Implement F10: Portfolio Summary & Metrics**
-   - Build summary components showing total value, total cost, gain/loss
-   - Add portfolio-level metrics (ROI, allocation by asset type)
-   - Integrate calculation engine for real-time metrics
-2. **Implement F11: Charts & Visualizations**
-   - Asset allocation pie/donut charts
+1. **Implement F11: Charts & Visualizations** (Final MVP Feature!)
+   - Asset allocation pie/donut charts with Recharts
    - Performance timeline charts
    - Gain/loss visualization
+   - Interactive legend and tooltips
 
 ---
 

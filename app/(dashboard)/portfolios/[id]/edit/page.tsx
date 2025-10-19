@@ -14,15 +14,15 @@ export async function generateMetadata({ params }: EditPortfolioPageProps): Prom
   const { id } = await params
   const result = await getPortfolio(id)
 
-  if (!result.success || !result.portfolio) {
+  if (!result.success || !result.data) {
     return {
       title: 'Portfolio Not Found',
     }
   }
 
   return {
-    title: `Edit ${result.portfolio.name} - Track Your Stack`,
-    description: `Edit ${result.portfolio.name}`,
+    title: `Edit ${result.data.name} - Track Your Stack`,
+    description: `Edit ${result.data.name}`,
   }
 }
 
@@ -30,11 +30,11 @@ export default async function EditPortfolioPage({ params }: EditPortfolioPagePro
   const { id } = await params
   const result = await getPortfolio(id)
 
-  if (!result.success || !result.portfolio) {
+  if (!result.success || !result.data) {
     notFound()
   }
 
-  const { portfolio } = result
+  const portfolio = result.data
 
   return (
     <div className="mx-auto max-w-2xl space-y-8">
