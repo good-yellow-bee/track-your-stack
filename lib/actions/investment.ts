@@ -1,109 +1,71 @@
 'use server'
 
 import { revalidatePath } from 'next/cache'
-import { auth } from '@/lib/auth'
+import { requireAuth } from '@/lib/auth'
 import { prisma } from '@/lib/prisma'
-import { AssetType } from '@prisma/client'
 import { Decimal } from '@prisma/client/runtime/library'
-import { z } from 'zod'
-
-type ActionResult<T = void> = {
-  success: boolean
-  data?: T
-  error?: string
-  message?: string
-}
-
-// Validation schemas
-const AddInvestmentSchema = z.object({
-  ticker: z.preprocess(
-    (val) => (val === null || val === undefined ? '' : val),
-    z
-      .string()
-      .trim()
-      .min(1, 'Ticker is required')
-      .max(20)
-      .transform((val) => val.toUpperCase())
-  ),
-  assetName: z.preprocess(
-    (val) => (val === null || val === undefined ? '' : val),
-    z.string().trim().min(1, 'Asset name is required').max(200)
-  ),
-  assetType: z.nativeEnum(AssetType),
-  quantity: z.coerce.number().positive('Quantity must be a positive number'),
-  pricePerUnit: z.coerce.number().positive('Price per unit must be a positive number'),
-  currency: z.string().length(3, 'Invalid currency code'),
-  purchaseDate: z.string().optional(),
-  notes: z.string().max(500).optional(),
-})
-
-const UpdateInvestmentSchema = z.object({
-  assetName: z.preprocess(
-    (val) => (val === null || val === undefined ? '' : val),
-    z.string().trim().min(1, 'Asset name is required').max(200)
-  ),
-  assetType: z.nativeEnum(AssetType),
-})
+import { ActionResult } from '@/lib/types/actions'
+import { addInvestmentSchema, updateInvestmentSchema } from '@/lib/validations/investment'
+import { getAssetPrice } from '@/lib/services/priceService'
 
 /**
  * Add a new investment to a portfolio
  * If the ticker already exists, aggregates with weighted average cost basis
+ * @param portfolioId - The portfolio ID to add investment to
+ * @param formData - Form data containing investment details
+ * @returns ActionResult with investment ID and aggregation status
  */
 export async function addInvestment(
   portfolioId: string,
   formData: FormData
 ): Promise<ActionResult<{ id: string; aggregated: boolean }>> {
-  const session = await auth()
-
-  if (!session?.user?.id) {
-    return { success: false, error: 'Unauthorized' }
-  }
-
-  // Verify portfolio ownership
-  const portfolio = await prisma.portfolio.findUnique({
-    where: { id: portfolioId },
-    select: { userId: true },
-  })
-
-  if (!portfolio) {
-    return { success: false, error: 'Portfolio not found' }
-  }
-
-  if (portfolio.userId !== session.user.id) {
-    return { success: false, error: 'Forbidden' }
-  }
-
-  // Extract and validate form data using Zod (handles type coercion and validation)
-  const validated = AddInvestmentSchema.safeParse({
-    ticker: formData.get('ticker'),
-    assetName: formData.get('assetName'),
-    assetType: formData.get('assetType'),
-    quantity: formData.get('quantity'), // Zod will coerce string to number
-    pricePerUnit: formData.get('pricePerUnit'), // Zod will coerce string to number
-    currency: formData.get('currency') || 'USD',
-    purchaseDate: formData.get('purchaseDate') || undefined,
-    notes: formData.get('notes') || undefined,
-  })
-
-  if (!validated.success) {
-    return {
-      success: false,
-      error: validated.error.issues[0]?.message || 'Invalid input',
-    }
-  }
-
-  const {
-    ticker,
-    assetName,
-    assetType,
-    quantity: validatedQuantity,
-    pricePerUnit: validatedPrice,
-    currency,
-    purchaseDate,
-    notes,
-  } = validated.data
-
   try {
+    const user = await requireAuth()
+
+    // Verify portfolio ownership
+    const portfolio = await prisma.portfolio.findUnique({
+      where: { id: portfolioId },
+      select: { userId: true },
+    })
+
+    if (!portfolio) {
+      return { success: false, error: 'Portfolio not found' }
+    }
+
+    if (portfolio.userId !== user.id) {
+      return { success: false, error: 'Forbidden' }
+    }
+
+    // Extract and validate form data using Zod (handles type coercion and validation)
+    const validated = addInvestmentSchema.safeParse({
+      ticker: formData.get('ticker'),
+      assetName: formData.get('assetName'),
+      assetType: formData.get('assetType'),
+      quantity: formData.get('quantity'), // Zod will coerce string to number
+      pricePerUnit: formData.get('pricePerUnit'), // Zod will coerce string to number
+      currency: formData.get('currency') || 'USD',
+      purchaseDate: formData.get('purchaseDate') || undefined,
+      notes: formData.get('notes') || undefined,
+    })
+
+    if (!validated.success) {
+      return {
+        success: false,
+        error: validated.error.issues[0]?.message || 'Invalid input',
+      }
+    }
+
+    const {
+      ticker,
+      assetName,
+      assetType,
+      quantity: validatedQuantity,
+      pricePerUnit: validatedPrice,
+      currency,
+      purchaseDate,
+      notes,
+    } = validated.data
+
     // Check if investment already exists for this ticker
     const existingInvestment = await prisma.investment.findFirst({
       where: {
@@ -199,54 +161,56 @@ export async function addInvestment(
         : `${ticker} added to portfolio`,
     }
   } catch (error) {
-    console.error('Failed to add investment:', error)
+    console.error('Failed to add investment:', {
+      error,
+      timestamp: new Date().toISOString(),
+    })
     return { success: false, error: 'Failed to add investment' }
   }
 }
 
 /**
- * Update an existing investment
+ * Update an existing investment's metadata
+ * @param investmentId - The investment ID to update
+ * @param formData - Form data containing updated asset name and type
+ * @returns ActionResult indicating success or error
  */
 export async function updateInvestment(
   investmentId: string,
   formData: FormData
 ): Promise<ActionResult> {
-  const session = await auth()
-
-  if (!session?.user?.id) {
-    return { success: false, error: 'Unauthorized' }
-  }
-
-  // Verify ownership through portfolio
-  const investment = await prisma.investment.findUnique({
-    where: { id: investmentId },
-    include: { portfolio: { select: { userId: true } } },
-  })
-
-  if (!investment) {
-    return { success: false, error: 'Investment not found' }
-  }
-
-  if (investment.portfolio.userId !== session.user.id) {
-    return { success: false, error: 'Forbidden' }
-  }
-
-  // Validate form data
-  const validated = UpdateInvestmentSchema.safeParse({
-    assetName: formData.get('assetName'),
-    assetType: formData.get('assetType'),
-  })
-
-  if (!validated.success) {
-    return {
-      success: false,
-      error: validated.error.issues[0]?.message || 'Invalid input',
-    }
-  }
-
-  const { assetName, assetType } = validated.data
-
   try {
+    const user = await requireAuth()
+
+    // Verify ownership through portfolio
+    const investment = await prisma.investment.findUnique({
+      where: { id: investmentId },
+      include: { portfolio: { select: { userId: true } } },
+    })
+
+    if (!investment) {
+      return { success: false, error: 'Investment not found' }
+    }
+
+    if (investment.portfolio.userId !== user.id) {
+      return { success: false, error: 'Forbidden' }
+    }
+
+    // Validate form data
+    const validated = updateInvestmentSchema.safeParse({
+      assetName: formData.get('assetName'),
+      assetType: formData.get('assetType'),
+    })
+
+    if (!validated.success) {
+      return {
+        success: false,
+        error: validated.error.issues[0]?.message || 'Invalid input',
+      }
+    }
+
+    const { assetName, assetType } = validated.data
+
     await prisma.investment.update({
       where: { id: investmentId },
       data: {
@@ -256,43 +220,45 @@ export async function updateInvestment(
     })
 
     revalidatePath(`/portfolios/${investment.portfolioId}`)
+
     return {
       success: true,
       message: `${investment.ticker} updated`,
     }
   } catch (error) {
-    console.error('Failed to update investment:', error)
+    console.error('Failed to update investment:', {
+      error,
+      timestamp: new Date().toISOString(),
+    })
     return { success: false, error: 'Failed to update investment' }
   }
 }
 
 /**
  * Remove an investment from a portfolio
+ * @param investmentId - The investment ID to delete
+ * @returns ActionResult with ticker name
  */
 export async function deleteInvestment(
   investmentId: string
 ): Promise<ActionResult<{ ticker: string }>> {
-  const session = await auth()
-
-  if (!session?.user?.id) {
-    return { success: false, error: 'Unauthorized' }
-  }
-
-  // Verify ownership through portfolio
-  const investment = await prisma.investment.findUnique({
-    where: { id: investmentId },
-    include: { portfolio: { select: { userId: true } } },
-  })
-
-  if (!investment) {
-    return { success: false, error: 'Investment not found' }
-  }
-
-  if (investment.portfolio.userId !== session.user.id) {
-    return { success: false, error: 'Forbidden' }
-  }
-
   try {
+    const user = await requireAuth()
+
+    // Verify ownership through portfolio
+    const investment = await prisma.investment.findUnique({
+      where: { id: investmentId },
+      include: { portfolio: { select: { userId: true } } },
+    })
+
+    if (!investment) {
+      return { success: false, error: 'Investment not found' }
+    }
+
+    if (investment.portfolio.userId !== user.id) {
+      return { success: false, error: 'Forbidden' }
+    }
+
     await prisma.investment.delete({
       where: { id: investmentId },
     })
@@ -306,46 +272,47 @@ export async function deleteInvestment(
       message: `${investment.ticker} removed from portfolio`,
     }
   } catch (error) {
-    console.error('Failed to delete investment:', error)
+    console.error('Failed to delete investment:', {
+      error,
+      timestamp: new Date().toISOString(),
+    })
     return { success: false, error: 'Failed to remove investment' }
   }
 }
 
 /**
- * Refresh current price for an investment
+ * Refresh current price for an investment using Alpha Vantage API
+ * @param investmentId - The investment ID to refresh price for
+ * @returns ActionResult with updated price
  */
 export async function refreshInvestmentPrice(
   investmentId: string
 ): Promise<ActionResult<{ price: number }>> {
-  const session = await auth()
-
-  if (!session?.user?.id) {
-    return { success: false, error: 'Unauthorized' }
-  }
-
-  // Verify ownership through portfolio
-  const investment = await prisma.investment.findUnique({
-    where: { id: investmentId },
-    include: { portfolio: { select: { userId: true } } },
-  })
-
-  if (!investment) {
-    return { success: false, error: 'Investment not found' }
-  }
-
-  if (investment.portfolio.userId !== session.user.id) {
-    return { success: false, error: 'Forbidden' }
-  }
-
   try {
-    // TODO: Integrate with Alpha Vantage API to fetch real price
-    // For now, this is a placeholder that returns the current stored price
-    // In production, this would call lib/api/alphaVantage.ts
+    const user = await requireAuth()
 
-    // Placeholder: Just update the priceUpdatedAt timestamp
+    // Verify ownership through portfolio
+    const investment = await prisma.investment.findUnique({
+      where: { id: investmentId },
+      include: { portfolio: { select: { userId: true } } },
+    })
+
+    if (!investment) {
+      return { success: false, error: 'Investment not found' }
+    }
+
+    if (investment.portfolio.userId !== user.id) {
+      return { success: false, error: 'Forbidden' }
+    }
+
+    // Fetch real price from Alpha Vantage API
+    const currentPrice = await getAssetPrice(investment.ticker, investment.assetType)
+
+    // Update investment with new price
     const updatedInvestment = await prisma.investment.update({
       where: { id: investmentId },
       data: {
+        currentPrice: new Decimal(currentPrice),
         priceUpdatedAt: new Date(),
       },
     })
@@ -355,10 +322,22 @@ export async function refreshInvestmentPrice(
     return {
       success: true,
       data: { price: updatedInvestment.currentPrice?.toNumber() || 0 },
-      message: 'Price refreshed',
+      message: 'Price refreshed successfully',
     }
   } catch (error) {
-    console.error('Failed to refresh price:', error)
+    console.error('Failed to refresh price:', {
+      error,
+      timestamp: new Date().toISOString(),
+    })
+
+    // Check if it's a rate limit error
+    if (error instanceof Error && error.message.includes('Rate limit')) {
+      return {
+        success: false,
+        error: 'API rate limit exceeded. Please try again in a few minutes.',
+      }
+    }
+
     return { success: false, error: 'Failed to refresh price' }
   }
 }

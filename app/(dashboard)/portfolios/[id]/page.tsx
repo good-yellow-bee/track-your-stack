@@ -20,15 +20,15 @@ export async function generateMetadata({ params }: PortfolioPageProps): Promise<
   const { id } = await params
   const result = await getPortfolio(id)
 
-  if (!result.success || !result.portfolio) {
+  if (!result.success || !result.data) {
     return {
       title: 'Portfolio Not Found',
     }
   }
 
   return {
-    title: `${result.portfolio.name} - Track Your Stack`,
-    description: `View and manage ${result.portfolio.name}`,
+    title: `${result.data.name} - Track Your Stack`,
+    description: `View and manage ${result.data.name}`,
   }
 }
 
@@ -36,11 +36,11 @@ export default async function PortfolioPage({ params }: PortfolioPageProps) {
   const { id } = await params
   const result = await getPortfolio(id)
 
-  if (!result.success || !result.portfolio) {
+  if (!result.success || !result.data) {
     notFound()
   }
 
-  const { portfolio } = result
+  const portfolio = result.data
   const summary = await calculatePortfolioSummary(portfolio)
 
   return (

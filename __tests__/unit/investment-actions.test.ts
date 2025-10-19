@@ -9,7 +9,7 @@ import {
 
 // Mock dependencies
 vi.mock('@/lib/auth', () => ({
-  auth: vi.fn(),
+  requireAuth: vi.fn(),
 }))
 
 vi.mock('@/lib/prisma', () => ({
@@ -35,9 +35,14 @@ vi.mock('next/cache', () => ({
   revalidatePath: vi.fn(),
 }))
 
-import { auth } from '@/lib/auth'
+vi.mock('@/lib/services/priceService', () => ({
+  getAssetPrice: vi.fn(),
+}))
+
+import { requireAuth } from '@/lib/auth'
 import { prisma } from '@/lib/prisma'
 import { revalidatePath } from 'next/cache'
+import { getAssetPrice } from '@/lib/services/priceService'
 import { AssetType } from '@prisma/client'
 
 describe('Investment Actions', () => {
@@ -62,7 +67,7 @@ describe('Investment Actions', () => {
 
   beforeEach(() => {
     vi.clearAllMocks()
-    ;(auth as ReturnType<typeof vi.fn>).mockResolvedValue({ user: mockUser })
+    ;(requireAuth as ReturnType<typeof vi.fn>).mockResolvedValue(mockUser)
   })
 
   describe('addInvestment', () => {
@@ -92,7 +97,7 @@ describe('Investment Actions', () => {
 
       const result = await addInvestment(mockPortfolio.id, formData)
 
-      expect(auth).toHaveBeenCalled()
+      expect(requireAuth).toHaveBeenCalled()
       expect(prisma.portfolio.findUnique).toHaveBeenCalledWith({
         where: { id: mockPortfolio.id },
         select: { userId: true },
@@ -205,7 +210,7 @@ describe('Investment Actions', () => {
     })
 
     it('should return error when user is not authenticated', async () => {
-      ;(auth as ReturnType<typeof vi.fn>).mockResolvedValue(null)
+      ;(requireAuth as ReturnType<typeof vi.fn>).mockRejectedValue(new Error('Unauthorized'))
 
       const formData = new FormData()
       formData.append('ticker', 'AAPL')
@@ -219,7 +224,7 @@ describe('Investment Actions', () => {
 
       expect(result).toEqual({
         success: false,
-        error: 'Unauthorized',
+        error: 'Failed to add investment',
       })
       expect(prisma.portfolio.findUnique).not.toHaveBeenCalled()
     })
@@ -403,7 +408,7 @@ describe('Investment Actions', () => {
 
       const result = await updateInvestment(mockInvestment.id, formData)
 
-      expect(auth).toHaveBeenCalled()
+      expect(requireAuth).toHaveBeenCalled()
       expect(prisma.investment.findUnique).toHaveBeenCalledWith({
         where: { id: mockInvestment.id },
         include: { portfolio: { select: { userId: true } } },
@@ -459,7 +464,7 @@ describe('Investment Actions', () => {
 
       const result = await deleteInvestment(mockInvestment.id)
 
-      expect(auth).toHaveBeenCalled()
+      expect(requireAuth).toHaveBeenCalled()
       expect(prisma.investment.findUnique).toHaveBeenCalledWith({
         where: { id: mockInvestment.id },
         include: { portfolio: { select: { userId: true } } },
@@ -518,15 +523,19 @@ describe('Investment Actions', () => {
 
   describe('refreshInvestmentPrice', () => {
     it('should refresh price and update timestamp', async () => {
+      const newPrice = 160
+      ;(getAssetPrice as ReturnType<typeof vi.fn>).mockResolvedValue(newPrice)
       ;(prisma.investment.findUnique as ReturnType<typeof vi.fn>).mockResolvedValue(mockInvestment)
       ;(prisma.investment.update as ReturnType<typeof vi.fn>).mockResolvedValue({
         ...mockInvestment,
+        currentPrice: new Decimal(newPrice),
         priceUpdatedAt: new Date(),
       })
 
       const result = await refreshInvestmentPrice(mockInvestment.id)
 
-      expect(auth).toHaveBeenCalled()
+      expect(requireAuth).toHaveBeenCalled()
+      expect(getAssetPrice).toHaveBeenCalledWith(mockInvestment.ticker, mockInvestment.assetType)
       expect(prisma.investment.findUnique).toHaveBeenCalledWith({
         where: { id: mockInvestment.id },
         include: { portfolio: { select: { userId: true } } },
@@ -534,11 +543,16 @@ describe('Investment Actions', () => {
       expect(prisma.investment.update).toHaveBeenCalledWith({
         where: { id: mockInvestment.id },
         data: {
+          currentPrice: expect.any(Decimal),
           priceUpdatedAt: expect.any(Date),
         },
       })
       expect(revalidatePath).toHaveBeenCalledWith(`/portfolios/${mockInvestment.portfolioId}`)
-      expect(result.success).toBe(true)
+      expect(result).toEqual({
+        success: true,
+        data: { price: newPrice },
+        message: 'Price refreshed successfully',
+      })
     })
 
     it('should verify ownership before refresh', async () => {

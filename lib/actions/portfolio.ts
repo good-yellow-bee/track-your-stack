@@ -11,8 +11,17 @@ import {
   UpdatePortfolioInput,
   DeletePortfolioInput,
 } from '@/lib/validations/portfolio'
+import { ActionResult } from '@/lib/types/actions'
+import { Portfolio } from '@prisma/client'
 
-export async function createPortfolio(input: CreatePortfolioInput) {
+/**
+ * Create a new portfolio
+ * @param input - Portfolio creation data (name and base currency)
+ * @returns ActionResult with created portfolio or error
+ */
+export async function createPortfolio(
+  input: CreatePortfolioInput
+): Promise<ActionResult<Portfolio>> {
   try {
     // Authenticate user
     const user = await requireAuth()
@@ -32,11 +41,14 @@ export async function createPortfolio(input: CreatePortfolioInput) {
     revalidatePath('/portfolios')
     revalidatePath('/dashboard')
 
-    return { success: true, portfolio }
+    return {
+      success: true,
+      data: portfolio,
+      message: 'Portfolio created successfully',
+    }
   } catch (error) {
     console.error('Error creating portfolio:', {
       error,
-      userId: (await requireAuth().catch(() => ({ id: 'unknown' }))).id,
       timestamp: new Date().toISOString(),
     })
     return {
@@ -46,7 +58,13 @@ export async function createPortfolio(input: CreatePortfolioInput) {
   }
 }
 
-export async function getPortfolios() {
+/**
+ * Get all portfolios for the authenticated user
+ * @returns ActionResult with array of portfolios or error
+ */
+export async function getPortfolios(): Promise<
+  ActionResult<Array<Portfolio & { _count: { investments: number } }>>
+> {
   try {
     const user = await requireAuth()
 
@@ -60,11 +78,10 @@ export async function getPortfolios() {
       },
     })
 
-    return { success: true, portfolios }
+    return { success: true, data: portfolios }
   } catch (error) {
     console.error('Error fetching portfolios:', {
       error,
-      userId: (await requireAuth().catch(() => ({ id: 'unknown' }))).id,
       timestamp: new Date().toISOString(),
     })
     return {
@@ -74,6 +91,11 @@ export async function getPortfolios() {
   }
 }
 
+/**
+ * Get a single portfolio by ID with all investments and transactions
+ * @param id - Portfolio ID
+ * @returns ActionResult with portfolio or error
+ */
 export async function getPortfolio(id: string) {
   try {
     const user = await requireAuth()
@@ -98,12 +120,11 @@ export async function getPortfolio(id: string) {
       return { success: false, error: 'Unauthorized' }
     }
 
-    return { success: true, portfolio }
+    return { success: true, data: portfolio }
   } catch (error) {
     console.error('Error fetching portfolio:', {
       error,
       portfolioId: id,
-      userId: (await requireAuth().catch(() => ({ id: 'unknown' }))).id,
       timestamp: new Date().toISOString(),
     })
     return {
@@ -113,7 +134,14 @@ export async function getPortfolio(id: string) {
   }
 }
 
-export async function updatePortfolio(input: UpdatePortfolioInput) {
+/**
+ * Update an existing portfolio
+ * @param input - Portfolio update data (id, name, and/or base currency)
+ * @returns ActionResult with updated portfolio or error
+ */
+export async function updatePortfolio(
+  input: UpdatePortfolioInput
+): Promise<ActionResult<Portfolio>> {
   try {
     const user = await requireAuth()
 
@@ -146,12 +174,15 @@ export async function updatePortfolio(input: UpdatePortfolioInput) {
     revalidatePath('/portfolios')
     revalidatePath(`/portfolios/${portfolio.id}`)
 
-    return { success: true, portfolio }
+    return {
+      success: true,
+      data: portfolio,
+      message: 'Portfolio updated successfully',
+    }
   } catch (error) {
     console.error('Error updating portfolio:', {
       error,
       portfolioId: input.id,
-      userId: (await requireAuth().catch(() => ({ id: 'unknown' }))).id,
       timestamp: new Date().toISOString(),
     })
     return {
@@ -161,7 +192,12 @@ export async function updatePortfolio(input: UpdatePortfolioInput) {
   }
 }
 
-export async function deletePortfolio(input: DeletePortfolioInput) {
+/**
+ * Delete a portfolio and all associated investments (cascade)
+ * @param input - Portfolio deletion data (id)
+ * @returns ActionResult indicating success or error
+ */
+export async function deletePortfolio(input: DeletePortfolioInput): Promise<ActionResult> {
   try {
     const user = await requireAuth()
 
@@ -190,12 +226,14 @@ export async function deletePortfolio(input: DeletePortfolioInput) {
     revalidatePath('/portfolios')
     revalidatePath('/dashboard')
 
-    return { success: true }
+    return {
+      success: true,
+      message: 'Portfolio deleted successfully',
+    }
   } catch (error) {
     console.error('Error deleting portfolio:', {
       error,
       portfolioId: input.id,
-      userId: (await requireAuth().catch(() => ({ id: 'unknown' }))).id,
       timestamp: new Date().toISOString(),
     })
     return {

@@ -77,7 +77,8 @@ describe('Portfolio Actions', () => {
       expect(revalidatePath).toHaveBeenCalledWith('/dashboard')
       expect(result).toEqual({
         success: true,
-        portfolio: mockPortfolio,
+        data: mockPortfolio,
+        message: 'Portfolio created successfully',
       })
     })
 
@@ -172,7 +173,7 @@ describe('Portfolio Actions', () => {
         },
       })
       expect(result.success).toBe(true)
-      expect(result.portfolios).toHaveLength(2)
+      expect(result.data).toHaveLength(2)
     })
 
     it('should return empty array when user has no portfolios', async () => {
@@ -182,7 +183,7 @@ describe('Portfolio Actions', () => {
 
       expect(result).toEqual({
         success: true,
-        portfolios: [],
+        data: [],
       })
     })
 
@@ -233,7 +234,7 @@ describe('Portfolio Actions', () => {
       })
       expect(result).toEqual({
         success: true,
-        portfolio: mockPortfolioWithInvestments,
+        data: mockPortfolioWithInvestments,
       })
     })
 
@@ -359,7 +360,10 @@ describe('Portfolio Actions', () => {
       })
       expect(revalidatePath).toHaveBeenCalledWith('/portfolios')
       expect(revalidatePath).toHaveBeenCalledWith('/dashboard')
-      expect(result).toEqual({ success: true })
+      expect(result).toEqual({
+        success: true,
+        message: 'Portfolio deleted successfully',
+      })
     })
 
     it('should verify ownership before deletion', async () => {
