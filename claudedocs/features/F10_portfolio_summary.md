@@ -315,6 +315,7 @@ export default async function PortfolioPage({ params }: { params: { id: string }
 - [x] Updates after price refresh
 
 **Test Coverage:**
+
 - 153 total tests passing
 - Portfolio calculation tests (8 tests)
 - Investment calculation tests (13 tests)
