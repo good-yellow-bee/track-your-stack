@@ -1,4 +1,6 @@
 import Bottleneck from 'bottleneck'
+import { incrementQuota, getQuota } from '@/lib/cache/redis'
+import { logger } from '@/lib/logger'
 
 // Alpha Vantage limits: 5 calls per minute, 500 calls per day
 const limiter = new Bottleneck({
@@ -9,36 +11,61 @@ const limiter = new Bottleneck({
   reservoirRefreshInterval: 24 * 60 * 60 * 1000, // Reset daily
 })
 
-// Track API usage
-// TODO: PRODUCTION LIMITATION - In-memory state is ephemeral and resets on server restart.
-// In serverless environments (Vercel, AWS Lambda), each function invocation may get a new
-// instance, causing inaccurate quota tracking. This could lead to exceeding Alpha Vantage's
-// daily limit (500 calls/day) without detection.
-// RECOMMENDATION: Implement persistent storage (Redis, PostgreSQL) for production deployment
-// to track request counts across server restarts and function instances.
-let requestCount = 0
-let dailyResetTime = Date.now() + 24 * 60 * 60 * 1000
+// Constants for Alpha Vantage quota
+const DAILY_QUOTA_LIMIT = 500
+const QUOTA_TTL_SECONDS = 24 * 60 * 60 // 24 hours
+const QUOTA_KEY = 'alpha_vantage:daily'
 
 export function getRateLimiter() {
   return limiter
 }
 
-export function incrementRequestCount() {
-  requestCount++
+/**
+ * Increment API request count in Redis (distributed counter)
+ * Returns the new count and remaining quota
+ */
+export async function incrementRequestCount(): Promise<number> {
+  try {
+    const { count, remaining, exceeded } = await incrementQuota(
+      QUOTA_KEY,
+      DAILY_QUOTA_LIMIT,
+      QUOTA_TTL_SECONDS
+    )
 
-  // Reset counter daily
-  if (Date.now() >= dailyResetTime) {
-    requestCount = 0
-    dailyResetTime = Date.now() + 24 * 60 * 60 * 1000
+    if (exceeded) {
+      logger.warn({ count, remaining }, 'Alpha Vantage daily quota exceeded or approaching limit')
+    }
+
+    return count
+  } catch (error) {
+    logger.error({ error }, 'Failed to increment Alpha Vantage request count in Redis')
+    // Fallback: return 0 to allow request but log the failure
+    return 0
   }
-
-  return requestCount
 }
 
-export function getRequestCount() {
-  return requestCount
+/**
+ * Get current request count from Redis
+ */
+export async function getRequestCount(): Promise<number> {
+  try {
+    const { count } = await getQuota(QUOTA_KEY, DAILY_QUOTA_LIMIT)
+    return count
+  } catch (error) {
+    logger.error({ error }, 'Failed to get Alpha Vantage request count from Redis')
+    return 0
+  }
 }
 
-export function getRemainingRequests() {
-  return Math.max(0, 500 - requestCount)
+/**
+ * Get remaining API quota from Redis
+ */
+export async function getRemainingRequests(): Promise<number> {
+  try {
+    const { remaining } = await getQuota(QUOTA_KEY, DAILY_QUOTA_LIMIT)
+    return remaining
+  } catch (error) {
+    logger.error({ error }, 'Failed to get remaining Alpha Vantage quota from Redis')
+    return DAILY_QUOTA_LIMIT // Fail open
+  }
 }

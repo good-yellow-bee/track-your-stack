@@ -1,14 +1,7 @@
 import { prisma } from '@/lib/prisma'
 import { PRICE_CACHE_TTL } from '@/lib/constants'
 import { Decimal } from '@prisma/client/runtime/library'
-
-// In-memory lock to prevent duplicate API calls for the same currency pair
-// TODO: PRODUCTION LIMITATION - This is an in-memory lock that doesn't work across
-// server instances in distributed environments. For production, consider using:
-// - Redis locks (recommended): SET key value NX EX ttl
-// - PostgreSQL advisory locks: pg_try_advisory_lock()
-// - Distributed lock service (e.g., AWS DynamoDB, Consul)
-const currencyRateLocks = new Map<string, Promise<void>>()
+import { acquireLock } from '@/lib/cache/distributedLock'
 
 /**
  * Check if cached price is still fresh
@@ -79,49 +72,40 @@ export async function getCachedCurrencyRate(from: string, to: string) {
 }
 
 /**
- * Update cached currency rate with lock to prevent race conditions
+ * Update cached currency rate with distributed lock to prevent race conditions
+ * Works across multiple server instances in production environments
  */
 export async function updateCachedCurrencyRate(from: string, to: string, rate: number) {
-  const lockKey = `${from.toUpperCase()}_${to.toUpperCase()}`
+  const lockKey = `currency:${from.toUpperCase()}:${to.toUpperCase()}`
 
-  // Check if an update is already in progress for this currency pair
-  const existingLock = currencyRateLocks.get(lockKey)
-  if (existingLock) {
-    // Wait for the existing update to complete
-    await existingLock
-    return
-  }
+  // Acquire distributed lock (works across server instances)
+  const release = await acquireLock(lockKey, {
+    timeout: 10000, // 10 seconds max lock time
+    maxWaitTime: 5000, // Wait up to 5 seconds for lock
+  })
 
-  // Create a new lock
-  const updatePromise = (async () => {
-    try {
-      await prisma.currencyRate.upsert({
-        where: {
-          fromCurrency_toCurrency: {
-            fromCurrency: from.toUpperCase(),
-            toCurrency: to.toUpperCase(),
-          },
-        },
-        create: {
+  try {
+    // Critical section - only one process across all instances can execute this
+    await prisma.currencyRate.upsert({
+      where: {
+        fromCurrency_toCurrency: {
           fromCurrency: from.toUpperCase(),
           toCurrency: to.toUpperCase(),
-          rate,
-          fetchedAt: new Date(),
         },
-        update: {
-          rate,
-          fetchedAt: new Date(),
-        },
-      })
-    } finally {
-      // Always remove the lock when done
-      currencyRateLocks.delete(lockKey)
-    }
-  })()
-
-  // Store the lock
-  currencyRateLocks.set(lockKey, updatePromise)
-
-  // Wait for completion
-  await updatePromise
+      },
+      create: {
+        fromCurrency: from.toUpperCase(),
+        toCurrency: to.toUpperCase(),
+        rate,
+        fetchedAt: new Date(),
+      },
+      update: {
+        rate,
+        fetchedAt: new Date(),
+      },
+    })
+  } finally {
+    // Always release the lock
+    await release()
+  }
 }

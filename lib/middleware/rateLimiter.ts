@@ -1,10 +1,31 @@
-// TODO: Implement Redis-based rate limiting
-// import { checkRateLimit } from '@/lib/cache/redis'
-
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
+import { checkRateLimit } from '@/lib/cache/redis'
 import { RateLimitError } from '@/lib/errors/AppError'
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { logger, logRateLimit } from '@/lib/logger'
+
+/**
+ * Parse window string to milliseconds
+ * Examples: "1 m" = 60000, "1 h" = 3600000, "1 d" = 86400000
+ */
+function parseWindow(window: string): number {
+  const match = window.match(/^(\d+)\s*([mhd])$/)
+  if (!match) {
+    throw new Error(`Invalid window format: ${window}`)
+  }
+
+  const value = parseInt(match[1], 10)
+  const unit = match[2]
+
+  switch (unit) {
+    case 'm':
+      return value * 60 * 1000 // minutes to ms
+    case 'h':
+      return value * 60 * 60 * 1000 // hours to ms
+    case 'd':
+      return value * 24 * 60 * 60 * 1000 // days to ms
+    default:
+      throw new Error(`Invalid window unit: ${unit}`)
+  }
+}
 
 /**
  * Rate limit configuration for different operations
@@ -23,6 +44,7 @@ export const RATE_LIMITS = {
 
   // General operations
   SERVER_ACTION: { limit: 100, window: '1 m' }, // General limit for all actions
+  EXTERNAL_API: { limit: 5, window: '1 m' }, // Strict limit for external API calls (Alpha Vantage)
 } as const
 
 /**
@@ -45,23 +67,35 @@ export const RATE_LIMITS = {
 export async function rateLimitServerAction(
   userId: string,
   operation: keyof typeof RATE_LIMITS = 'SERVER_ACTION',
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  _customLimit?: { limit: number; window: string }
+  customLimit?: { limit: number; window: string }
 ): Promise<void> {
-  // TODO: Implement Redis-based rate limiting
-  // For now, this is a no-op until Redis is configured
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const identifier = `user:${userId}:${operation}`
+  const config = customLimit || RATE_LIMITS[operation]
+  const windowMs = parseWindow(config.window)
 
-  // Stub implementation - always allow requests
-  const success = true
-  const remaining = 100
+  const { success, remaining, reset } = await checkRateLimit(identifier, config.limit, windowMs)
 
   logRateLimit(userId, operation, success, remaining)
 
-  // When Redis is implemented, use:
-  // const { success, remaining, reset } = await checkRateLimit(identifier)
-  // if (!success) { throw RateLimitError... }
+  if (!success) {
+    const resetDate = new Date(reset)
+    const retryAfter = Math.ceil((reset - Date.now()) / 1000) // seconds
+
+    logger.warn(
+      {
+        userId,
+        operation,
+        remaining,
+        resetDate,
+      },
+      `Rate limit exceeded for user ${userId} on ${operation}`
+    )
+
+    throw new RateLimitError(
+      `Too many requests. Please try again after ${resetDate.toLocaleTimeString()}`,
+      retryAfter
+    )
+  }
 }
 
 /**
@@ -109,23 +143,33 @@ export function withRateLimit<TArgs extends unknown[], TReturn>(
 export async function rateLimitByIP(
   ip: string,
   operation: string,
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  _limit: number = 20,
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  _window: string = '1 m'
+  limit: number = 20,
+  window: string = '1 m'
 ): Promise<void> {
-  // TODO: Implement Redis-based rate limiting
-  // For now, this is a no-op until Redis is configured
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const identifier = `ip:${ip}:${operation}`
+  const windowMs = parseWindow(window)
 
-  // Stub implementation - always allow requests
-  const success = true
-  const remaining = 20
+  const { success, remaining, reset } = await checkRateLimit(identifier, limit, windowMs)
 
   logRateLimit(ip, operation, success, remaining)
 
-  // When Redis is implemented, use:
-  // const { success, remaining, reset } = await checkRateLimit(identifier)
-  // if (!success) { throw RateLimitError... }
+  if (!success) {
+    const resetDate = new Date(reset)
+    const retryAfter = Math.ceil((reset - Date.now()) / 1000)
+
+    logger.warn(
+      {
+        ip,
+        operation,
+        remaining,
+        resetDate,
+      },
+      `Rate limit exceeded for IP ${ip} on ${operation}`
+    )
+
+    throw new RateLimitError(
+      `Too many requests. Please try again after ${resetDate.toLocaleTimeString()}`,
+      retryAfter
+    )
+  }
 }

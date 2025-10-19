@@ -81,6 +81,7 @@ model Portfolio {
   updatedAt     DateTime            @updatedAt
 
   @@index([userId])
+  @@index([userId, createdAt]) // For sorting user's portfolios by creation date
 }
 
 // ============================================
@@ -114,6 +115,8 @@ model Investment {
   @@index([portfolioId])
   @@index([ticker])
   @@index([priceUpdatedAt])
+  @@index([portfolioId, ticker]) // For finding existing investments in portfolio
+  @@index([assetType]) // For filtering by asset type
 }
 
 model PurchaseTransaction {
