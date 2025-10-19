@@ -73,6 +73,12 @@ temp/
 # Claude Code (keep user-specific configurations private)
 .claude/
 
+# Serena MCP (keep session memories private)
+.serena/
+
+# IDE history files
+.history/
+
 # Documentation generated files (keep source, ignore generated artifacts)
 docs/**/*.pdf
 docs/**/*.html
