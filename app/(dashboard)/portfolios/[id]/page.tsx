@@ -5,6 +5,9 @@ import { getPortfolio } from '@/lib/actions/portfolio'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import DeletePortfolioButton from '@/components/portfolio/DeletePortfolioButton'
+import PortfolioSummary from '@/components/portfolio/PortfolioSummary'
+import AllocationList from '@/components/portfolio/AllocationList'
+import { calculatePortfolioSummary } from '@/lib/calculations/portfolio'
 import { Edit, ArrowLeft } from 'lucide-react'
 
 interface PortfolioPageProps {
@@ -38,6 +41,7 @@ export default async function PortfolioPage({ params }: PortfolioPageProps) {
   }
 
   const { portfolio } = result
+  const summary = await calculatePortfolioSummary(portfolio)
 
   return (
     <div className="space-y-8">
@@ -69,6 +73,12 @@ export default async function PortfolioPage({ params }: PortfolioPageProps) {
         </div>
       </div>
 
+      {/* Portfolio Summary Cards */}
+      <PortfolioSummary portfolio={portfolio} />
+
+      {/* Allocation List */}
+      <AllocationList investments={summary.investments} baseCurrency={portfolio.baseCurrency} />
+
       <Card>
         <CardHeader>
           <CardTitle>Investments</CardTitle>
@@ -80,7 +90,7 @@ export default async function PortfolioPage({ params }: PortfolioPageProps) {
         </CardHeader>
         <CardContent>
           <p className="text-sm text-muted-foreground">
-            Investment management will be implemented in F06
+            Investment table will be enhanced in future updates
           </p>
         </CardContent>
       </Card>
