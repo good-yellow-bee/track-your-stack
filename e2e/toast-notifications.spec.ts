@@ -226,9 +226,13 @@ test.describe('Toast Notifications', () => {
 })
 
 test.describe('Toast Integration with Features', () => {
-  test.use({
-    storageState: 'e2e/fixtures/.auth/user.json',
-  })
+  test.skip(!hasAuth, 'Skipping: Authentication not configured')
+
+  if (hasAuth) {
+    test.use({
+      storageState: 'e2e/fixtures/.auth/user.json',
+    })
+  }
 
   test('should show appropriate toasts for all portfolio CRUD operations', async ({ page }) => {
     await page.goto('/portfolios')
