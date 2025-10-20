@@ -22,4 +22,4 @@ vi.mock('next/navigation', () => ({
 
 // Mock environment variables for tests
 process.env.NEXTAUTH_URL = 'http://localhost:3000'
-process.env.NEXTAUTH_SECRET = 'test-secret'
+process.env.NEXTAUTH_SECRET = 'test-secret-at-least-32-characters-long-for-validation'

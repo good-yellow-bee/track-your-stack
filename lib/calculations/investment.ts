@@ -1,4 +1,5 @@
 import { Investment } from '@prisma/client'
+import { Decimal } from '@prisma/client/runtime/library'
 import { getCurrencyRate } from '@/lib/services/priceService'
 
 /**
@@ -69,4 +70,38 @@ export function calculateAverageCostBasis(
   const totalCost = purchases.reduce((sum, p) => sum + p.quantity * p.pricePerUnit, 0)
 
   return totalQuantity > 0 ? totalCost / totalQuantity : 0
+}
+
+/**
+ * Calculate aggregated investment metrics with weighted average
+ * Uses Decimal arithmetic for precision in financial calculations
+ *
+ * @param existingQty - Current total quantity (Decimal)
+ * @param existingAvg - Current average cost basis (Decimal)
+ * @param newQty - New quantity to add (number)
+ * @param newPrice - New price per unit (number)
+ * @returns Object with new total quantity and average cost basis
+ */
+export function calculateAggregatedInvestment(
+  existingQty: Decimal,
+  existingAvg: Decimal,
+  newQty: number,
+  newPrice: number
+): { totalQuantity: Decimal; averageCostBasis: Decimal } {
+  const newQtyDecimal = new Decimal(newQty)
+  const newPriceDecimal = new Decimal(newPrice)
+
+  // Calculate: totalQty = existingQty + newQty
+  const totalQuantity = existingQty.plus(newQtyDecimal)
+
+  // Calculate: totalCost = (existingQty * existingAvg) + (newQty * newPrice)
+  const totalCost = existingQty.times(existingAvg).plus(newQtyDecimal.times(newPriceDecimal))
+
+  // Calculate: newAvgCostBasis = totalCost / totalQty
+  const averageCostBasis = totalCost.dividedBy(totalQuantity)
+
+  return {
+    totalQuantity,
+    averageCostBasis,
+  }
 }

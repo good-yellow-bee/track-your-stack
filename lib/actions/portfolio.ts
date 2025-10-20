@@ -13,6 +13,7 @@ import {
 } from '@/lib/validations/portfolio'
 import { ActionResult } from '@/lib/types/actions'
 import { Portfolio } from '@prisma/client'
+import { rateLimitServerAction } from '@/lib/middleware/rateLimiter'
 
 /**
  * Create a new portfolio
@@ -25,6 +26,9 @@ export async function createPortfolio(
   try {
     // Authenticate user
     const user = await requireAuth()
+
+    // Rate limiting protection
+    await rateLimitServerAction(user.id, 'SERVER_ACTION')
 
     // Validate input
     const validated = createPortfolioSchema.parse(input)
@@ -51,6 +55,15 @@ export async function createPortfolio(
       error,
       timestamp: new Date().toISOString(),
     })
+
+    // Handle rate limit errors with specific message
+    if (error instanceof Error && error.constructor.name === 'RateLimitError') {
+      return {
+        success: false,
+        error: error.message,
+      }
+    }
+
     return {
       success: false,
       error: 'Failed to create portfolio',
@@ -145,6 +158,9 @@ export async function updatePortfolio(
   try {
     const user = await requireAuth()
 
+    // Rate limiting protection
+    await rateLimitServerAction(user.id, 'SERVER_ACTION')
+
     // Validate input
     const validated = updatePortfolioSchema.parse(input)
 
@@ -185,6 +201,15 @@ export async function updatePortfolio(
       portfolioId: input.id,
       timestamp: new Date().toISOString(),
     })
+
+    // Handle rate limit errors with specific message
+    if (error instanceof Error && error.constructor.name === 'RateLimitError') {
+      return {
+        success: false,
+        error: error.message,
+      }
+    }
+
     return {
       success: false,
       error: 'Failed to update portfolio',
@@ -200,6 +225,9 @@ export async function updatePortfolio(
 export async function deletePortfolio(input: DeletePortfolioInput): Promise<ActionResult> {
   try {
     const user = await requireAuth()
+
+    // Rate limiting protection
+    await rateLimitServerAction(user.id, 'SERVER_ACTION')
 
     // Validate input
     const validated = deletePortfolioSchema.parse(input)
@@ -236,6 +264,15 @@ export async function deletePortfolio(input: DeletePortfolioInput): Promise<Acti
       portfolioId: input.id,
       timestamp: new Date().toISOString(),
     })
+
+    // Handle rate limit errors with specific message
+    if (error instanceof Error && error.constructor.name === 'RateLimitError') {
+      return {
+        success: false,
+        error: error.message,
+      }
+    }
+
     return {
       success: false,
       error: 'Failed to delete portfolio',

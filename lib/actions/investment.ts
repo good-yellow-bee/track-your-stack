@@ -7,6 +7,7 @@ import { Decimal } from '@prisma/client/runtime/library'
 import { ActionResult } from '@/lib/types/actions'
 import { addInvestmentSchema, updateInvestmentSchema } from '@/lib/validations/investment'
 import { getAssetPrice } from '@/lib/services/priceService'
+import { rateLimitServerAction } from '@/lib/middleware/rateLimiter'
 
 /**
  * Add a new investment to a portfolio
@@ -21,6 +22,9 @@ export async function addInvestment(
 ): Promise<ActionResult<{ id: string; aggregated: boolean }>> {
   try {
     const user = await requireAuth()
+
+    // Rate limiting protection
+    await rateLimitServerAction(user.id, 'SERVER_ACTION')
 
     // Verify portfolio ownership
     const portfolio = await prisma.portfolio.findUnique({
@@ -165,6 +169,15 @@ export async function addInvestment(
       error,
       timestamp: new Date().toISOString(),
     })
+
+    // Handle rate limit errors with specific message
+    if (error instanceof Error && error.constructor.name === 'RateLimitError') {
+      return {
+        success: false,
+        error: error.message,
+      }
+    }
+
     return { success: false, error: 'Failed to add investment' }
   }
 }
@@ -181,6 +194,9 @@ export async function updateInvestment(
 ): Promise<ActionResult> {
   try {
     const user = await requireAuth()
+
+    // Rate limiting protection
+    await rateLimitServerAction(user.id, 'SERVER_ACTION')
 
     // Verify ownership through portfolio
     const investment = await prisma.investment.findUnique({
@@ -230,6 +246,15 @@ export async function updateInvestment(
       error,
       timestamp: new Date().toISOString(),
     })
+
+    // Handle rate limit errors with specific message
+    if (error instanceof Error && error.constructor.name === 'RateLimitError') {
+      return {
+        success: false,
+        error: error.message,
+      }
+    }
+
     return { success: false, error: 'Failed to update investment' }
   }
 }
@@ -244,6 +269,9 @@ export async function deleteInvestment(
 ): Promise<ActionResult<{ ticker: string }>> {
   try {
     const user = await requireAuth()
+
+    // Rate limiting protection
+    await rateLimitServerAction(user.id, 'SERVER_ACTION')
 
     // Verify ownership through portfolio
     const investment = await prisma.investment.findUnique({
@@ -276,6 +304,15 @@ export async function deleteInvestment(
       error,
       timestamp: new Date().toISOString(),
     })
+
+    // Handle rate limit errors with specific message
+    if (error instanceof Error && error.constructor.name === 'RateLimitError') {
+      return {
+        success: false,
+        error: error.message,
+      }
+    }
+
     return { success: false, error: 'Failed to remove investment' }
   }
 }
@@ -290,6 +327,9 @@ export async function refreshInvestmentPrice(
 ): Promise<ActionResult<{ price: number }>> {
   try {
     const user = await requireAuth()
+
+    // Strict rate limiting for API calls (5 per minute to match Alpha Vantage limits)
+    await rateLimitServerAction(user.id, 'EXTERNAL_API')
 
     // Verify ownership through portfolio
     const investment = await prisma.investment.findUnique({
@@ -330,7 +370,15 @@ export async function refreshInvestmentPrice(
       timestamp: new Date().toISOString(),
     })
 
-    // Check if it's a rate limit error
+    // Handle rate limit errors with specific message
+    if (error instanceof Error && error.constructor.name === 'RateLimitError') {
+      return {
+        success: false,
+        error: error.message,
+      }
+    }
+
+    // Check if it's an Alpha Vantage API rate limit error
     if (error instanceof Error && error.message.includes('Rate limit')) {
       return {
         success: false,
