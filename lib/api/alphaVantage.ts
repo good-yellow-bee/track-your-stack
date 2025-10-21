@@ -27,7 +27,7 @@ export class AlphaVantageClient {
   private async request<T>(params: Record<string, string>): Promise<T> {
     return this.limiter.schedule(async () => {
       try {
-        incrementRequestCount()
+        void incrementRequestCount()
 
         const response = await axios.get<T>(BASE_URL, {
           params: {

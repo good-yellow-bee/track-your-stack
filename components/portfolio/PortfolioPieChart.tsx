@@ -91,8 +91,7 @@ export default function PortfolioPieChart({
               cx="50%"
               cy="50%"
               labelLine={false}
-              label={(props: any) => {
-                // eslint-disable-line @typescript-eslint/no-explicit-any
+              label={(props: any) => { // eslint-disable-line @typescript-eslint/no-explicit-any
                 const entry = props.payload || props
                 const label = formatPercentLabel(entry.percentage)
                 return label ? `${entry.ticker} ${label}` : ''
