@@ -1,12 +1,20 @@
 import { NextResponse } from 'next/server'
 import { alphaVantageClient } from '@/lib/api/alphaVantage'
 import { getRemainingRequests } from '@/lib/api/rateLimiter'
+import { rateLimitByIP } from '@/lib/middleware/rateLimiter'
+import { headers } from 'next/headers'
 
 export async function GET(request: Request) {
-  const { searchParams } = new URL(request.url)
-  const test = searchParams.get('test') || 'stock'
-
   try {
+    // Rate limit test endpoint to prevent abuse
+    const headersList = await headers()
+    const ip = headersList.get('x-forwarded-for') || headersList.get('x-real-ip') || 'unknown'
+
+    await rateLimitByIP(ip, 'test-api', 5, '1 m')
+
+    const { searchParams } = new URL(request.url)
+    const test = searchParams.get('test') || 'stock'
+
     let result: unknown
 
     switch (test) {
@@ -33,6 +41,17 @@ export async function GET(request: Request) {
       remainingRequests: getRemainingRequests(),
     })
   } catch (error) {
+    // Check if it's a rate limit error
+    if (error instanceof Error && error.constructor.name === 'RateLimitError') {
+      return NextResponse.json(
+        {
+          success: false,
+          error: 'Too many requests. Please try again later.',
+        },
+        { status: 429 }
+      )
+    }
+
     return NextResponse.json(
       {
         success: false,

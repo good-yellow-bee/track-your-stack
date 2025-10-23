@@ -124,34 +124,88 @@ export async function addInvestment(
       aggregated = true
     } else {
       // Create new investment with purchase transaction atomically
-      const result = await prisma.$transaction(async (tx) => {
-        const newInvestment = await tx.investment.create({
-          data: {
-            portfolioId,
-            ticker,
-            assetName,
-            assetType,
-            totalQuantity: new Decimal(validatedQuantity),
-            averageCostBasis: new Decimal(validatedPrice),
-            purchaseCurrency: currency,
-          },
+      // Handle P2002 (unique constraint violation) by retrying with aggregation
+      try {
+        const result = await prisma.$transaction(async (tx) => {
+          const newInvestment = await tx.investment.create({
+            data: {
+              portfolioId,
+              ticker,
+              assetName,
+              assetType,
+              totalQuantity: new Decimal(validatedQuantity),
+              averageCostBasis: new Decimal(validatedPrice),
+              purchaseCurrency: currency,
+            },
+          })
+
+          await tx.purchaseTransaction.create({
+            data: {
+              investmentId: newInvestment.id,
+              quantity: new Decimal(validatedQuantity),
+              pricePerUnit: new Decimal(validatedPrice),
+              currency,
+              purchaseDate:
+                purchaseDate && purchaseDate.trim() ? new Date(purchaseDate) : new Date(),
+              notes: notes || null,
+            },
+          })
+
+          return newInvestment
         })
 
-        await tx.purchaseTransaction.create({
-          data: {
-            investmentId: newInvestment.id,
-            quantity: new Decimal(validatedQuantity),
-            pricePerUnit: new Decimal(validatedPrice),
-            currency,
-            purchaseDate: purchaseDate && purchaseDate.trim() ? new Date(purchaseDate) : new Date(),
-            notes: notes || null,
-          },
-        })
+        investmentId = result.id
+      } catch (error: any) {
+        // Handle unique constraint violation (P2002) - race condition detected
+        if (error?.code === 'P2002') {
+          // Re-fetch the investment that was created by another request
+          const raceInvestment = await prisma.investment.findFirst({
+            where: { portfolioId, ticker },
+          })
 
-        return newInvestment
-      })
+          if (raceInvestment) {
+            // Aggregate with the existing investment
+            const existingQty = raceInvestment.totalQuantity
+            const existingAvg = raceInvestment.averageCostBasis
+            const newQty = new Decimal(validatedQuantity)
+            const newPrice = new Decimal(validatedPrice)
 
-      investmentId = result.id
+            const totalQty = existingQty.plus(newQty)
+            const totalCost = existingQty.times(existingAvg).plus(newQty.times(newPrice))
+            const newAvgCostBasis = totalCost.dividedBy(totalQty)
+
+            await prisma.$transaction([
+              prisma.investment.update({
+                where: { id: raceInvestment.id },
+                data: {
+                  totalQuantity: totalQty,
+                  averageCostBasis: newAvgCostBasis,
+                },
+              }),
+              prisma.purchaseTransaction.create({
+                data: {
+                  investmentId: raceInvestment.id,
+                  quantity: new Decimal(validatedQuantity),
+                  pricePerUnit: new Decimal(validatedPrice),
+                  currency,
+                  purchaseDate:
+                    purchaseDate && purchaseDate.trim() ? new Date(purchaseDate) : new Date(),
+                  notes: notes || null,
+                },
+              }),
+            ])
+
+            investmentId = raceInvestment.id
+            aggregated = true
+          } else {
+            // Unexpected state - throw original error
+            throw error
+          }
+        } else {
+          // Not a P2002 error - throw original error
+          throw error
+        }
+      }
     }
 
     revalidatePath(`/portfolios/${portfolioId}`)
@@ -346,13 +400,14 @@ export async function refreshInvestmentPrice(
     }
 
     // Fetch real price from Alpha Vantage API
-    const currentPrice = await getAssetPrice(investment.ticker, investment.assetType)
+    const priceData = await getAssetPrice(investment.ticker, investment.assetType)
 
-    // Update investment with new price
+    // Update investment with new price and currency
     const updatedInvestment = await prisma.investment.update({
       where: { id: investmentId },
       data: {
-        currentPrice: new Decimal(currentPrice),
+        currentPrice: new Decimal(priceData.price),
+        currentPriceCurrency: priceData.currency,
         priceUpdatedAt: new Date(),
       },
     })

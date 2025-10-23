@@ -69,7 +69,7 @@ export default function AssetTypeChart({ investments, baseCurrency }: AssetTypeC
   }
 
   return (
-    <Card>
+    <Card data-testid="asset-type-chart" role="img" aria-label="Asset type distribution chart">
       <CardHeader>
         <CardTitle>Asset Type Distribution</CardTitle>
         <CardDescription>Portfolio breakdown by asset class</CardDescription>
@@ -91,9 +91,15 @@ export default function AssetTypeChart({ investments, baseCurrency }: AssetTypeC
               outerRadius={100}
               fill="#8884d8"
               dataKey="value"
+              aria-label="Asset type distribution pie chart"
             >
               {chartData.map((entry, index) => (
-                <Cell key={`cell-${index}`} fill={entry.color} />
+                <Cell
+                  key={`cell-${index}`}
+                  fill={entry.color}
+                  data-testid={`asset-type-segment-${entry.type}`}
+                  aria-label={`${entry.label}: ${entry.percentage.toFixed(1)}%`}
+                />
               ))}
             </Pie>
             <Tooltip
@@ -120,11 +126,15 @@ export default function AssetTypeChart({ investments, baseCurrency }: AssetTypeC
         </ResponsiveContainer>
 
         {/* Legend with color indicators */}
-        <div className="mt-4 flex flex-wrap justify-center gap-4">
+        <div className="mt-4 flex flex-wrap justify-center gap-3 text-xs sm:gap-4 sm:text-sm">
           {chartData.map((entry, index) => (
-            <div key={`legend-${index}`} className="flex items-center gap-2">
-              <div className="h-3 w-3 rounded-full" style={{ backgroundColor: entry.color }} />
-              <span className="text-sm text-muted-foreground">
+            <div key={`legend-${index}`} className="flex items-center gap-1.5 sm:gap-2">
+              <div
+                className="h-3 w-3 flex-shrink-0 rounded-full"
+                style={{ backgroundColor: entry.color }}
+                aria-hidden="true"
+              />
+              <span className="text-muted-foreground">
                 {entry.label} ({entry.count})
               </span>
             </div>

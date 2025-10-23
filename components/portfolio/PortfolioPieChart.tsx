@@ -4,6 +4,7 @@ import { useMemo } from 'react'
 import { PieChart, Pie, Cell, ResponsiveContainer, Legend, Tooltip } from 'recharts'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { formatCurrency } from '@/lib/utils/format'
+import { useTableHighlight } from '@/lib/contexts/TableHighlightContext'
 
 interface ChartData {
   name: string
@@ -22,7 +23,6 @@ interface PortfolioPieChartProps {
     percentOfPortfolio: number
   }>
   baseCurrency: string
-  onSliceClick?: (ticker: string) => void
 }
 
 const COLORS = [
@@ -40,11 +40,9 @@ const COLORS = [
   '#f43f5e', // rose-500
 ]
 
-export default function PortfolioPieChart({
-  investments,
-  baseCurrency,
-  onSliceClick,
-}: PortfolioPieChartProps) {
+export default function PortfolioPieChart({ investments, baseCurrency }: PortfolioPieChartProps) {
+  const { setHighlightedTicker } = useTableHighlight()
+
   const chartData = useMemo<ChartData[]>(() => {
     return investments.map((inv, index) => ({
       name: inv.assetName,
@@ -55,9 +53,15 @@ export default function PortfolioPieChart({
     }))
   }, [investments])
 
+  const handleSliceClick = (data: ChartData) => {
+    setHighlightedTicker(data.ticker)
+    // Auto-clear highlight after 3 seconds
+    setTimeout(() => setHighlightedTicker(null), 3000)
+  }
+
   if (chartData.length === 0) {
     return (
-      <Card>
+      <Card data-testid="portfolio-pie-chart">
         <CardHeader>
           <CardTitle>Portfolio Allocation</CardTitle>
           <CardDescription>No investments to display</CardDescription>
@@ -78,7 +82,7 @@ export default function PortfolioPieChart({
   }
 
   return (
-    <Card>
+    <Card data-testid="portfolio-pie-chart" role="img" aria-label="Portfolio allocation chart">
       <CardHeader>
         <CardTitle>Portfolio Allocation</CardTitle>
         <CardDescription>Distribution of investments by current value</CardDescription>
@@ -99,11 +103,17 @@ export default function PortfolioPieChart({
               outerRadius={120}
               fill="#8884d8"
               dataKey="value"
-              onClick={(data: ChartData) => onSliceClick?.(data.ticker)}
-              style={{ cursor: onSliceClick ? 'pointer' : 'default' }}
+              onClick={handleSliceClick}
+              style={{ cursor: 'pointer' }}
+              aria-label="Portfolio allocation pie chart"
             >
               {chartData.map((entry, index) => (
-                <Cell key={`cell-${index}`} fill={entry.color} />
+                <Cell
+                  key={`cell-${index}`}
+                  fill={entry.color}
+                  data-testid={`pie-segment-${entry.ticker}`}
+                  aria-label={`${entry.ticker}: ${entry.percentage.toFixed(1)}%`}
+                />
               ))}
             </Pie>
             <Tooltip
@@ -130,14 +140,15 @@ export default function PortfolioPieChart({
               verticalAlign="bottom"
               height={36}
               content={({ payload }) => (
-                <div className="mt-4 flex flex-wrap justify-center gap-4">
+                <div className="mt-4 flex flex-wrap justify-center gap-3 text-xs sm:gap-4 sm:text-sm">
                   {payload?.map((entry, index) => (
-                    <div key={`legend-${index}`} className="flex items-center gap-2">
+                    <div key={`legend-${index}`} className="flex items-center gap-1.5 sm:gap-2">
                       <div
-                        className="h-3 w-3 rounded-full"
+                        className="h-3 w-3 flex-shrink-0 rounded-full"
                         style={{ backgroundColor: entry.color }}
+                        aria-hidden="true"
                       />
-                      <span className="text-sm text-muted-foreground">{entry.value}</span>
+                      <span className="text-muted-foreground">{entry.value}</span>
                     </div>
                   ))}
                 </div>

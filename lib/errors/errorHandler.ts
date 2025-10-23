@@ -1,194 +1,170 @@
-import { ZodError } from 'zod'
-import { Prisma } from '@prisma/client'
-import { fromZodError } from 'zod-validation-error'
-import {
-  AppError,
-  AuthenticationError,
-  AuthorizationError,
-  ValidationError,
-  NotFoundError,
-  DatabaseError,
-  ExternalAPIError,
-  isAppError,
-} from './AppError'
+/**
+ * Centralized error handling and sanitization
+ * Prevents sensitive information leakage in production
+ */
 
-import { ActionResult } from '@/lib/types/actions'
+import { isSentryConfigured } from '@/lib/env'
 
 /**
- * Convert any error to an AppError
- * Normalizes errors from different sources (Zod, Prisma, Axios, etc.)
+ * Sanitize error for client response
+ * Removes stack traces and sensitive details in production
  */
-export function normalizeError(error: unknown): AppError {
-  // Already an AppError
-  if (isAppError(error)) {
-    return error
-  }
+export function sanitizeError(error: unknown): {
+  message: string
+  code?: string
+  statusCode: number
+} {
+  const isProd = process.env.NODE_ENV === 'production'
 
-  // Zod validation errors
-  if (error instanceof ZodError) {
-    const validationError = fromZodError(error)
-    return new ValidationError(validationError.message, {
-      issues: error.issues,
-    })
-  }
-
-  // Prisma errors
-  if (error instanceof Prisma.PrismaClientKnownRequestError) {
-    switch (error.code) {
-      case 'P2002':
-        return new ValidationError('A record with this value already exists', {
-          field: error.meta?.target,
-        })
-      case 'P2025':
-        return new NotFoundError('Record', { code: error.code })
-      case 'P2003':
-        return new ValidationError('Invalid reference to related record', {
-          field: error.meta?.field_name,
-        })
-      default:
-        return new DatabaseError(`Database error: ${error.message}`, {
-          code: error.code,
-        })
-    }
-  }
-
-  // Prisma validation errors
-  if (error instanceof Prisma.PrismaClientValidationError) {
-    return new ValidationError('Invalid data provided', {
-      details: error.message,
-    })
-  }
-
-  // Standard Error objects
+  // Handle known error types
   if (error instanceof Error) {
-    // Check for specific error messages
-    if (error.message.includes('Unauthorized') || error.message.includes('Authentication')) {
-      return new AuthenticationError(error.message)
+    // Rate limit errors
+    if (error.constructor.name === 'RateLimitError') {
+      return {
+        message: error.message,
+        code: 'RATE_LIMIT_EXCEEDED',
+        statusCode: 429,
+      }
     }
 
-    if (error.message.includes('Forbidden') || error.message.includes('Authorization')) {
-      return new AuthorizationError(error.message)
+    // Prisma errors
+    if ('code' in error) {
+      const prismaError = error as any
+      switch (prismaError.code) {
+        case 'P2002':
+          return {
+            message: 'A record with this information already exists',
+            code: 'DUPLICATE_RECORD',
+            statusCode: 409,
+          }
+        case 'P2025':
+          return {
+            message: 'Record not found',
+            code: 'NOT_FOUND',
+            statusCode: 404,
+          }
+        case 'P2003':
+          return {
+            message: 'Invalid reference',
+            code: 'INVALID_REFERENCE',
+            statusCode: 400,
+          }
+        default:
+          return {
+            message: isProd ? 'Database error occurred' : prismaError.message,
+            code: 'DATABASE_ERROR',
+            statusCode: 500,
+          }
+      }
     }
 
-    if (error.message.includes('not found')) {
-      return new NotFoundError(error.message)
-    }
-
-    // Network/API errors
-    if (
-      error.message.includes('timeout') ||
-      error.message.includes('network') ||
-      error.message.includes('ECONNREFUSED')
-    ) {
-      return new ExternalAPIError('Network', error.message, true)
+    // Zod validation errors
+    if (error.constructor.name === 'ZodError') {
+      return {
+        message: 'Validation failed',
+        code: 'VALIDATION_ERROR',
+        statusCode: 400,
+      }
     }
 
     // Generic error
-    return new AppError(error.message, 500, 'INTERNAL_ERROR', true)
+    return {
+      message: isProd ? 'An error occurred' : error.message,
+      statusCode: 500,
+    }
   }
 
   // Unknown error type
-  return new AppError('An unexpected error occurred', 500, 'UNKNOWN_ERROR', true, {
-    originalError: String(error),
-  })
-}
-
-/**
- * Convert error to ActionResult format for Server Actions
- * Provides consistent error responses to client components
- */
-export function errorToActionResult<T = void>(error: unknown): ActionResult<T> {
-  const appError = normalizeError(error)
-
   return {
-    success: false,
-    error: appError.message,
+    message: isProd ? 'An unexpected error occurred' : String(error),
+    statusCode: 500,
   }
 }
 
 /**
- * Log error with appropriate level based on error type
- * Should be used with structured logger (Pino)
+ * Log error to monitoring service (Sentry)
+ * Only logs in production if Sentry is configured
  */
-export function getErrorLogLevel(error: AppError): 'error' | 'warn' | 'info' {
-  // Non-operational errors are always logged as errors
-  if (!error.isOperational) {
-    return 'error'
+export function logError(error: unknown, context?: Record<string, any>) {
+  // Always log to console in development
+  if (process.env.NODE_ENV === 'development') {
+    console.error('Error:', error)
+    if (context) {
+      console.error('Context:', context)
+    }
   }
 
-  // Client errors (4xx) are warnings
-  if (error.statusCode >= 400 && error.statusCode < 500) {
-    return 'warn'
+  // Log to Sentry in production if configured
+  if (process.env.NODE_ENV === 'production' && isSentryConfigured()) {
+    try {
+      // Dynamic import to avoid loading Sentry in development
+      import('@sentry/nextjs').then((Sentry) => {
+        Sentry.captureException(error, {
+          extra: context,
+        })
+      })
+    } catch (sentryError) {
+      console.error('Failed to log to Sentry:', sentryError)
+    }
   }
-
-  // Server errors (5xx) are errors
-  return 'error'
 }
 
 /**
- * Check if error should be reported to Sentry
- * Filters out expected errors to reduce noise
+ * Sanitize log data to remove PII and sensitive information
  */
-export function shouldReportError(error: AppError): boolean {
-  // Don't report operational errors with 4xx status codes
-  if (error.isOperational && error.statusCode >= 400 && error.statusCode < 500) {
-    return false
+export function sanitizeLogData(data: Record<string, any>): Record<string, any> {
+  const sensitiveKeys = [
+    'password',
+    'token',
+    'secret',
+    'apiKey',
+    'api_key',
+    'authorization',
+    'cookie',
+    'session',
+    'email',
+    'phone',
+    'ssn',
+    'creditCard',
+    'credit_card',
+  ]
+
+  const sanitized: Record<string, any> = {}
+
+  for (const [key, value] of Object.entries(data)) {
+    const lowerKey = key.toLowerCase()
+
+    // Check if key contains sensitive information
+    if (sensitiveKeys.some((sensitive) => lowerKey.includes(sensitive))) {
+      sanitized[key] = '[REDACTED]'
+    } else if (typeof value === 'object' && value !== null) {
+      // Recursively sanitize nested objects
+      sanitized[key] = sanitizeLogData(value)
+    } else {
+      sanitized[key] = value
+    }
   }
 
-  // Don't report validation errors
-  if (error instanceof ValidationError) {
-    return false
-  }
-
-  // Don't report authentication errors (expected)
-  if (error instanceof AuthenticationError) {
-    return false
-  }
-
-  // Don't report authorization errors (expected)
-  if (error instanceof AuthorizationError) {
-    return false
-  }
-
-  // Don't report not found errors (expected)
-  if (error instanceof NotFoundError) {
-    return false
-  }
-
-  // Report everything else
-  return true
+  return sanitized
 }
 
 /**
- * Extract user-safe error message
- * Removes sensitive information and provides friendly messages
+ * Safe logger that sanitizes data before logging
  */
-export function getUserMessage(error: AppError): string {
-  // Use custom message for known error types
-  if (error instanceof ValidationError) {
-    return error.message
-  }
+export const safeLogger = {
+  info: (message: string, data?: Record<string, any>) => {
+    const sanitized = data ? sanitizeLogData(data) : undefined
+    console.log(`[INFO] ${message}`, sanitized)
+  },
 
-  if (error instanceof AuthenticationError) {
-    return 'Please sign in to continue'
-  }
+  warn: (message: string, data?: Record<string, any>) => {
+    const sanitized = data ? sanitizeLogData(data) : undefined
+    console.warn(`[WARN] ${message}`, sanitized)
+  },
 
-  if (error instanceof AuthorizationError) {
-    return "You don't have permission to perform this action"
-  }
-
-  if (error instanceof NotFoundError) {
-    return error.message
-  }
-
-  if (error instanceof ExternalAPIError) {
-    return 'External service temporarily unavailable. Please try again later.'
-  }
-
-  if (error instanceof DatabaseError) {
-    return 'A database error occurred. Please try again.'
-  }
-
-  // Generic message for other errors
-  return 'An unexpected error occurred. Please try again.'
+  error: (message: string, error: unknown, data?: Record<string, any>) => {
+    const sanitized = data ? sanitizeLogData(data) : undefined
+    console.error(`[ERROR] ${message}`, error, sanitized)
+    logError(error, sanitized)
+  },
 }
