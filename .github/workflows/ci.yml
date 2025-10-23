@@ -145,9 +145,9 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
-      - name: Create .env.local for build
+      - name: Create .env for build
         run: |
-          cat > .env.local << EOF
+          cat > .env << EOF
           # Build-time environment variables
           DATABASE_URL="postgresql://placeholder:placeholder@localhost:5432/placeholder"
           NEXTAUTH_URL="http://localhost:3000"
@@ -248,10 +248,10 @@ jobs:
             echo "e2e_exists=false" >> $GITHUB_OUTPUT
           fi
 
-      - name: Create .env.local for E2E tests
+      - name: Create .env for E2E tests
         if: steps.check-e2e.outputs.e2e_exists == 'true'
         run: |
-          cat > .env.local << EOF
+          cat > .env << EOF
           # E2E test environment variables
           DATABASE_URL="postgresql://placeholder:placeholder@localhost:5432/placeholder"
           NEXTAUTH_URL="http://localhost:3000"
