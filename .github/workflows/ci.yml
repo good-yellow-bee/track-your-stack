@@ -151,7 +151,7 @@ jobs:
           # Build-time environment variables
           DATABASE_URL="postgresql://placeholder:placeholder@localhost:5432/placeholder"
           NEXTAUTH_URL="http://localhost:3000"
-          NEXTAUTH_SECRET="build-time-secret-not-used"
+          NEXTAUTH_SECRET="build-time-secret-32-chars-min-required-for-security"
           GOOGLE_CLIENT_ID="placeholder"
           GOOGLE_CLIENT_SECRET="placeholder"
           ALPHA_VANTAGE_API_KEY="placeholder"
@@ -210,6 +210,8 @@ jobs:
 
       - name: Run unit tests
         if: steps.check-tests.outputs.tests_exist == 'true'
+        env:
+          SKIP_ENV_VALIDATION: 'true'
         run: pnpm test
 
       - name: Skip tests (not configured)
@@ -255,7 +257,7 @@ jobs:
           # E2E test environment variables
           DATABASE_URL="postgresql://placeholder:placeholder@localhost:5432/placeholder"
           NEXTAUTH_URL="http://localhost:3000"
-          NEXTAUTH_SECRET="test-secret-for-e2e-only-not-secure"
+          NEXTAUTH_SECRET="test-secret-for-e2e-32-chars-min-required"
           GOOGLE_CLIENT_ID="placeholder"
           GOOGLE_CLIENT_SECRET="placeholder"
           ALPHA_VANTAGE_API_KEY="placeholder"
