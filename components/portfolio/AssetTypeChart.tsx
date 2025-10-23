@@ -82,7 +82,8 @@ export default function AssetTypeChart({ investments, baseCurrency }: AssetTypeC
               cx="50%"
               cy="50%"
               labelLine={false}
-              label={(props: any) => { // eslint-disable-line @typescript-eslint/no-explicit-any
+              label={(props: any) => {
+                // eslint-disable-line @typescript-eslint/no-explicit-any
                 const entry = props.payload || props
                 // Only show label if percentage >= 5%
                 if (entry.percentage < 5) return ''
