@@ -98,7 +98,6 @@ export function logError(error: unknown, context?: Record<string, any>) {
   if (process.env.NODE_ENV === 'production' && isSentryConfigured()) {
     try {
       // Dynamic import to avoid loading Sentry in development
-      // @ts-expect-error - Sentry is optional and only loaded when configured
       // void operator explicitly marks this as an intentional floating promise
       void import('@sentry/nextjs').then((Sentry) => {
         Sentry.captureException(error, {
