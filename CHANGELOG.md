@@ -7,6 +7,64 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.1.0] - 2025-10-23 - Phase 1 Security & UX Improvements
+
+### Security
+
+- **Global Security Headers:** Added CSP, HSTS, X-Frame-Options, X-Content-Type-Options, Referrer-Policy, and Permissions-Policy to all routes
+- **NextAuth Cookie Hardening:** Implemented `__Secure-` prefix in production, explicit httpOnly, secure, and sameSite settings
+- **Database Constraints:** Added unique constraints for Portfolio(userId, name) and Investment(portfolioId, ticker)
+- **Rate Limiting:** Applied IP-based rate limiting to public API endpoints (health check: 20/min, test API: 5/min)
+- **Production Data Minimization:** Health endpoint returns minimal info in production
+- **Centralized Error Handling:** Created sanitization and logging system with Sentry integration support
+- **PII Protection:** Automatic redaction of sensitive data (passwords, tokens, emails) from logs
+
+### UI/UX
+
+- **Chart Accessibility:** Added data-testid attributes and ARIA labels to all charts for E2E testing and screen readers
+- **Mobile-Responsive Legends:** Improved chart legends with smaller text and tighter spacing on mobile devices
+- **Interactive Highlighting:** Pie chart slices now highlight corresponding table rows on click (3-second auto-clear)
+- **Visual Feedback:** Highlighted investment rows show blue background with ring border
+
+### Logic & Precision
+
+- **Decimal Arithmetic:** Portfolio calculations now use Decimal to prevent floating-point precision errors
+- **Deterministic Sorting:** Best/worst performers use alphabetical tie-breaking for consistent results
+- **Enhanced Validation:** Strengthened ticker (alphanumeric, 1-10 chars) and purchase date (ISO-8601, not future, not before 1900) validation
+- **Concurrency Safety:** Investment creation handles P2002 (unique constraint violations) gracefully with automatic retry
+- **Price Currency Tracking:** Price refresh now tracks and stores currency information (currentPriceCurrency field)
+- **Smart Performance Ranking:** Only investments with current prices considered for best/worst performer calculation
+
+### Developer Experience
+
+- **Error Sanitization:** Production errors hide stack traces and sensitive details
+- **Safe Logging:** safeLogger utility automatically sanitizes PII from log output
+- **Better Error Messages:** User-friendly error messages with proper HTTP status codes
+- **Type Safety:** Enhanced TypeScript types for price data with currency information
+
+### Documentation
+
+- Added `docs/security/phase1-improvements.md` with comprehensive improvement summary
+- Updated security review checklist
+- Documented migration requirements for database constraints
+
+### Breaking Changes
+
+- **Database Migration Required:** Run `pnpm prisma migrate dev --name add_unique_constraints` before deploying
+- **Duplicate Data:** Migration will fail if duplicate portfolios (same user + name) or investments (same portfolio + ticker) exist
+- **Cookie Names:** Production cookies now use `__Secure-` prefix (users will need to re-authenticate once)
+
+### Migration Guide
+
+1. Clean up any duplicate portfolios or investments in database
+2. Run `pnpm prisma migrate dev --name add_unique_constraints`
+3. Deploy application (users will be logged out once due to cookie name change)
+4. Optional: Configure Sentry by setting `SENTRY_DSN` and `SENTRY_AUTH_TOKEN` environment variables
+
+## [1.0.0] - 2025-10-21 - MVP Complete
+
+### MVP Features (F01-F11)
+
 ### Added - F01: Project Setup & Configuration (2025-01-09)
 
 #### Core Framework

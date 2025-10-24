@@ -532,7 +532,7 @@ pnpm format:check
 # Test build locally
 pnpm build
 
-# Check .env.local has all required variables
+# Check .env has all required variables
 # CI uses placeholder values for build-time validation
 ```
 
@@ -1093,7 +1093,7 @@ Wrapper class in `lib/api/alphaVantage.ts` provides methods:
 
 ## Environment Variables
 
-Required in `.env.local`:
+Required in `.env` (gitignored):
 
 ```bash
 # Database
@@ -1113,6 +1113,8 @@ ALPHA_VANTAGE_API_KEY="..."
 # Optional: Monitoring
 SENTRY_DSN="..."
 ```
+
+**Note:** Both Prisma and Next.js automatically load `.env` files. No additional configuration needed.
 
 ## Performance Considerations
 

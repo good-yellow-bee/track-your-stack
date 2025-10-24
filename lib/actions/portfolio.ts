@@ -51,22 +51,13 @@ export async function createPortfolio(
       message: 'Portfolio created successfully',
     }
   } catch (error) {
-    console.error('Error creating portfolio:', {
-      error,
-      timestamp: new Date().toISOString(),
-    })
+    const { logError, sanitizeError } = await import('@/lib/errors/errorHandler')
+    logError(error, { action: 'createPortfolio', userId: (await requireAuth()).id })
 
-    // Handle rate limit errors with specific message
-    if (error instanceof Error && error.constructor.name === 'RateLimitError') {
-      return {
-        success: false,
-        error: error.message,
-      }
-    }
-
+    const sanitized = sanitizeError(error)
     return {
       success: false,
-      error: 'Failed to create portfolio',
+      error: sanitized.message,
     }
   }
 }

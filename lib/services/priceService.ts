@@ -7,22 +7,39 @@ import {
 import { AssetType } from '@prisma/client'
 
 /**
+ * Price data with currency information
+ */
+export interface PriceData {
+  price: number
+  currency: string
+}
+
+/**
  * Get current price for any asset (with caching)
  */
-export async function getAssetPrice(ticker: string, assetType: AssetType): Promise<number> {
+export async function getAssetPrice(ticker: string, assetType: AssetType): Promise<PriceData> {
   // Check cache first
   const cached = await getCachedStockPrice(ticker)
   if (cached && cached.isFresh) {
-    return cached.price.toNumber()
+    return {
+      price: cached.price.toNumber(),
+      currency: 'USD', // Default currency for cached prices
+    }
   }
 
   // Fetch fresh price
   if (assetType === 'CRYPTO') {
     const cryptoPrice = await alphaVantageClient.getCryptoPrice(ticker, 'USD')
-    return cryptoPrice.price
+    return {
+      price: cryptoPrice.price,
+      currency: cryptoPrice.currency,
+    }
   } else {
     const stockQuote = await alphaVantageClient.getStockQuote(ticker)
-    return stockQuote.price
+    return {
+      price: stockQuote.price,
+      currency: 'USD', // Stock prices are in USD
+    }
   }
 }
 

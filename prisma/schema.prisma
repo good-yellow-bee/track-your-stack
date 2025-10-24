@@ -80,6 +80,7 @@ model Portfolio {
   createdAt     DateTime            @default(now())
   updatedAt     DateTime            @updatedAt
 
+  @@unique([userId, name]) // Prevent duplicate portfolio names per user
   @@index([userId])
   @@index([userId, createdAt]) // For sorting user's portfolios by creation date
 }
@@ -112,10 +113,10 @@ model Investment {
   createdAt            DateTime              @default(now())
   updatedAt            DateTime              @updatedAt
 
+  @@unique([portfolioId, ticker]) // Prevent duplicate tickers within a portfolio
   @@index([portfolioId])
   @@index([ticker])
   @@index([priceUpdatedAt])
-  @@index([portfolioId, ticker]) // For finding existing investments in portfolio
   @@index([assetType]) // For filtering by asset type
 }
 

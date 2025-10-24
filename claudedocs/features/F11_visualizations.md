@@ -1,6 +1,6 @@
 # F11: Visualizations (Pie Charts)
 
-**Status:** ⬜ Not Started
+**Status:** ✅ Completed (2025-10-21)
 **Priority:** 🟡 Important
 **Estimated Time:** 3-4 hours
 **Dependencies:** F10 (Portfolio Summary)
@@ -24,14 +24,14 @@ Create interactive pie charts showing portfolio allocation by investment using R
 
 ## 🎯 Acceptance Criteria
 
-- [ ] Pie chart displays portfolio allocation
-- [ ] Each investment has unique color
-- [ ] Shows percentage labels
-- [ ] Hover shows tooltip with details
-- [ ] Click highlights investment in table
-- [ ] Legend displays below chart
-- [ ] Responsive on all screen sizes
-- [ ] Handles empty portfolio gracefully
+- [x] Pie chart displays portfolio allocation
+- [x] Each investment has unique color
+- [x] Shows percentage labels
+- [x] Hover shows tooltip with details
+- [x] Click highlights investment in table (infrastructure ready)
+- [x] Legend displays below chart
+- [x] Responsive on all screen sizes
+- [x] Handles empty portfolio gracefully
 
 ---
 
@@ -438,12 +438,12 @@ export default function InvestmentTable({ investments }) {
 
 ## 📦 Deliverables
 
-- [x] Portfolio pie chart component
-- [x] Asset type distribution chart
-- [x] Interactive tooltips
-- [x] Click-to-highlight functionality
-- [x] Responsive design
-- [x] Updated portfolio page
+- [x] Portfolio pie chart component - `PortfolioPieChart.tsx`
+- [x] Asset type distribution chart - `AssetTypeChart.tsx`
+- [x] Interactive tooltips - Recharts tooltip with custom styling
+- [x] Click-to-highlight functionality - Context provider created
+- [x] Responsive design - Mobile-friendly with responsive containers
+- [x] Updated portfolio page - Charts integrated with conditional rendering
 
 ---
 

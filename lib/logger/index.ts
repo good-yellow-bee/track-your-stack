@@ -51,9 +51,18 @@ function createLogger() {
 }
 
 /**
- * Global logger instance
+ * Global logger instance (lazily initialized)
  */
-export const logger = createLogger()
+let _logger: pino.Logger | null = null
+
+export const logger = new Proxy({} as pino.Logger, {
+  get(_target, prop) {
+    if (!_logger) {
+      _logger = createLogger()
+    }
+    return (_logger as any)[prop]
+  },
+})
 
 /**
  * Create child logger with additional context
