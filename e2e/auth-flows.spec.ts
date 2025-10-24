@@ -95,6 +95,8 @@ test.describe('Authentication Flows', () => {
 })
 
 test.describe('Protected Routes', () => {
+  test.skip(!hasAuth, 'Skipping: Authentication not configured')
+  
   test('should block access to portfolio creation page without auth', async ({ page }) => {
     await page.context().clearCookies()
     await page.goto('/portfolios/new')
